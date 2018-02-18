@@ -1,0 +1,29 @@
+ R←Test_10(stopFlag batchFlag);fns;MyFns;⎕TRAP;home;path
+⍝ Test "HandleError.Process": fires up a thread. Should still save an error WS.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+⍝ Preconditions...
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  ''''')(0 'S')
+ home←'Errors'
+ {}#.FilesAndDirs.RmDir home
+ {}'CREATE!'#.FilesAndDirs.CheckPath home
+
+ fns←⍎⎕FX'MyFns dummy' '⎕dl .1 ⋄ →1'
+ fns&1
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →GoToTidyUp 1
+ :EndTrap
+
+ →GoToTidyUp 406≠⎕EN
+ :If 'WIN'≡#.APLTreeUtils.Uppercase #.APLTreeUtils.GetOperatingSystem ⍬
+     path←#.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(1⊃⎕NPARTS ⎕WSID),'\Errors\'
+ :Else
+     path←#.FilesAndDirs.PWD,'/Errors/'
+ :EndIf
+ →GoToTidyUp 3≠⍴↑#.FilesAndDirs.Dir path   ⍝ DCF & HTML & DWS (since acre 4)
+ R←∆OK
+
+∆TidyUp:
+ {}#.FilesAndDirs.RmDir home

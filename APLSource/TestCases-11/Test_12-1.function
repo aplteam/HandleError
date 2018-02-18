@@ -1,0 +1,34 @@
+ R←Test_12(stopFlag batchFlag);path;rc;⎕TRAP;wsname;more
+⍝ Test "HandleError. Fires up a runtime instance (test_ws_2.dws) which should not ⎕OFF (CONTINUE.DWS)
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+
+ :If 'Win'≢#.APLTreeUtils.GetOperatingSystem ⍬
+ ⍝ This is because under Linux the Dyalog runtime behaves differently; this needs to be investigated.
+     R←∆Inactive
+     :Return
+ :EndIf
+
+ R←∆Failed
+
+⍝ Preconditions...
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ #.FilesAndDirs.DeleteFile'CONTINUE.DWS'
+ path←'"',0⊃#.APLTreeUtils.SplitPath 0⊃#.GetCommandLineArgs
+ wsname←#.FilesAndDirs.PWD,'\Tests\test_ws_2.dws'
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.returnCode←123
+ #.HandleErrorParms.errorFolder←#.FilesAndDirs.GetTempPath,'Errors'
+ {}#.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'#.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ (rc more)←∆GetResultFromSecondDyalogInstance wsname
+
+ →GoToTidyUp''≢more
+ →GoToTidyUp~#.FilesAndDirs.Exists'Tests\CONTINUE.DWS'
+ →GoToTidyUp~0∊⍴↑#.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'
+ R←∆OK
+
+∆TidyUp:
+ {}#.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ #.FilesAndDirs.DeleteFile'CONTINUE.DWS'

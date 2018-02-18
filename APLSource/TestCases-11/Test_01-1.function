@@ -1,0 +1,36 @@
+ R←Test_01(stopFlag batchFlag);⎕TRAP;home;ALIEN;parms;test;filename;fno;crash;QEN
+⍝ Test "HandleError.Process" without any parameters; just the defaults.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+⍝ Preconditions...
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process ⍬')(0 'S')
+ :If 'WIN'≡#.APLTreeUtils.Uppercase #.APLTreeUtils.GetOperatingSystem ⍬
+     home←#.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(1⊃⎕NPARTS ⎕WSID),'\Errors'
+ :Else
+     home←#.FilesAndDirs.PWD,'/Errors'
+ :EndIf
+ #.FilesAndDirs.RmDir home
+ {}'CREATE!'#.FilesAndDirs.CheckPath home
+ ALIEN←'Hello world'
+
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →GoToTidyUp 1
+ :EndTrap
+
+ QEN←⎕EN  ⍝ Because of stop vectors.
+ →GoToTidyUp QEN≠406
+ →GoToTidyUp 3≠⍴↑#.FilesAndDirs.Dir home,'\'    ⍝ DCF & HTML & DWS (since acre 4)
+ filename←↑#.FilesAndDirs.ListFiles home,'\*.dcf'
+ fno←filename ⎕FTIE 0
+ crash←⎕FREAD fno 1
+ ⎕FUNTIE fno
+ →GoToTidyUp 9≠crash.⎕NC'Vars'
+ →GoToTidyUp 2≠crash.Vars.⎕NC'ALIEN'
+ →GoToTidyUp'Hello world'≢crash.Vars.ALIEN
+
+ R←∆OK
+
+∆TidyUp:
+ {}#.FilesAndDirs.RmDir home

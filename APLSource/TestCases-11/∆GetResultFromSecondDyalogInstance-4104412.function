@@ -1,0 +1,44 @@
+ {(rc more)}←{rideParms}∆GetResultFromSecondDyalogInstance wsname;cmd;buff
+⍝ This starts a second session of Dyalog and waits for it to finish. Whatever `⎕OFF` returns
+⍝ is then returned as `rc`. `more` may provide additional information.
+⍝
+⍝ The optinal `rideParms` is one of:
+⍝ * '' (the default: no Ride and therefore also no conflict).
+⍝ * 'SERVE::4502'  or  'SERVE:192.168.1.2:9999'
+ rideParms←{0=⎕NC ⍵:'' ⋄ ⍎⍵}'rideParms'
+ :Select #.APLTreeUtils.GetOperatingSystem ⍬
+ :Case 'Win'
+     cmd←''
+     cmd,←'"',(↑2 ⎕NQ'#' 'GetCommandLineArgs'),'"'
+     cmd,←' "',(#.FilesAndDirs.NormalizePath wsname),'"'
+     cmd←'\\dyalog.exe"'⎕R'\\dyalogrt.exe"'⍠('IC' 1)⊣cmd ⍝ Make sure the runtime is called; avoid when debugging!
+     cmd,←' RIDE_INIT=',rideParms~''''
+     cmd,←' DYALOG_NOPOPUPS=1'
+     :If 0
+         cmd,←' -lx'                            ⍝ For debugging only
+     :EndIf
+     buff←#.Execute.Application cmd
+     (rc more)←buff[2 3]
+ :CaseList 'Lin' 'Mac'
+     wsname←↑,/1 ⎕NPARTS wsname
+     wsname←' '⎕R'\\ '⊣wsname                   ⍝ Encode blanks
+     wsname,←('.dws'≢#.APLTreeUtils.Lowercase ¯4↑wsname)/'.dws'
+     wsname←#.FilesAndDirs.NormalizePath wsname
+     cmd←''
+     cmd,←' RIDE_INIT=''',rideParms,''''
+     cmd,←' DYALOG_NOPOPUPS=1'
+     cmd,←' ',2 ⎕NQ'.' 'GetEnvironment' 'DYALOG'
+     cmd,←'/dyalog ',wsname
+     cmd←'/dyalog '⎕R'/dyalog.rt '⊣cmd          ⍝ Make sure the runtime is called; avoid when debugging!
+    ⍝cmd,←' -x'                                 ⍝ For debugging only
+     :Trap 11
+         buff←⎕SH cmd
+         rc←0
+         more←''
+     :Else
+         rc←↑(//)⎕VFI{{⌽⍵↑⍨⍵⍳' '}⌽⍵}⎕DMX.Message
+         more←⎕DMX.Message
+     :EndTrap
+ :Else
+     .                                          ⍝ Huuh?!
+ :EndSelect

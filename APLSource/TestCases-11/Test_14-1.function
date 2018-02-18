@@ -1,0 +1,37 @@
+ R←Test_14(stopFlag batchFlag);⎕TRAP
+⍝ Test "HandleError.Process" with a ref to a logging function. See also Test_02.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.⎕SHADOW'TEMP'
+ 'TEMP'#.⎕NS''
+ #.TEMP.TheLog←''
+ #.TEMP.⎕FX'{r}←∆LOG msg' 'TheLog,←#.APLTreeUtils.Nest msg'
+ #.HandleErrorParms.errorFolder←#.FilesAndDirs.GetTempPath,'HandleError_TestCases\Errors'
+ {}#.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ 'Create!'#.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ #.HandleErrorParms.logFunction←'∆LOG'
+ #.HandleErrorParms.logFunctionParent←#.TEMP    ⍝ This is a ref!
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ {}#.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'#.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →GoToTidyUp 406≠⎕EN
+     →GoToTidyUp 1
+ :EndTrap
+
+ →GoToTidyUp 406≠⎕EN
+ →GoToTidyUp 3≠⍴↑#.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'       ⍝ DCF & HTML & DWS (since acre 4)
+ →GoToTidyUp 5≠⍴#.TEMP.TheLog
+ →GoToTidyUp~∨/'Error number=405'⍷∊#.TEMP.TheLog
+
+ R←∆OK
+
+∆TidyUp:
+ {}#.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

@@ -1,0 +1,10 @@
+ R←Test_07(stopFlag batchFlag);⎕TRAP
+⍝ Test ##.HandleError.CreateParms and its contents.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ →FailsIf 1≠⍴#.HandleErrorParms.⎕NL-3
+
+ R←∆OK

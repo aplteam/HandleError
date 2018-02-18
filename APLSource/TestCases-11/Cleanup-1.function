@@ -1,0 +1,3 @@
+ Cleanup
+ #.FilesAndDirs.RmDir'Errors'
+ #.FilesAndDirs.DeleteFile'CONTINUE.DWS'
