@@ -1,6 +1,9 @@
 # HandleError
 
 
+`HandleError` is a member of the APLTree library. The library is a collection of classes etc. that aim to support the Dyalog APL programmer. Search GitHub for "apltree" and you will find solutions to many every-day problems Dyalog APL programmers might have to solve.
+
+
 ## Overview 
 
 `HandleError` offers a method `Process` which is useful to handle application errors on a general level.
