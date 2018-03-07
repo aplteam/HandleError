@@ -87,7 +87,7 @@
 ⍝
 ⍝ Kai Jaeger ⋄ APL Team Ltd
 ⍝
-⍝ Homepage: <http://aplwiki.com/HandleError>
+⍝ Homepage: <http://github.com/aplteam/HandleError>
 
     :Include ##.APLTreeUtils
 
