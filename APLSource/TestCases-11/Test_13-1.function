@@ -32,7 +32,7 @@
      #.HandleErrorParms←##.HandleError.CreateParms
      #.HandleErrorParms.addToMsg←'Hey there'
      #.HandleErrorParms.createHTML←0
-     #.HandleErrorParms.errorFolder,←'Sub\'
+     #.HandleErrorParms.errorFolder←home,'Sub\'
      {}'CREATE!'#.FilesAndDirs.CheckPath home,'\Sub'
      #.HandleErrorParms.signal←999
      ⎕TRAP←(⊂999 'E' '→∆CarryOn'),1 ##.HandleError.SetTrap'#.HandleErrorParms'

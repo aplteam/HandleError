@@ -41,9 +41,11 @@
 ⍝   is sending an email to notify certain people about the crash.
 ⍝
 ⍝   The `customFns` must accept  a right argument. This is the parameter namespace
-⍝   which holds all the parameters plus two additional variables:
+⍝   which holds all the parameters plus three additional variables:
 ⍝   * `LastError` hold `⎕DM` at the moment of the crash.
 ⍝   * `LastErrorNumber` holds `⎕EN` at the moment of the crash.
+⍝   * `crashFilename` holds the name used for the crash files (HTML file, workspace,
+⍝     DCF file) but without `.extension`.
 ⍝
 ⍝   This is necessary because something might go wrong inside `HandleError` and, as a
 ⍝   side effect, overwrite both `⎕DM` and `⎕EN`.
@@ -55,7 +57,7 @@
 ⍝ they live in an instance of a class. For such case use `logFunctionParent`
 ⍝ and `customFnsParent` respectively in order to define the parent of the functions.
 ⍝
-⍝ ## Windows Event Log 
+⍝ ## Windows Event Log
 ⍝ `HandleError` will attempt to write to the Windows Event Log when `windowsEventSource`
 ⍝ is not empty. For that to work .NET is needed (that shouldn't be a problem these days)
 ⍝ and the Dyalog bridge DLLs are requiered. That means you need to take action, it would
@@ -74,8 +76,8 @@
 ⍝
 ⍝ ## Notes
 ⍝ * The attempt to save an error WS will fail if there are any open acre projects. acre is
-⍝   designed to make any saved workspace superfluous anyway but if you do not share this 
-⍝   opinion then use your own function (see the `customFns` parameter) to close all open 
+⍝   designed to make any saved workspace superfluous anyway but if you do not share this
+⍝   opinion then use your own function (see the `customFns` parameter) to close all open
 ⍝   acre projects.
 ⍝ * Prior to version 2.2.0 `HandleError` saved crash files in a folder `Errors`
 ⍝   that was created as a sibling of either the workspace or the stabnd-alone
@@ -93,11 +95,15 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←(Last⍕⎕THIS)'2.4.0' '2018-02-18'
+      r←(Last⍕⎕THIS)'2.4.1.8' '2018-04-30'
     ∇
 
     ∇ History
       :Access Public Shared
+      ⍝ * 2.4.1
+      ⍝   * Saving the "crash" namespace improved.
+      ⍝   * Bug fix: when the error folder defaulted to `%LOCALAPPDATA%` then this was not expanded
+      ⍝     and therefore did not work as expected.
       ⍝ * 2.4.0
       ⍝   * First release after the conversion from the APL wiki to GitHub.
       ⍝ * 2.3.1
@@ -106,13 +112,6 @@
       ⍝   * `crash` now contains `SaveFailed` with a message in case saving an error WS failed.
       ⍝   * Method `History` introduced.
       ⍝   * Now managed by acre 3.
-      ⍝ * 2.2.1
-      ⍝   * Bug fix: the change in 2.2.0 should have been Windows-only but wasn't.
-      ⍝ * 2.2.0
-      ⍝   * Prior to 2.2.0 all crash information was saved as a sibling of the application, be
-      ⍝     it a workspace or a stand-alone exe. Under Windows now `HandleError` saves the crash
-      ⍝     files in %LOCALAPPDATA/{name}% with either the name being `⎕WSID` or the name of the
-      ⍝     EXE file. Under Linux and Mac OS no change takes place.
     ∇
 
     ∇ {filename}←{signal}Process parms;crash;TRAP;⎕IO;⎕ML;⎕TRAP
@@ -139,6 +138,7 @@
       CheckErrorFolder parms
       crash←CreateCrash parms TRAP
       filename←CreateFilename parms.errorFolder
+      parms.crashFilename←filename
       0 ⎕TKILL ⎕TNUMS~⎕TID   ⍝ Try to kill all threads but itself and the main thread
       WriteToLogFile parms
       WriteHtmlFile parms crash filename
@@ -452,11 +452,11 @@
       :If parms.saveCrash
           :Trap (parms.trapInternalErrors)/0
               tno←filename ⎕FCREATE 0
-              crash ⎕FAPPEND tno
-              ⎕FUNTIE tno
+              crash ⎕FAPPEND tno  ⍝ Might fail with a WS FULL
           :Else
-            ⍝ For the Tracer
+              ⎕DMX.DM ⎕FAPPEND tno
           :EndTrap
+          :Trap 0 ⋄ ⎕FUNTIE tno ⋄ :EndTrap
       :EndIf
     ∇
 
@@ -500,7 +500,7 @@
               buff←2⊃⎕NPARTS'"'~⍨{⍵↑⍨¯1+⍵⍳' '}2 ⎕NQ'#' 'GetCommandLine' ⍝ Probably a stanmd-alone EXE
           :EndIf
           :If 'Win'≡GetOperatingSystem ⍬
-              parms.errorFolder←'%LOCALAPPDATA%','/',buff,'\Errors'
+              parms.errorFolder←(⊃⎕CMD'ECHO %LOCALAPPDATA%'),'/',buff,'\Errors'
           :Else
               parms.errorFolder←##.FilesAndDirs.PWD,'/Errors'
           :EndIf

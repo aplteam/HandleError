@@ -23,7 +23,7 @@
 
  →GoToTidyUp 406≠⎕EN
  →GoToTidyUp 3≠⍴↑#.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'    ⍝ DCF & HTML & DWS (since acre 4)
- →GoToTidyUp(2+0⊃⍴##.HandleError.CreateParms.∆List)≠0⊃⍴#.TEMP.TheLog
+ →GoToTidyUp(3+0⊃⍴##.HandleError.CreateParms.∆List)≠0⊃⍴#.TEMP.TheLog
  R←∆OK
 
 ∆TidyUp:
