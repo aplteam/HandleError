@@ -95,7 +95,7 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←(Last⍕⎕THIS)'2.4.1.12' '2018-04-30'
+      r←(Last⍕⎕THIS)'2.4.1.1.3' '2018-04-30'
     ∇
 
     ∇ History
