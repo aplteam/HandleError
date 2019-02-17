@@ -91,27 +91,21 @@
 ⍝
 ⍝ Homepage: <http://aplwiki.com/HandleError>
 
-    :Include ##.APLTreeUtils
+    :Include APLTreeUtils
 
     ∇ r←Version
       :Access Public Shared
-      r←(Last⍕⎕THIS)'2.4.1.8' '2018-04-30'
+      r←(Last⍕⎕THIS)'2.4.2.13' '2019-02-17'
     ∇
 
     ∇ History
       :Access Public Shared
-      ⍝ * 2.4.1
-      ⍝   * Saving the "crash" namespace improved.
-      ⍝   * Bug fix: when the error folder defaulted to `%LOCALAPPDATA%` then this was not expanded
-      ⍝     and therefore did not work as expected.
-      ⍝ * 2.4.0
-      ⍝   * First release after the conversion from the APL wiki to GitHub.
-      ⍝ * 2.3.1
-      ⍝   * Documention now points out prerequisites needed for writing to the Windows Event Log.
-      ⍝ * 2.3.0
-      ⍝   * `crash` now contains `SaveFailed` with a message in case saving an error WS failed.
-      ⍝   * Method `History` introduced.
-      ⍝   * Now managed by acre 3.
+      ⍝ * 2.4.2
+      ⍝   * `:Include APLTreeUtils`
+      ⍝   * Build-ID fixed
+      ⍝   * "Make" polished
+      ⍝\\
+      ⍝ For information regarding older versions see <https://github.com/aplteam/HandleError/releases>
     ∇
 
     ∇ {filename}←{signal}Process parms;crash;TRAP;⎕IO;⎕ML;⎕TRAP
