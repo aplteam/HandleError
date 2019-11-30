@@ -1,0 +1,38 @@
+ {R}←Test_03(stopFlag batchFlag);myEventLog;buffer;⎕TRAP;QTS
+⍝ Test "HandleError.Process": let it write to the Windows Event Log
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+
+ :If 'Win'≢##.APLTreeUtils.GetOperatingSystem ⍬
+     R←T._WindowsOnly
+     :Return
+ :EndIf
+
+ R←T._Failed
+
+⍝ Preconditions...
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ myEventLog←⎕NEW ##.WindowsEventLog(,⊂'Foo')
+ myEventLog.WriteInfo'"Foo" created'
+ ⎕EX'myEventLog'
+
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.addToMsg←QTS←⍕⎕TS
+ #.HandleErrorParms.windowsEventSource←'Foo'
+ #.HandleErrorParms.errorFolder←##.FilesAndDirs.GetTempPath,'HandleError_TestCases\Errors'
+ {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ →T.GoToTidyUp 406≠⎕EN
+ →T.GoToTidyUp 3≠⍴↑##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
+ myEventLog←⎕NEW ##.WindowsEventLog(,⊂'Foo')
+ buffer←myEventLog.ReadThese{⎕IO←0 ⋄ (10>⍵):⍳⍵ ⋄ ⍵+-⍳10}myEventLog.NumberOfLogEntries
+ →T.GoToTidyUp 1≠+/∨/¨#.HandleErrorParms.addToMsg∘⍷¨buffer
+ R←T._OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

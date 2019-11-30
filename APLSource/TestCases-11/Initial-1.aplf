@@ -1,6 +1,0 @@
- Initial
- #.FilesAndDirs.PolishCurrentDir
- #.Tester.EstablishHelpersIn ⎕THIS
-
-⍝ Because the test workspaces need the latest copy for their tests:
- ⎕SE.SALT.Save ##.HandleError(('expand'#.FilesAndDirs.NormalizePath'Tests/HandleError'),' -noprompt')

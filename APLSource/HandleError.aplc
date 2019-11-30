@@ -1,4 +1,4 @@
-﻿:Class HandleError
+:Class HandleError
 ⍝ This class offers the method `Process` which is useful to handle application
 ⍝ errors on a general level. `Process` in turn is triggered via `⎕TRAP`; use
 ⍝ the method `SetTrap` in order to set `⎕TRAP` properly.
@@ -95,7 +95,7 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←(Last⍕⎕THIS)'2.4.3.14' '2019-11-28'
+      r←(Last⍕⎕THIS)'2.4.3.16' '2019-11-28'
     ∇
 
     ∇ History

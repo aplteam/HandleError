@@ -1,0 +1,25 @@
+ R←Test_09(stopFlag batchFlag);⎕TRAP
+⍝ Test "HandleError.Process": sets "saveErrorWS"
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.saveErrorWS←0
+ #.HandleErrorParms.errorFolder←##.FilesAndDirs.GetTempPath,'Errors'
+ {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ →T.GoToTidyUp 406≠⎕EN
+ →T.GoToTidyUp 2≠⍴↑##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'
+ R←T._OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

@@ -1,0 +1,26 @@
+ R←Test_05(stopFlag batchFlag);⎕TRAP;QEN
+⍝ Test "HandleError.Process": sets "errorFolder" to an absolute path.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.errorFolder←'Special'
+ #.HandleErrorParms.errorFolder←##.FilesAndDirs.GetTempPath,'HandleError_TestCases\Special'
+ {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ QEN←⎕EN   ⍝ Because of stop vectors
+ →T.GoToTidyUp 406≠QEN
+ →T.GoToTidyUp 3≠⍴↑##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'   ⍝ DCF & HTML & DWS (since acre 4)
+ R←T._OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
