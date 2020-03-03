@@ -95,13 +95,15 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←(Last⍕⎕THIS)'2.4.3.14' '2019-11-28'
+      r←(Last⍕⎕THIS)'2.5.0.20' '2020-03-03'
     ∇
 
     ∇ History
       :Access Public Shared
-      ⍝ * 2.4.3
-      ⍝   * `GetCurrentDir` called wrongly #.APLTreeUtils
+      ⍝ * 2.5.0
+      ⍝   * HTML document elevated to HTML5
+      ⍝   * Internally: Tally is now used
+      ⍝   * Error messages written to the Windows Event Log now add "Details can be found in {path}"
       ⍝\\
       ⍝ For information regarding older versions see <https://github.com/aplteam/HandleError/releases>
     ∇
@@ -118,9 +120,9 @@
       ⎕IO←1 ⋄ ⎕ML←1
       TRAP←⎕TRAP                                    ⍝ Remember old setting (for reporting)
       ⎕TRAP←(0 1000)'C' '→∆End'                     ⍝ Make sure that it does not crash itself
-      parms←⍎⍣((~0∊⍴parms)∧(⎕DR parms)∊320 160 80 82)⊣parms     ⍝ Convert name into reference
+      parms←⍎⍣((0≠≢parms)∧(⎕DR parms)∊320 160 80 82)⊣parms     ⍝ Convert name into reference
       :If 9≠⎕NC'parms'
-      :OrIf 0∊⍴parms
+      :OrIf 0=≢parms
           parms←CreateParms
       :EndIf
       :If 0<⎕NC'signal'
@@ -168,13 +170,13 @@
       force←{0=⎕NC ⍵:0 ⋄ ⍎⍵}'force'
       r←(0 1000)'S'
       calledFrom←{⌽{⍵/⍨2≤+\'.'=⍵}⌽⍵}1⊃⎕XSI
-      :If ~0∊⍴parameterSpaceName
+      :If 0≠≢parameterSpaceName
           :If 1≠≡,parameterSpaceName
           :OrIf ~(⎕DR parameterSpaceName)∊80 82 160
               'Invalid right argument: must be a name'⎕SIGNAL 11
           :EndIf
       :EndIf
-      :If 0∊⍴parameterSpaceName  ⍝ At a very early stage error trapping does not make sense
+      :If 0=≢parameterSpaceName  ⍝ At a very early stage error trapping does not make sense
       :AndIf (0=IsDevelopment)∨force
           r←⊂0 'E'(calledFrom,'HandleError.Process ⍬')
       :Else
@@ -244,7 +246,7 @@
       :Access Public Shared
       r←⍬
       ⎕USING←'System,system.dll' 'System.Diagnostics,system.dll'
-      :If 0∊⍴appName
+      :If 0=≢appName
           appName←'APL'
       :EndIf
       message←Nest message
@@ -278,52 +280,52 @@
     ∇
 
     ∇ html←AssembleHTML(parms crash)
-      html←'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> ',CR
-      html,←'<html>',CR
+      html←'<!DOCTYPE html>',CR
+      html,←'<html lang="en">',CR
       html,←'<head>',CR
-      html,←'<meta http-equiv="Content-Type" content="text/html;charset=utf-8">',CR
-      html,←'<title>',('/'Last filename),'</title>',CR
-      html,←'<style media="screen" type="text/css">',CR
-      html,←'pre {',CR
-      html,←'font-family: "APL385 Unicode"; font-size: 14px;',CR
-      html,←'}',CR
-      html,←'h1 {',CR
-      html,←'font-family: "Courier New";',CR
-      html,←'}',CR
-      html,←'table#apl {',CR
-      html,←'font-family: "APL385 Unicode"; font-size: 14px;',CR
-      html,←'}',CR
-      html,←'</style>',CR
+      html,←'  <meta charset="utf-8">',CR
+      html,←'  <title>',('/'Last filename),'</title>',CR
+      html,←'  <style media="screen" type="text/css">',CR
+      html,←'    pre {',CR
+      html,←'   font-family: "APL385 Unicode"; font-size: 14px;',CR
+      html,←'   }',CR
+      html,←'   h1 {',CR
+      html,←'   font-family: "Courier New";',CR
+      html,←'   }',CR
+      html,←'   table#apl {',CR
+      html,←'   font-family: "APL385 Unicode"; font-size: 14px;',CR
+      html,←'   }',CR
+      html,←'  </style>',CR
       html,←'</head>',CR
       html,←'<body>',CR
-      html,←'<h1>',('/'Last filename),'</h1>',CR
-      html,←'<table id="apl">'
-      html,←'Version'MarkupAsTableRow⍕'#'⎕WG'APLVersion'
-      html,←'⎕WSID'MarkupAsTableRow⍕{'/'Last ⍵ ⋄ ⍵}⍣('/'∊crash.WSID)⊣1↓' ',crash.WSID  ⍝ Enforce ⎕DR 80/82 with 1↓' ',
-      html,←'⎕IO'MarkupAsTableRow⍕⎕IO
-      html,←'⎕ML'MarkupAsTableRow⍕⎕ML
-      html,←'⎕WA'MarkupAsTableRow⍕⎕WA
-      html,←'⎕TNUMS'MarkupAsTableRow⍕⎕TNUMS
-      html,←'Category'MarkupAsTableRow crash.Category
-      html,←'EM'MarkupAsTableRow crash.EM
-      html,←'HelpURL'MarkupAsTableRow crash.HelpURL
-      html,←'EN'MarkupAsTableRow⍕crash.EN
-      html,←'ENX'MarkupAsTableRow⍕crash.ENX
-      html,←'InternalLocation'MarkupAsTableRow⍕crash.InternalLocation
-      html,←'Message'MarkupAsTableRow crash.Message
-      html,←'OSError'MarkupAsTableRow⍕crash.OSError
-      html,←'Current Dir'MarkupAsTableRow⍕crash.CurrentDir
-      html,←'Command line'MarkupAsTableRow⍕crash.CommandLine
-      :If ~0∊⍴parms.addToMsg
-          html,←'Added Msg'MarkupAsTableRow parms.addToMsg
+      html,←'  <h1>',('/'Last filename),'</h1>',CR
+      html,←'  <table id="apl">'
+      html,←'  Version'MarkupAsTableRow⍕'#'⎕WG'APLVersion'
+      html,←'  ⎕WSID'MarkupAsTableRow⍕{'/'Last ⍵ ⋄ ⍵}⍣('/'∊crash.WSID)⊣1↓' ',crash.WSID  ⍝ Enforce ⎕DR 80/82 with 1↓' ',
+      html,←'  ⎕IO'MarkupAsTableRow⍕⎕IO
+      html,←'  ⎕ML'MarkupAsTableRow⍕⎕ML
+      html,←'  ⎕WA'MarkupAsTableRow⍕⎕WA
+      html,←'  ⎕TNUMS'MarkupAsTableRow⍕⎕TNUMS
+      html,←'  Category'MarkupAsTableRow crash.Category
+      html,←'  EM'MarkupAsTableRow crash.EM
+      html,←'  HelpURL'MarkupAsTableRow crash.HelpURL
+      html,←'  EN'MarkupAsTableRow⍕crash.EN
+      html,←'  ENX'MarkupAsTableRow⍕crash.ENX
+      html,←'  InternalLocation'MarkupAsTableRow⍕crash.InternalLocation
+      html,←'  Message'MarkupAsTableRow crash.Message
+      html,←'  OSError'MarkupAsTableRow⍕crash.OSError
+      html,←'  Current Dir'MarkupAsTableRow⍕crash.CurrentDir
+      html,←'  Command line'MarkupAsTableRow⍕crash.CommandLine
+      :If 0≠≢parms.addToMsg
+          html,←'  Added Msg'MarkupAsTableRow parms.addToMsg
       :EndIf
-      html,←'</table>'
+      html,←'  </table>'
       html,←'<p><b>Stack:</b></p>',CR
-      :If ~0∊⍴crash.XSI
+      :If 0≠≢crash.XSI
           html,←'<pre>',(⊃,/CR,¨crash.XSI,¨{'[',(⍕⍵),']'}¨crash.LC),CR,'</pre>',CR
       :EndIf
       html,←'<p><b>Error Message:</b></p>',CR
-      :If ~0∊⍴crash.DM
+      :If 0≠≢crash.DM
           html,←'<pre>',(ExchangeHtmlChars⊃,/CR,¨crash.DM),CR,'</pre>',CR
       :EndIf
       html,←'</body>',CR
@@ -362,7 +364,7 @@
     ∇
 
     ∇ WriteToLogFile parms;fns;parent
-      :If ~0∊⍴parms.logFunction
+      :If 0≠≢parms.logFunction
           :Trap (parms.trapInternalErrors)/0
               :If '.'∊parms.logFunction
                   fns←⍎parms.logFunction
@@ -376,7 +378,7 @@
               fns'*** Error'
               fns'Error number=',⍕parms.LastErrorNumber
               fns parms.LastError
-              :If ~0∊⍴parms.addToMsg
+              :If 0≠≢parms.addToMsg
                   fns parms.addToMsg
               :EndIf
           :Else
@@ -386,7 +388,7 @@
     ∇
 
     ∇ ExecuteCustomFns parms;fns;parent
-      :If ~0∊⍴parms.customFns
+      :If 0≠≢parms.customFns
           :Trap (parms.trapInternalErrors)/0
               :If '.'∊parms.customFns
                   fns←⍎parms.customFns
@@ -431,7 +433,7 @@
           crash.(Category DM EM HelpURL EN ENX InternalLocation Message OSError)←⎕DMX.(Category DM EM HelpURL EN ENX InternalLocation Message OSError)
           crash.(XSI LC)←1↓¨crash.(XSI LC)
       :EndTrap
-      :If ~0∊⍴parms.addToMsg
+      :If 0≠≢parms.addToMsg
           crash.addedMsg←parms.addToMsg
       :EndIf
       :If parms.saveVars
@@ -454,17 +456,18 @@
 
       CreateFilename←{
           folder←⍵
-          folder,←((~0∊⍴folder)∧'/'≠¯1↑folder)/'/'
+          folder,←((0≠≢folder)∧'/'≠¯1↑folder)/'/'
           folder,({⍵↑⍨¯1+⍵⍳'.'}2⊃SplitPath crash.WSID),'_',14 0⍕100⊥6↑⎕TS}
 
     ∇ {r}←WriteToWindowsEvents parms;msg
       r←⍬
       :If 'Win'≡GetOperatingSystem ⍬
-      :AndIf ~0∊⍴parms.windowsEventSource
+      :AndIf 0≠≢parms.windowsEventSource
           :Trap (parms.trapInternalErrors)/0
-              msg←('Application has crashed, RC=',⍕crash.EN,'; MSG=',1⊃crash.DM)
-              :If ~0∊⍴parms.addToMsg
-                  msg,←parms.addToMsg
+              msg←⊂'Application has crashed, RC=',⍕crash.EN,'; MSG=',1⊃crash.DM
+              msg,←(0<≢parms.errorFolder)/''('Details can be found in ',parms.errorFolder)
+              :If 0≠≢parms.addToMsg
+                  msg,←{(≡⍵)∊0 1:,⊂,⍵ ⋄ ⍵}parms.addToMsg
               :EndIf
               ReportErrorToWindowsLog parms.windowsEventSource msg
           :EndTrap
@@ -487,8 +490,8 @@
 
     ∇ {r}←CheckErrorFolder parms;buff
       r←⍬
-      :If 0∊⍴parms.errorFolder
-          :If 0∊⍴buff←2⊃⎕NPARTS ⎕WSID
+      :If 0=≢parms.errorFolder
+          :If 0=≢buff←2⊃⎕NPARTS ⎕WSID
               buff←2⊃⎕NPARTS'"'~⍨{⍵↑⍨¯1+⍵⍳' '}2 ⎕NQ'#' 'GetCommandLine' ⍝ Probably a stanmd-alone EXE
           :EndIf
           :If 'Win'≡GetOperatingSystem ⍬
