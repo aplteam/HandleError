@@ -95,11 +95,13 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←(Last⍕⎕THIS)'2.5.0.21' '2020-03-03'
+      r←(Last⍕⎕THIS)'2.5.1.24' '2020-03-05'
     ∇
 
     ∇ History
       :Access Public Shared
+      ⍝ * 2.5.1
+      ⍝   * Bug fix: writing to the Windows Event Log could fail depending on the type of error.
       ⍝ * 2.5.0
       ⍝   * HTML document elevated to HTML5
       ⍝   * Internally: Tally is now used
@@ -128,7 +130,8 @@
       :If 0<⎕NC'signal'
           parms.signal←signal
       :EndIf
-      parms.(LastError LastErrorNumber)←⎕DM ⎕EN
+      parms.(LastError LastErrorNumber)←⎕DMX.(DM EN)
+      parms.(EN ENX EM Message)←⎕DMX.(EN ENX EM Message)
       CheckErrorFolder parms
       crash←CreateCrash parms TRAP
       filename←CreateFilename parms.errorFolder
@@ -464,7 +467,7 @@
       :If 'Win'≡GetOperatingSystem ⍬
       :AndIf 0≠≢parms.windowsEventSource
           :Trap (parms.trapInternalErrors)/0
-              msg←⊂'Application has crashed, RC=',⍕crash.EN,'; MSG=',1⊃crash.DM
+              msg←⊂'Application has crashed, RC=',(⍕crash.EN),'; MSG=',crash.EM
               msg,←(0<≢parms.errorFolder)/''('Details can be found in ',parms.errorFolder)
               :If 0≠≢parms.addToMsg
                   msg,←{(≡⍵)∊0 1:,⊂,⍵ ⋄ ⍵}parms.addToMsg
