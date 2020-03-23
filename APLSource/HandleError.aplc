@@ -95,17 +95,13 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←(Last⍕⎕THIS)'2.5.1.24' '2020-03-05'
+      r←(Last⍕⎕THIS)'3.0.0.25' '2020-03-23'
     ∇
 
     ∇ History
       :Access Public Shared
-      ⍝ * 2.5.1
-      ⍝   * Bug fix: writing to the Windows Event Log could fail depending on the type of error.
-      ⍝ * 2.5.0
-      ⍝   * HTML document elevated to HTML5
-      ⍝   * Internally: Tally is now used
-      ⍝   * Error messages written to the Windows Event Log now add "Details can be found in {path}"
+      ⍝ * 3.0.0
+      ⍝   * BREAKING CHANGE: File extension is now .aplc rather than .dyalog
       ⍝\\
       ⍝ For information regarding older versions see <https://github.com/aplteam/HandleError/releases>
     ∇
