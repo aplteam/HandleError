@@ -22,8 +22,8 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- →T.GoToTidyUp 3≠⍴↑##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'    ⍝ DCF & HTML & DWS (since acre 4)
- →T.GoToTidyUp 3≠0⊃⍴#.TEMP.∆TheLog
+ →T.GoToTidyUp 3≠≢⊃##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'    ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠1⊃⍴#.TEMP.∆TheLog
  R←T._OK
 
 ∆TidyUp:

@@ -2,7 +2,7 @@
 ⍝ Test "HandleError.Process": let it write to the Windows Event Log
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
 
- :If 'Win'≢##.APLTreeUtils.GetOperatingSystem ⍬
+ :If 'Win'≢##.APLTreeUtils2.GetOperatingSystem ⍬
      R←T._WindowsOnly
      :Return
  :EndIf
@@ -28,7 +28,7 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- →T.GoToTidyUp 3≠⍴↑##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠⍴⊃##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
  myEventLog←⎕NEW ##.WindowsEventLog(,⊂'Foo')
  buffer←myEventLog.ReadThese{⎕IO←0 ⋄ (10>⍵):⍳⍵ ⋄ ⍵+-⍳10}myEventLog.NumberOfLogEntries
  →T.GoToTidyUp 1≠+/∨/¨#.HandleErrorParms.addToMsg∘⍷¨buffer

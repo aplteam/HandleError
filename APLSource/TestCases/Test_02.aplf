@@ -9,7 +9,7 @@
  #.⎕SHADOW'TEMP'
  'TEMP'#.⎕NS''
  #.TEMP.TheLog←''
- #.TEMP.⎕FX'{r}←∆LOG msg' 'TheLog,←#._dependencies.APLTreeUtils.Nest msg'
+ #.TEMP.⎕FX'{r}←∆LOG msg' 'TheLog,←⊆msg'
  #.HandleErrorParms.errorFolder←##.FilesAndDirs.GetTempPath,'HandleError_TestCases\Errors'
  {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  'Create!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
@@ -26,11 +26,11 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- →T.GoToTidyUp 3≠⍴↑##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠≢⊃##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
  →T.GoToTidyUp 5≠≢#.TEMP.TheLog
  →T.GoToTidyUp~∨/'Error number=405'⍷∊#.TEMP.TheLog
 
  R←T._OK
 
 ∆TidyUp:
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder,'/..'

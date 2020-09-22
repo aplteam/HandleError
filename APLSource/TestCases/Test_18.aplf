@@ -9,8 +9,8 @@
  #.parms.saveVars←0
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(0 'S')
  home←'Errors'
- :If 'WIN'≡##.APLTreeUtils.Uppercase ##.APLTreeUtils.GetOperatingSystem ⍬
-     fullHome←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(1⊃⎕NPARTS ⎕WSID),'\',home
+ :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
+     fullHome←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\',home
  :Else
      fullHome←##.FilesAndDirs.PWD,'/Errors'
  :EndIf
@@ -25,8 +25,8 @@
 
  →T.GoToTidyUp ⎕EN≠406
  ⎕DL 1
- →T.GoToTidyUp 3≠⍴↑##.FilesAndDirs.Dir fullHome,'\'    ⍝ DCF & HTML & DWS (since acre 4)
- filename←↑##.FilesAndDirs.ListFiles fullHome,'\*.dcf'
+ →T.GoToTidyUp 3≠⍴⊃##.FilesAndDirs.Dir fullHome,'\'    ⍝ DCF & HTML & DWS (since acre 4)
+ filename←⊃##.FilesAndDirs.ListFiles fullHome,'\*.dcf'
  fno←filename ⎕FTIE 0
  crash←⎕FREAD fno 1
  ⎕FUNTIE fno

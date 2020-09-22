@@ -1,0 +1,4 @@
+[tatin]aplteam-APLTreeUtils2-1.0.0
+[tatin]aplteam-FilesAndDirs-4.0.0
+[tatin]aplteam-OS-3.0.0
+[tatin]aplteam-WindowsEventLog-3.0.0

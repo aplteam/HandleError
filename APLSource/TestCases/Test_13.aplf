@@ -8,25 +8,25 @@
  :Else
 ⍝ Preconditions...
      home←'Errors'                  ⍝ Because we want to test the defaults...
-     :If 'WIN'≡##.APLTreeUtils.Uppercase ##.APLTreeUtils.GetOperatingSystem ⍬
-         home←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(1⊃⎕NPARTS ⎕WSID),'\Errors'
+     :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
+         home←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors'
      :Else
          home←##.FilesAndDirs.PWD,'/Errors'
      :EndIf
      {}##.FilesAndDirs.RmDir home
      {}'CREATE!'##.FilesAndDirs.CheckPath home
-     ##.FilesAndDirs.DeleteFile'CONTINUE.DWS'
+     ##.FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
 
      ⎕TRAP←1 ##.HandleError.SetTrap ⍬
-     trap←0⊃⎕TRAP                   ⍝ However, we need to inject...
-     (2⊃trap)←'999 ',2⊃trap         ⍝ ... a signal into ⎕Trap ...
+     trap←1⊃⎕TRAP                   ⍝ However, we need to inject...
+     (3⊃trap)←'999 ',3⊃trap         ⍝ ... a signal into ⎕Trap ...
      ⎕TRAP←(999 'E' '→⎕LC+1')trap   ⍝ ... for a restart
      {.}&⍬                          ⍝ Causes an error that will be handled by HandleError.Process
      ⎕DL 0.2
      ⎕TRAP←(0 1000)'S'
      →T.GoToTidyUp 0=##.FilesAndDirs.Exists home
-     →T.GoToTidyUp 0=⍴list←##.FilesAndDirs.ListFiles home,'\*'
-     →T.GoToTidyUp∨/('-'~⍨10↑##.APLTreeUtils.FormatDateTime ⎕TS)∘≢¨{8↑⍵↓⍨1+⍵⍳'_'}¨{1⊃⎕NPARTS ⍵}¨list
+     →T.GoToTidyUp 0=≢list←##.FilesAndDirs.ListFiles home,'\*'
+     →T.GoToTidyUp∨/('-'~⍨10↑##.APLTreeUtils2.FormatDateTime ⎕TS)∘≢¨{8↑⍵↓⍨⍵⍳'_'}¨{2⊃⎕NPARTS ⍵}¨list
 
      #.⎕SHADOW'HandleErrorParms'
      #.HandleErrorParms←##.HandleError.CreateParms
@@ -42,7 +42,7 @@
 
 ∆CarryOn:
      ⎕TRAP←(0 1000)'S'
-     →T.GoToTidyUp 0=⍴##.FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder
+     →T.GoToTidyUp 0=≢##.FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder
 
      :Trap 11
          ##.HandleError.SetTrap ⎕NS''
@@ -69,5 +69,5 @@
 
 ∆TidyUp:
      {}##.FilesAndDirs.RmDir home
-     ##.FilesAndDirs.DeleteFile'CONTINUE.DWS'
+     ##.FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
  :EndIf

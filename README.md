@@ -72,58 +72,17 @@ By editing or `⎕CR`ing the following function you can see what the command spa
 
 That would result in something similar to this:
 
-createHTML
-
-: Boolean that defaults to 1. A 0 suppresses the creation of the HTML file
-
-customFns 
-
-: Name of a monadic function to be executed by "Process". Useful to send an email, for example. Either specify a fully qualified name of specify `customFnsParent` as well.
-
-customFnsParent 
-
-: Reference pointing to a namespace or an instance where `customFns` can be found.
-
-errorFolder 
-
-: Folder that keeps the component file (crash), the HTML page and the error WS
-
-logFunction
-
-: Name of the logging function to be used. Either specify a fully qualified name of specify `logFunctionParent` as well.
-
-logFunctionParent 
-
-: Reference pointing to a namespace or an instance where `logFunction` can be found.
-
-off 
-
-: By default this function executes `⎕OFF` with ""returnCode"" when in Runtime.  A 0 suppressed this.
-
-returnCode
-
-: The return code passed on to `⎕OFF`
-
-saveCrash
-
-: Boolean that defaults to 1. A 0 suppresses the creation of #.Crash & a  component file saving this NS
-
-saveErrorWS 
-
-: Boolean that defaults to 1. A 0 suppresses the creation of crash
- 
-signal
-
-: When "off" is 0 and "signal" is not 0 then "signal" is signaled by "Process". Can be used for a restart attempt.
-
-trapInternalErrors
-
-: By default all internal errors are trapped: "Process" should never crash in  an app.
-
-windowsEventSource
-
-: Name of the Windows Event Log to write to. Ignored when empty.
-
-addToMsg 
-
-:      Will be added to log file entries as well as Windows Event Log messages. Mainly for test cases
+|`createHTML`        | Boolean that defaults to 1. A 0 suppresses the creation of the HTML file
+|`customFns`         | Name of a monadic function to be executed by "Process". Useful to send an email, for example. Either specify a fully qualified name of specify `customFnsParent` as well.
+|`customFnsParent`   | Reference pointing to a namespace or an instance where `customFns` can be found.
+|`errorFolder`       | Folder that keeps the component file (crash), the HTML page and the error WS
+|`logFunction`       | Name of the logging function to be used. Either specify a fully qualified name of specify `logFunctionParent` as well.
+|`logFunctionParent` | Reference pointing to a namespace or an instance where `logFunction` can be found.
+|`off`               | By default this function executes `⎕OFF` with ""returnCode"" when in Runtime.  A 0 suppressed this.
+|`returnCode`        | The return code passed on to `⎕OFF`
+|`saveCrash`         | Boolean that defaults to 1. A 0 suppresses the creation of #.Crash & a  component file saving this NS
+|`saveErrorWS`       | Boolean that defaults to 1. A 0 suppresses the creation of crash
+|`signal`            | When "off" is 0 and "signal" is not 0 then "signal" is signaled by "Process". Can be used for a restart attempt.
+|`trapInternalErrors`| By default all internal errors are trapped: "Process" should never crash in  an app.
+|`windowsEventSource`| Name of the Windows Event Log to write to. Ignored when empty.
+|`addToMsg`          | Will be added to log file entries as well as Windows Event Log messages. Mainly for test cases

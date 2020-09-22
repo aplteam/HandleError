@@ -17,12 +17,12 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- :If 'WIN'≡##.APLTreeUtils.Uppercase ##.APLTreeUtils.GetOperatingSystem ⍬
-     path←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(1⊃⎕NPARTS ⎕WSID),'\Errors\'
+ :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
+     path←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors\'
  :Else
      path←##.FilesAndDirs.PWD,'/Errors/'
  :EndIf
- →T.GoToTidyUp 3≠⍴↑##.FilesAndDirs.Dir path   ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠≢⊃##.FilesAndDirs.Dir path   ⍝ DCF & HTML & DWS (since acre 4)
  R←T._OK
 
 ∆TidyUp:

@@ -1,42 +1,44 @@
- {(rc more)}←{rideParms}∆GetResultFromSecondDyalogInstance wsname;cmd;buff
+ {(rc more)}←∆GetResultFromSecondDyalogInstance wsname;cmd;buff;ridePort
 ⍝ This starts a second session of Dyalog and waits for it to finish. Whatever `⎕OFF` returns
 ⍝ is then returned as `rc`. `more` may provide additional information.
-⍝
-⍝ The optinal `rideParms` is one of:
-⍝ * '' (the default: no Ride and therefore also no conflict).
-⍝ * 'SERVE::4502'  or  'SERVE:192.168.1.2:9999'
- rideParms←{0=⎕NC ⍵:'' ⋄ ⍎⍵}'rideParms'
- :Select ##.APLTreeUtils.GetOperatingSystem ⍬
+ ridePort←9995
+ :Select ##.APLTreeUtils2.GetOperatingSystem ⍬
  :Case 'Win'
      cmd←''
-     cmd,←'"',(↑2 ⎕NQ'#' 'GetCommandLineArgs'),'"'
+     cmd,←'"',(⊃2 ⎕NQ'#' 'GetCommandLineArgs'),'"'
      cmd,←' "',(##.FilesAndDirs.NormalizePath wsname),'"'
-     cmd←'\\dyalog.exe"'⎕R'\\dyalogrt.exe"'⍠('IC' 1)⊣cmd ⍝ Make sure the runtime is called; avoid when debugging!
-     cmd,←' RIDE_INIT=',rideParms~''''
-     cmd,←' DYALOG_NOPOPUPS=1'
+     cmd←'\\dyalog.exe"'⎕R'\\dyalogrt.exe"'⍠('IC' 1)⊣cmd ⍝ Make sure the runtime is called
      :If 0
-         cmd,←' -lx'                            ⍝ For debugging only
+         cmd,←' RIDE_INIT=SERVE::',⍕ridePort
+         cmd,←' -ride=',⍕ridePort
+     :Else
+         cmd,←' DYALOG_NOPOPUPS=1'
+         cmd,←' session_file=doesnotexistforsure'
      :EndIf
      buff←##.Execute.Application cmd
-     (rc more)←buff[2 3]
+     (rc more)←buff[3 2]
  :CaseList 'Lin' 'Mac'
-     wsname←↑,/1 ⎕NPARTS wsname
+     wsname←⊃,/1 ⎕NPARTS wsname
      wsname←' '⎕R'\\ '⊣wsname                   ⍝ Encode blanks
-     wsname,←('.dws'≢##.APLTreeUtils.Lowercase ¯4↑wsname)/'.dws'
+     wsname,←('.dws'≢##.APLTreeUtils2.Lowercase ¯4↑wsname)/'.dws'
      wsname←##.FilesAndDirs.NormalizePath wsname
      cmd←''
-     cmd,←' RIDE_INIT=''',rideParms,''''
-     cmd,←' DYALOG_NOPOPUPS=1'
+     :If 0
+         cmd,←' RIDE_INIT=SERVE::',⍕ridePort
+         cmd,←' -ride=',⍕ridePort
+     :Else
+         cmd,←' DYALOG_NOPOPUPS=1'
+         cmd,←' session_file=doesnotexistforsure'
+     :EndIf
      cmd,←' ',2 ⎕NQ'.' 'GetEnvironment' 'DYALOG'
      cmd,←'/dyalog ',wsname
-     cmd←'/dyalog '⎕R'/dyalog.rt '⊣cmd          ⍝ Make sure the runtime is called; avoid when debugging!
-    ⍝cmd,←' -x'                                 ⍝ For debugging only
+     cmd←'/dyalog '⎕R'/dyalog.rt '⊣cmd          ⍝ Make sure the runtime is called
      :Trap 11
          buff←⎕SH cmd
          rc←0
          more←''
      :Else
-         rc←↑(//)⎕VFI{{⌽⍵↑⍨⍵⍳' '}⌽⍵}⎕DMX.Message
+         rc←⊃(//)⎕VFI{{⌽⍵↑⍨⍵⍳' '}⌽⍵}⎕DMX.Message
          more←⎕DMX.Message
      :EndTrap
  :Else

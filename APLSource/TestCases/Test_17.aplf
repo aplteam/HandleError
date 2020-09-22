@@ -18,7 +18,7 @@
  :EndTrap
 
  ⎕DL 2
- list2←↑##.FilesAndDirs.Dir''
+ list2←⊃##.FilesAndDirs.Dir''
  →T.GoToTidyUp list1≡list2
  →T.GoToTidyUp 0=(##.FilesAndDirs.NormalizePath ##.FilesAndDirs.PWD,'/HandleErrorTest_17'){∧/∨/¨⍺∘⍷¨⍵}list2~list1
  R←T._OK

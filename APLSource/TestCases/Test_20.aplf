@@ -1,0 +1,29 @@
+ R←Test_20(stopFlag batchFlag);⎕TRAP;home;ALIEN;parms;test;filename;html
+⍝ Test "HandleError.Process" with just the defaults but an error message that carries special characters
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process ⍬')(0 'S')
+ :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
+     home←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors'
+ :Else
+     home←##.FilesAndDirs.PWD,'/Errors'
+ :EndIf
+ ##.FilesAndDirs.RmDir home
+ {}'CREATE!'##.FilesAndDirs.CheckPath home
+ ALIEN←'Hello world'
+
+ :Trap 406
+     {'& and < and> are special characters'⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ filename←⊃##.FilesAndDirs.ListFiles home,'\*.html'
+ html←⊃⎕NGET filename
+ →T.GoToTidyUp 2≠+/'&amp; and &lt; and&gt; are special characters'⍷html
+
+ R←T._OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir home,'/..'
