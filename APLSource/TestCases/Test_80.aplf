@@ -1,12 +1,18 @@
- R←Test_01(stopFlag batchFlag);⎕TRAP;home;ALIEN;parms;test;filename;fno;crash;QEN
-⍝ Test "HandleError.Process" without any parameters; just the defaults.
+ R←Test_80(stopFlag batchFlag);⎕TRAP;home;ALIEN;parms;test;filename;fno;crash;QEN;WSID
+⍝ Emulates an empty ⎕WSID, something that can happen with a stand-alone EXE. Was once a bug.
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process ⍬')(0 'S')
+ #.⎕SHADOW'TEMP'
+ 'TEMP'#.⎕NS''
+ #.TEMP.ErrorParms←##.HandleError.CreateParms
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.TEMP.ErrorParms')(0 'S')
+ WSID←⎕WSID
+ ⎕WSID←''
+ home←2⊃⎕NPARTS{'"'∊⍵:1↓⍵/⍨1=+\'"'=⍵ ⋄ ⍵↑⍨¯1+⍵⍳' '}2 ⎕NQ'#' 'GetCommandLine'
  :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
-     home←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors'
+     home←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',home,'\Errors'
  :Else
      home←##.FilesAndDirs.PWD,'/Errors'
  :EndIf
@@ -21,7 +27,7 @@
 
  QEN←⎕EN  ⍝ Because of stop vectors.
  →T.GoToTidyUp QEN≠406
- →T.GoToTidyUp 3≠≢⊃##.FilesAndDirs.Dir home,'\'    ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠≢⊃##.FilesAndDirs.Dir home,'\'    ⍝ DCF & HTML & DWS (since acre 4); if this fails try with a fresh session: there might be a pointer from ⎕SE to #
  filename←⊃##.FilesAndDirs.ListFiles home,'\*.dcf'
  fno←filename ⎕FTIE 0
  crash←⎕FREAD fno 1
@@ -33,4 +39,5 @@
  R←T._OK
 
 ∆TidyUp:
+ ⎕WSID←WSID
  {}##.FilesAndDirs.RmDir ##.FilesAndDirs.ExpandPath home,'/..'
