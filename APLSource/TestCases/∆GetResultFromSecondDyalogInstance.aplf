@@ -2,11 +2,11 @@
 ⍝ This starts a second session of Dyalog and waits for it to finish. Whatever `⎕OFF` returns
 ⍝ is then returned as `rc`. `more` may provide additional information.
  ridePort←9995
- :Select ##.APLTreeUtils2.GetOperatingSystem ⍬
+ :Select APLTreeUtils2.GetOperatingSystem ⍬
  :Case 'Win'
      cmd←''
      cmd,←'"',(⊃2 ⎕NQ'#' 'GetCommandLineArgs'),'"'
-     cmd,←' "',(##.FilesAndDirs.NormalizePath wsname),'"'
+     cmd,←' "',(FilesAndDirs.NormalizePath wsname),'"'
      cmd←'\\dyalog.exe"'⎕R'\\dyalogrt.exe"'⍠('IC' 1)⊣cmd ⍝ Make sure the runtime is called
      :If 0
          cmd,←' RIDE_INIT=SERVE::',⍕ridePort
@@ -15,13 +15,13 @@
          cmd,←' DYALOG_NOPOPUPS=1'
          cmd,←' session_file=doesnotexistforsure'
      :EndIf
-     buff←##.Execute.Application cmd
+     buff←Execute.Application cmd
      (rc more)←buff[3 2]
  :CaseList 'Lin' 'Mac'
      wsname←⊃,/1 ⎕NPARTS wsname
      wsname←' '⎕R'\\ '⊣wsname                   ⍝ Encode blanks
-     wsname,←('.dws'≢##.APLTreeUtils2.Lowercase ¯4↑wsname)/'.dws'
-     wsname←##.FilesAndDirs.NormalizePath wsname
+     wsname,←('.dws'≢APLTreeUtils2.Lowercase ¯4↑wsname)/'.dws'
+     wsname←FilesAndDirs.NormalizePath wsname
      cmd←''
      :If 0
          cmd,←' RIDE_INIT=SERVE::',⍕ridePort

@@ -1,6 +1,6 @@
  Initial;body;targetFilename
  ##.FilesAndDirs.PolishCurrentDir
-⍝ Because the test workspaces need the latest copy for their tests:
+⍝ Because the test workspaces need the latest version for the tests:
  targetFilename←'expand'##.FilesAndDirs.NormalizePath'Tests/HandleError.aplc'
  body←⎕SRC ##.HandleError
  (⊂body)⎕NPUT targetFilename 1

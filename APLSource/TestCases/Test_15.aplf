@@ -6,7 +6,7 @@
 ⍝ Preconditions...
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
- #.HandleErrorParms.errorFolder←##.FilesAndDirs.GetTempPath,'HandleError_TestCases\Errors'
+ #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
  #.⎕SHADOW'TEMP'
  'TEMP'#.⎕NS''
  #.TEMP.TheLog←''

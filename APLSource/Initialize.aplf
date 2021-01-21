@@ -1,6 +1,12 @@
- {r}←Initialize;⎕TRAP
+ {r}←Initialize;⎕TRAP;parent;list
  ⎕TRAP←0 'S'
  r←⍬
  {}⎕SE.UCMD'cd ',AcreConfig.ProjectFolder
- ⎕SE.aplteam.InitializeAPLTreeProject ⎕THIS
+ ⎕WSID←(#.HandleError.AcreConfig.ProjectFolder),'project.dws'
+ parent←⍕⎕THIS
+ list←⎕SE.Tatin.LoadDependencies'./packages/'parent
+ ⎕←'Dependencies: ',⊃{⍺,',',⍵}/list
+ parent,←'.TestCases'
+ list←⎕SE.Tatin.LoadDependencies'./packages_dev/'parent
+ ⎕←'Development dependencies: ',⊃{⍺,',',⍵}/list
 ⍝Done

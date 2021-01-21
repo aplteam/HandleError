@@ -1,5 +1,5 @@
  R←Test_08(stopFlag batchFlag);⎕TRAP
-⍝ Test "HandleError.Process": sets "saveCrash"
+⍝ Test "HandleError.Process": sets "saveCrash" to 0
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 
@@ -8,7 +8,7 @@
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.saveCrash←0
- #.HandleErrorParms.errorFolder←##.FilesAndDirs.GetTempPath,'Errors'
+ #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
  {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
 

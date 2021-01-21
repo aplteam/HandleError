@@ -19,7 +19,7 @@
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.addToMsg←QTS←⍕⎕TS
  #.HandleErrorParms.windowsEventSource←'Foo'
- #.HandleErrorParms.errorFolder←##.FilesAndDirs.GetTempPath,'HandleError_TestCases\Errors'
+ #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
  {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
  :Trap 406
