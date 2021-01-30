@@ -9,8 +9,8 @@
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.errorFolder←'Special'
  #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
- {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
 
  :Trap 406
      {⎕SIGNAL ⍵}405
@@ -19,8 +19,8 @@
 
  QEN←⎕EN   ⍝ Because of stop vectors
  →T.GoToTidyUp 406≠QEN
- →T.GoToTidyUp 3≠⍴⊃##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'   ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠⍴⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'   ⍝ DCF & HTML & DWS (since acre 4)
  R←T._OK
 
 ∆TidyUp:
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

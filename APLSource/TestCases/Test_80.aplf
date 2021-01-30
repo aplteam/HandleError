@@ -11,13 +11,13 @@
  WSID←⎕WSID
  ⎕WSID←''
  home←2⊃⎕NPARTS{'"'∊⍵:1↓⍵/⍨1=+\'"'=⍵ ⋄ ⍵↑⍨¯1+⍵⍳' '}2 ⎕NQ'#' 'GetCommandLine'
- :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
-     home←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',home,'\Errors'
+ :If 'WIN'≡APLTreeUtils2.Uppercase APLTreeUtils2.GetOperatingSystem ⍬
+     home←FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',home,'\Errors'
  :Else
-     home←##.FilesAndDirs.PWD,'/Errors'
+     home←FilesAndDirs.PWD,'/Errors'
  :EndIf
- ##.FilesAndDirs.RmDir home
- {}'CREATE!'##.FilesAndDirs.CheckPath home
+ FilesAndDirs.RmDir home
+ {}'CREATE!'FilesAndDirs.CheckPath home
  ALIEN←'Hello world'
 
  :Trap 406
@@ -27,8 +27,8 @@
 
  QEN←⎕EN  ⍝ Because of stop vectors.
  →T.GoToTidyUp QEN≠406
- →T.GoToTidyUp 3≠≢⊃##.FilesAndDirs.Dir home,'\'    ⍝ DCF & HTML & DWS (since acre 4); if this fails try with a fresh session: there might be a pointer from ⎕SE to #
- filename←⊃##.FilesAndDirs.ListFiles home,'\*.dcf'
+ →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir home,'\'    ⍝ DCF & HTML & DWS (since acre 4); if this fails try with a fresh session: there might be a pointer from ⎕SE to #
+ filename←⊃FilesAndDirs.ListFiles home,'\*.dcf'
  fno←filename ⎕FTIE 0
  crash←⎕FREAD fno 1
  ⎕FUNTIE fno
@@ -40,4 +40,4 @@
 
 ∆TidyUp:
  ⎕WSID←WSID
- {}##.FilesAndDirs.RmDir ##.FilesAndDirs.ExpandPath home,'/..'
+ {}FilesAndDirs.RmDir FilesAndDirs.ExpandPath home,'/..'

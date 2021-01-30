@@ -9,8 +9,8 @@
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.createHTML←0
  #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
- {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
 
  :Trap 406
      {⎕SIGNAL ⍵}405
@@ -18,8 +18,8 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- →T.GoToTidyUp 2≠⍴⊃##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'   ⍝ DCF & DWS (since acre 4) but no HTML
+ →T.GoToTidyUp 2≠⍴⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'   ⍝ DCF & DWS (since acre 4) but no HTML
  R←T._OK
 
 ∆TidyUp:
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

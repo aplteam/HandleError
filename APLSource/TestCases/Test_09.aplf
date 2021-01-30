@@ -9,8 +9,8 @@
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.saveErrorWS←0
  #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
- {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
 
  :Trap 406
      {⎕SIGNAL ⍵}405
@@ -18,7 +18,7 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- →T.GoToTidyUp 2≠⍴⊃##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'
+ →T.GoToTidyUp 2≠⍴⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'
  →T.GoToTidyUp 1≠≢list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.dcf'
  filename←⊃list
  tno←filename ⎕FTIE 0
@@ -31,4 +31,4 @@
 
 ∆TidyUp:
  :Trap 0 ⋄ ⎕FUNTIE tno ⋄ :EndTrap
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

@@ -1,5 +1,5 @@
  R←Test_17(stopFlag batchFlag);⎕TRAP;list1;list2
-⍝ Test "##.HandleError.Process" with a relative path as `errorFolder`
+⍝ Test "HandleError.Process" with a relative path as `errorFolder`
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 
@@ -8,7 +8,7 @@
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.errorFolder←'HandleErrorTest_17'
  'TEMP'#.⎕NS''
- list1←↑##.FilesAndDirs.Dir''
+ list1←↑FilesAndDirs.Dir''
  list2←''
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
 
@@ -18,11 +18,11 @@
  :EndTrap
 
  ⎕DL 2
- list2←⊃##.FilesAndDirs.Dir''
+ list2←⊃FilesAndDirs.Dir''
  →T.GoToTidyUp list1≡list2
- →T.GoToTidyUp 0=(##.FilesAndDirs.NormalizePath ##.FilesAndDirs.PWD,'/HandleErrorTest_17'){∧/∨/¨⍺∘⍷¨⍵}list2~list1
+ →T.GoToTidyUp 0=(FilesAndDirs.NormalizePath FilesAndDirs.PWD,'/HandleErrorTest_17'){∧/∨/¨⍺∘⍷¨⍵}list2~list1
  R←T._OK
 
 ∆TidyUp:
  ⎕DL 0.5
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

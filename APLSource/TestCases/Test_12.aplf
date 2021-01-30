@@ -2,7 +2,7 @@
 ⍝ Test "HandleError. Fires up a runtime instance (test_ws_2.dws) which should not ⎕OFF (CONTINUE.dws)
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
 
- :If 'Win'≢##.APLTreeUtils2.GetOperatingSystem ⍬
+ :If 'Win'≢APLTreeUtils2.GetOperatingSystem ⍬
  ⍝ This is because under Linux the Dyalog runtime behaves differently; this needs to be investigated.
      R←∆Inactive
      :Return
@@ -12,22 +12,22 @@
 
 ⍝ Preconditions...
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
- ##.FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
- path←'"',1⊃##.APLTreeUtils2.SplitPath 1⊃#.GetCommandLineArgs
- wsname←##.FilesAndDirs.PWD,'\Tests\test_ws_2.dws'
+ FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
+ path←'"',1⊃APLTreeUtils2.SplitPath 1⊃#.GetCommandLineArgs
+ wsname←FilesAndDirs.PWD,'\Tests\test_ws_2.dws'
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.returnCode←123
  #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
- {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
 
  (rc more)←∆GetResultFromSecondDyalogInstance wsname
 
- →T.GoToTidyUp~##.FilesAndDirs.Exists'Tests\CONTINUE.dws'
- →T.GoToTidyUp 0≠≢⊃##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'
+ →T.GoToTidyUp~FilesAndDirs.Exists'Tests\CONTINUE.dws'
+ →T.GoToTidyUp 0≠≢⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'
  R←T._OK
 
 ∆TidyUp:
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
- ##.FilesAndDirs.DeleteFile'Tests\CONTINUE.dws'
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ FilesAndDirs.DeleteFile'Tests\CONTINUE.dws'

@@ -1,2 +1,2 @@
  r←∆GetTempPath add
- r←##.FilesAndDirs.GetTempPath,'HandleError_TestCases\',add
+ r←FilesAndDirs.GetTempPath,'HandleError_TestCases\',add

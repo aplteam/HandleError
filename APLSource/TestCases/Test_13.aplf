@@ -8,14 +8,14 @@
  :Else
 ⍝ Preconditions...
      home←'Errors'                  ⍝ Because we want to test the defaults...
-     :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
-         home←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors'
+     :If 'WIN'≡APLTreeUtils2.Uppercase APLTreeUtils2.GetOperatingSystem ⍬
+         home←FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors'
      :Else
-         home←##.FilesAndDirs.PWD,'/Errors'
+         home←FilesAndDirs.PWD,'/Errors'
      :EndIf
-     {}##.FilesAndDirs.RmDir home
-     {}'CREATE!'##.FilesAndDirs.CheckPath home
-     ##.FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
+     {}FilesAndDirs.RmDir home
+     {}'CREATE!'FilesAndDirs.CheckPath home
+     FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
 
      ⎕TRAP←1 ##.HandleError.SetTrap ⍬
      trap←1⊃⎕TRAP                   ⍝ However, we need to inject...
@@ -24,16 +24,16 @@
      {.}&⍬                          ⍝ Causes an error that will be handled by HandleError.Process
      ⎕DL 0.2
      ⎕TRAP←(0 1000)'S'
-     →T.GoToTidyUp 0=##.FilesAndDirs.Exists home
-     →T.GoToTidyUp 0=≢list←##.FilesAndDirs.ListFiles home,'\*'
-     →T.GoToTidyUp∨/('-'~⍨10↑##.APLTreeUtils2.FormatDateTime ⎕TS)∘≢¨{8↑⍵↓⍨⍵⍳'_'}¨{2⊃⎕NPARTS ⍵}¨list
+     →T.GoToTidyUp 0=FilesAndDirs.Exists home
+     →T.GoToTidyUp 0=≢list←FilesAndDirs.ListFiles home,'\*'
+     →T.GoToTidyUp∨/('-'~⍨10↑APLTreeUtils2.FormatDateTime ⎕TS)∘≢¨{8↑⍵↓⍨⍵⍳'_'}¨{2⊃⎕NPARTS ⍵}¨list
 
      #.⎕SHADOW'HandleErrorParms'
      #.HandleErrorParms←##.HandleError.CreateParms
      #.HandleErrorParms.addToMsg←'Hey there'
      #.HandleErrorParms.createHTML←0
      #.HandleErrorParms.errorFolder←home,'Sub\'
-     {}'CREATE!'##.FilesAndDirs.CheckPath home,'\Sub'
+     {}'CREATE!'FilesAndDirs.CheckPath home,'\Sub'
      #.HandleErrorParms.signal←999
      ⎕TRAP←(⊂999 'E' '→∆CarryOn'),1 ##.HandleError.SetTrap'#.HandleErrorParms'
      .                              ⍝ Cause a crash
@@ -42,7 +42,7 @@
 
 ∆CarryOn:
      ⎕TRAP←(0 1000)'S'
-     →T.GoToTidyUp 0=≢##.FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder
+     →T.GoToTidyUp 0=≢FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder
 
      :Trap 11
          ##.HandleError.SetTrap ⎕NS''
@@ -68,6 +68,6 @@
      R←T._OK
 
 ∆TidyUp:
-     {}##.FilesAndDirs.RmDir home
-     ##.FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
+     {}FilesAndDirs.RmDir home
+     FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
  :EndIf

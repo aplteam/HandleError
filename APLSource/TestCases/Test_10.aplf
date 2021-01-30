@@ -6,8 +6,8 @@
 ⍝ Preconditions...
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process  ''''')(0 'S')
  home←'Errors'
- {}##.FilesAndDirs.RmDir home
- {}'CREATE!'##.FilesAndDirs.CheckPath home
+ {}FilesAndDirs.RmDir home
+ {}'CREATE!'FilesAndDirs.CheckPath home
 
  fns←⍎⎕FX'MyFns dummy' '⎕dl .1 ⋄ →1'
  fns&1
@@ -17,13 +17,13 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
-     path←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors\'
+ :If 'WIN'≡APLTreeUtils2.Uppercase APLTreeUtils2.GetOperatingSystem ⍬
+     path←FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors\'
  :Else
-     path←##.FilesAndDirs.PWD,'/Errors/'
+     path←FilesAndDirs.PWD,'/Errors/'
  :EndIf
- →T.GoToTidyUp 3≠≢⊃##.FilesAndDirs.Dir path   ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir path   ⍝ DCF & HTML & DWS (since acre 4)
  R←T._OK
 
 ∆TidyUp:
- {}##.FilesAndDirs.RmDir home
+ {}FilesAndDirs.RmDir home

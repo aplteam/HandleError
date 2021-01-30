@@ -5,13 +5,13 @@
 
 ⍝ Preconditions...
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process ⍬')(0 'S')
- :If 'WIN'≡##.APLTreeUtils2.Uppercase ##.APLTreeUtils2.GetOperatingSystem ⍬
-     home←##.FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors'
+ :If 'WIN'≡APLTreeUtils2.Uppercase APLTreeUtils2.GetOperatingSystem ⍬
+     home←FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors'
  :Else
-     home←##.FilesAndDirs.PWD,'/Errors'
+     home←FilesAndDirs.PWD,'/Errors'
  :EndIf
- ##.FilesAndDirs.RmDir home
- {}'CREATE!'##.FilesAndDirs.CheckPath home
+ FilesAndDirs.RmDir home
+ {}'CREATE!'FilesAndDirs.CheckPath home
  ALIEN←'Hello world'
 
  :Trap 406
@@ -21,8 +21,8 @@
 
  QEN←⎕EN  ⍝ Because of stop vectors.
  →T.GoToTidyUp QEN≠406
- →T.GoToTidyUp 3≠≢⊃##.FilesAndDirs.Dir home,'\'    ⍝ DCF & HTML & DWS (since acre 4)
- filename←⊃##.FilesAndDirs.ListFiles home,'\*.dcf'
+ →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir home,'\'    ⍝ DCF & HTML & DWS (since acre 4)
+ filename←⊃FilesAndDirs.ListFiles home,'\*.dcf'
  fno←filename ⎕FTIE 0
  crash←⎕FREAD fno 1
  ⎕FUNTIE fno
@@ -33,4 +33,4 @@
  R←T._OK
 
 ∆TidyUp:
- {}##.FilesAndDirs.RmDir ##.FilesAndDirs.ExpandPath home,'/..'
+ {}FilesAndDirs.RmDir FilesAndDirs.ExpandPath home,'/..'

@@ -2,7 +2,7 @@
 ⍝ Test "HandleError.Process": let it write to the Windows Event Log
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
 
- :If 'Win'≢##.APLTreeUtils2.GetOperatingSystem ⍬
+ :If 'Win'≢APLTreeUtils2.GetOperatingSystem ⍬
      R←T._WindowsOnly
      :Return
  :EndIf
@@ -20,19 +20,19 @@
  #.HandleErrorParms.addToMsg←QTS←⍕⎕TS
  #.HandleErrorParms.windowsEventSource←'Foo'
  #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
- {}'CREATE!'##.FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
  :Trap 406
      {⎕SIGNAL ⍵}405
      →T.GoToTidyUp 1
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- →T.GoToTidyUp 3≠⍴⊃##.FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠⍴⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
  myEventLog←⎕NEW ##.WindowsEventLog(,⊂'Foo')
  buffer←myEventLog.ReadThese{⎕IO←0 ⋄ (10>⍵):⍳⍵ ⋄ ⍵+-⍳10}myEventLog.NumberOfLogEntries
  →T.GoToTidyUp 1≠+/∨/¨#.HandleErrorParms.addToMsg∘⍷¨buffer
  R←T._OK
 
 ∆TidyUp:
- {}##.FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

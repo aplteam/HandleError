@@ -1,5 +1,5 @@
  R←Test_07(stopFlag batchFlag);⎕TRAP
-⍝ Test ##.HandleError.CreateParms and its contents.
+⍝ Test "HandleError.CreateParms" and its contents.
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 

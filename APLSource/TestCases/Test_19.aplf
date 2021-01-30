@@ -16,9 +16,9 @@
  :EndTrap
 
  →T.GoToTidyUp ⎕EN≠406
- →T.GoToTidyUp 0=##.FilesAndDirs.Exists #.parms.errorFolder
+ →T.GoToTidyUp 0=FilesAndDirs.Exists #.parms.errorFolder
 
- {}##.FilesAndDirs.RmDir #.parms.errorFolder
+ {}FilesAndDirs.RmDir #.parms.errorFolder
 
  #.parms.errorFolder←('HandleError_',(⍕⎕TS)~' '),'\'
  :Trap 406
@@ -27,13 +27,13 @@
  :EndTrap
 
  →T.GoToTidyUp ⎕EN≠406
- →T.GoToTidyUp 0=##.FilesAndDirs.Exists #.parms.errorFolder  ⍝ This fails in 2016-09-01 due to a bug in Dyalog: <01234>
+ →T.GoToTidyUp 0=FilesAndDirs.Exists #.parms.errorFolder  ⍝ This fails in 2016-09-01 due to a bug in Dyalog: <01234>
 
- {}##.FilesAndDirs.RmDir #.parms.errorFolder
+ {}FilesAndDirs.RmDir #.parms.errorFolder
 
  R←T._OK
 
 ∆TidyUp:
  :Trap 0
-     {}##.FilesAndDirs.RmDir #.parms.errorFolder
+     {}FilesAndDirs.RmDir #.parms.errorFolder
  :EndTrap
