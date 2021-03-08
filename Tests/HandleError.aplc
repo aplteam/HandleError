@@ -73,11 +73,13 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←'HandleError' '4.0.1.46' '2021-01-21'
+      r←'HandleError' '4.0.2+50' '2021-03-02'
     ∇
 
     ∇ History
       :Access Public Shared
+      ⍝ * 4.0.2
+      ⍝   * Package config file corrected
       ⍝ * 4.0.1
       ⍝   * Documentation improved
       ⍝   * Tests polished
