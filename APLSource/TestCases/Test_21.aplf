@@ -1,0 +1,27 @@
+ R←Test_21(stopFlag batchFlag);⎕TRAP;QEN
+⍝ Test "HandleError.Process" with `killThreads←0`
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.errorFolder←'Special'
+ #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
+ #.HandleErrorParms.killThreads←0
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ QEN←⎕EN    ⍝ Because of stop vectors
+ →T.GoToTidyUp 406≠QEN
+ →T.GoToTidyUp~(≢⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\')∊2 3   ⍝ DCF & HTML and a DWS but only on first attempt
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
