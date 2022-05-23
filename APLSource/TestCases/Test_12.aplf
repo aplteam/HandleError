@@ -12,9 +12,9 @@
 
 ⍝ Preconditions...
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
- FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
+ FilesAndDirs.DeleteFile ##.CiderConfig.HOME,'Tests/CONTINUE.dws'
  path←'"',1⊃APLTreeUtils2.SplitPath 1⊃#.GetCommandLineArgs
- wsname←FilesAndDirs.PWD,'\Tests\test_ws_2.dws'
+ wsname←##.CiderConfig.HOME,'\Tests\test_ws_2.dws'
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.returnCode←123
@@ -24,10 +24,10 @@
 
  (rc more)←∆GetResultFromSecondDyalogInstance wsname
 
- →T.GoToTidyUp~FilesAndDirs.Exists'Tests\CONTINUE.dws'
+ →T.GoToTidyUp~FilesAndDirs.Exists ##.CiderConfig.HOME,'Tests/CONTINUE.dws'
  →T.GoToTidyUp 0≠≢⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'
  R←T._OK
 
 ∆TidyUp:
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
- FilesAndDirs.DeleteFile'Tests\CONTINUE.dws'
+ FilesAndDirs.DeleteFile ##.CiderConfig.HOME,'Tests\CONTINUE.dws'

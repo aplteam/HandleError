@@ -7,7 +7,7 @@
 
 ⍝ Preconditions...
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
- wsname←'expand'FilesAndDirs.NormalizePath'Tests/test_ws_1.dws'
+ wsname←FilesAndDirs.NormalizePath ##.CiderConfig.HOME, 'Tests/test_ws_1.dws'
 
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
