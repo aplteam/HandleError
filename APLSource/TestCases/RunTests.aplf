@@ -1,8 +1,8 @@
  RunTests;htmlFilename
  Prepare
  T.Run 1
- htmlFilename←CodeCoverage.ProcessDataAndCreateReport T.codeCoverage.filename
- :If 0 ∆YesOrNo'View CodeCoverage report?'
-     APLTreeUtils2.GoToWebPage'file://',htmlFilename
+ :If 0<≢T.codeCoverage
+ :AndIf 0 ⎕SE.Maker2.YesOrNo'Put Code Coverage Report on display?'
+     htmlFilename←CodeCoverage.ProcessDataAndCreateReport T.codeCoverage.filename
+     {}APLTreeUtils2.GoToWebPage htmlFilename
  :EndIf
-⍝Done

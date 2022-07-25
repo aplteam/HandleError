@@ -1,0 +1,4 @@
+ Make flag
+ :If flag
+     ⎕se.MakeHelpers.CreateTatinPackageFromSingleScript ##.HandleError
+ :EndIf
