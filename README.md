@@ -3,6 +3,7 @@
 
 `HandleError` is a member of the APLTree library. The library is a collection of classes etc. that aim to support the Dyalog APL programmer. Search GitHub for "apltree" and you will find solutions to many every-day problems Dyalog APL programmers might have to solve.
 
+**Note:** `HandleError` releases are published as [Tatin](https://tatin.dev "Link to the principal Tatin Registry") packages, see there.
 
 ## Overview 
 
