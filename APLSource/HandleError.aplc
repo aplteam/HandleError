@@ -83,11 +83,13 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←'HandleError' '4.1.1+60' '2021-08-01'
+      r←'HandleError' '4.1.2+60' '2023-02-22'
     ∇
 
     ∇ History
       :Access Public Shared
+      ⍝ * 4.1.2 ⋄ 2023-02-21
+      ⍝   * ⎕TNUMS was reported in too many cells
       ⍝ * 4.1.1 ⋄ 2021-07-24
       ⍝   * `Process` now uses `:Hold` for preventing itself from running twice in two threads.
       ⍝   * Documentation polished
@@ -323,7 +325,7 @@
       html,←'  ⎕IO'MarkupAsTableRow⍕⎕IO
       html,←'  ⎕ML'MarkupAsTableRow⍕⎕ML
       html,←'  ⎕WA'MarkupAsTableRow⍕⎕WA
-      html,←'  ⎕TNUMS'MarkupAsTableRow⍕⎕TNUMS
+      html,←'  ⎕TNUMS'MarkupAsTableRow{0=≢⍵:⍵ ⋄ ⊃{⍺,',',⍵}/⍕¨⍵}⎕TNUMS
       html,←'  Category'MarkupAsTableRow crash.Category
       html,←'  EM'MarkupAsTableRow crash.EM
       html,←'  HelpURL'MarkupAsTableRow crash.HelpURL
