@@ -83,12 +83,12 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←'HandleError' '4.1.2+60' '2023-02-22'
+      r←'HandleError' '4.1.2+60' '2023-04-10'
     ∇
 
     ∇ History
       :Access Public Shared
-      ⍝ * 4.1.2 ⋄ 2023-02-21
+      ⍝ * 4.1.2 ⋄ 2023-04-10
       ⍝   * ⎕TNUMS was reported in too many cells
       ⍝ * 4.1.1 ⋄ 2021-07-24
       ⍝   * `Process` now uses `:Hold` for preventing itself from running twice in two threads.

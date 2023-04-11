@@ -1,4 +1,4 @@
- {(rc more)}←∆GetResultFromSecondDyalogInstance wsname;cmd;buff;ridePort
+ {(rc more)}←∆GetResultFromSecondDyalogInstance wsname;buff;cmd;dmx;ridePort
 ⍝ This starts a second session of Dyalog and waits for it to finish. Whatever `⎕OFF` returns
 ⍝ is then returned as `rc`. `more` may provide additional information.
  ridePort←9995
@@ -23,23 +23,20 @@
      wsname,←('.dws'≢APLTreeUtils2.Lowercase ¯4↑wsname)/'.dws'
      wsname←FilesAndDirs.NormalizePath wsname
      cmd←''
-     :If 0
-         cmd,←' RIDE_INIT=SERVE::',⍕ridePort
-         cmd,←' -ride=',⍕ridePort
-     :Else
-         cmd,←' DYALOG_NOPOPUPS=1'
-         cmd,←' session_file=doesnotexistforsure'
-     :EndIf
      cmd,←' ',2 ⎕NQ'.' 'GetEnvironment' 'DYALOG'
-     cmd,←'/dyalog ',wsname
-     cmd←'/dyalog '⎕R'/dyalog.rt '⊣cmd          ⍝ Make sure the runtime is called
+     cmd,←'/dyalog.rt '  ⍝ The development version will not ⎕OFF!
+     cmd,←wsname
+     :If 0
+         cmd,←' -ride=',⍕ridePort
+     :EndIf
      :Trap 11
          buff←⎕SH cmd
          rc←0
          more←''
      :Else
-         rc←⊃(//)⎕VFI{{⌽⍵↑⍨⍵⍳' '}⌽⍵}⎕DMX.Message
-         more←⎕DMX.Message
+         dmx←⎕DMX
+         rc←⊃(//)⎕VFI{{⌽⍵↑⍨⍵⍳' '}⌽⍵}dmx.Message
+         more←dmx.Message
      :EndTrap
  :Else
      .                                          ⍝ Huuh?!

@@ -1,4 +1,12 @@
- Make flag
+Make flag;M;C;path;zipFilename;res;version;cfg
  :If flag
-     ⎕se.MakeHelpers.CreateTatinPackageFromSingleScript ##.HandleError
+     M←⎕SE.MakeHelpers
+     C←##.CiderConfig
+     path←C.HOME,'/Dist/'
+     cfg←⎕JSON⍠('Dialect' 'JSON5')⊢⊃##.FilesAndDirs.NGET C.HOME,'/apl-package.json'
+     version←M.CompileVersionNumberPattern cfg
+     M.RecreateFolder path
+     zipFilename←⎕SE.Tatin.BuildPackage C.HOME path version
+     ⎕←'*** New version build successfully:',M.CR,'   ',zipFilename
  :EndIf
+ ⍝Done

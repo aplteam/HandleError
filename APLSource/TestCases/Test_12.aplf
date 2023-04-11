@@ -3,8 +3,8 @@
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
 
  :If 'Win'≢APLTreeUtils2.GetOperatingSystem ⍬
- ⍝ This is because under Linux the Dyalog runtime behaves differently; this needs to be investigated.
-     R←∆Inactive
+ ⍝ This is because under Linux/Mac-OS the Dyalog runtime behaves differently; this needs to be investigated.
+     R←T._WindowsOnly
      :Return
  :EndIf
 

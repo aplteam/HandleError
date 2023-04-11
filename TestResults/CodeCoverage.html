@@ -35,6 +35,9 @@ div.code-block {
     margin: 0.5em 0.5em 0.5em 0.5em;
     padding: 0.5em;
 }
+div.code-block.missing {
+    background-color: #fa605254;
+}
 div.code-block code {display: block; white-space: pre-wrap; margin:0; padding:0; word-wrap: break-word;}
 .emphasize { font-weight: 800;}
 ul li, ol li {margin: 0.7em 0.2em;}
@@ -49,7 +52,9 @@ ul li, ol li {margin: 0.7em 0.2em;}
     src:
         local("APL385 Unicode"),
         url("https://misc.aplteam.com/apl385.ttf") format("truetype");
-}}
+}
+.info {border: 1px silver dashed; background-color: #F2F2F2;margin: 0.5em; padding: 0.5em;}
+}
 @media print{@page {size: portrait}
 @page {
     margin: 1cm 1cm 1cm 1.75cm;
@@ -106,51 +111,607 @@ ul li, ol li {margin: 8pt 3pt;}
     src:
         local("APL385 Unicode"),
         url("https://misc.aplteam.com/apl385.ttf") format("truetype");
-}}
+}
+.info {border: 1px silver dashed; background-color: #F2F2F2;margin: 8px; padding: 8px;}
+}
 </style>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.11.2/b-2.0.0/b-print-2.0.0/fh-3.1.9/r-2.2.9/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.11.2/b-2.0.0/b-print-2.0.0/fh-3.1.9/r-2.2.9/datatables.min.js"></script>
 </head>
 <body>
 <h1 id="top">Coverage Report</h1>
 <p>Watched: 21 fns/opr within <code>#.HandleError.HandleError</code></p>
-<p>The test test suite was execute once:</p>
+<p>The test suite was executed 3 times:</p>
 <table>
 <thead>
 <tr><th>Executed at</th><th>APLVersion</th><th>Memory (MB)</th></tr>
-<thead>
-</tbody>
-<tr><td>2021-07-01 15:12:28</td><td>Windows-64 ⋄ 18.1.40684.0 ⋄ W ⋄ Development</td><td>118</td></tr>
-</tbody>
-</table>
-<p>Overall 91% of the testable code is  covered.</p>
-<p>(Comment lines, empty lines, all <code>:End</code>* lines etc. are all ignored)</p>
-<p>12 of the fns/opr are 100% covered.</p>
-<p>2 are not covered at all:</p>
-<table>
+</thead>
 <tbody>
-<tr><td>#.HandleError.HandleError.Version</td></tr>
-<tr><td>#.HandleError.HandleError.PrintErrorToSession</td></tr>
+<tr><td>2023-04-11 07:10:37</td><td>Windows-64 ⋄ 18.2.46856.0 ⋄ W ⋄ Development ⋄ Unicode</td><td>53</td></tr>
+<tr><td>2023-04-11 08:12:15</td><td>Linux-64 ⋄ 18.2.46656.0 ⋄ S ⋄ Development ⋄ Unicode</td><td>245</td></tr>
+<tr><td>2023-04-11 08:29:14</td><td>Mac-64 ⋄ 18.2.46881.0 ⋄ S ⋄ Development ⋄ Unicode</td><td>247</td></tr>
 </tbody>
 </table>
+<p>Overall 91% of the testable code is covered.</p>
+<p>(Comment lines, empty lines, all <code>:End</code>* lines etc. are ignored)</p>
+<p>12 of the fns/opr are 100% covered.</p>
 <div id="partly-covered" class="keep-together">
-<p>7 are partly covered:</p>
-<table>
+<table id="percent">
 <thead>
 <tr><th style="text-align:left;">Function/Operator</th><th style="text-align:left;">Lines not executed</th><th style="text-align:left;">Coverage</th><th style="text-align:right;">≢</th></tr>
 </thead>
 <tbody>
-<tr><td>#.HandleError.HandleError.WriteHtmlFile</td><td>6,7,8</td><td>63%</td><td class="align-right">8</td></tr>
-<tr><td>#.HandleError.HandleError.SaveCrash</td><td>6,7</td><td>71%</td><td class="align-right">7</td></tr>
-<tr><td>#.HandleError.HandleError.Process</td><td>8←≢37,44-46,48,51-52,55</td><td>79%</td><td class="align-right">38</td></tr>
-<tr><td>#.HandleError.HandleError.ReportErrorToWindowsLog</td><td>7</td><td>83%</td><td class="align-right">6</td></tr>
-<tr><td>#.HandleError.HandleError.WriteToLogFile</td><td>9,16</td><td>83%</td><td class="align-right">12</td></tr>
-<tr><td>#.HandleError.HandleError.ExecuteCustomFns</td><td>9</td><td>88%</td><td class="align-right">8</td></tr>
-<tr><td>#.HandleError.HandleError.CheckErrorFolder</td><td>12,24</td><td>88%</td><td class="align-right">17</td></tr>
+<tr class="uncovered"><td><a href="#listing_1" title="Link to listing">#.HandleError.HandleError.Version</a></td><td>2</td><td>0</td><td>1</td></tr>
+<tr class="uncovered"><td><a href="#listing_2" title="Link to listing">#.HandleError.HandleError.PrintErrorToSession</a></td><td>1, 2</td><td>0</td><td>2</td></tr>
+<tr><td><a href="#listing_3" title="Link to listing">#.HandleError.HandleError.WriteHtmlFile</a></td><td>6, 7, 8</td><td>63</td><td>8</td></tr>
+<tr><td><a href="#listing_4" title="Link to listing">#.HandleError.HandleError.SaveCrash</a></td><td>6, 7</td><td>71</td><td>7</td></tr>
+<tr><td><a href="#listing_5" title="Link to listing">#.HandleError.HandleError.Process</a></td><td>8←≢38,45-47,49,52-53,56</td><td>79</td><td>39</td></tr>
+<tr><td><a href="#listing_6" title="Link to listing">#.HandleError.HandleError.ReportErrorToWindowsLog</a></td><td>7</td><td>83</td><td>6</td></tr>
+<tr><td><a href="#listing_7" title="Link to listing">#.HandleError.HandleError.WriteToLogFile</a></td><td>9, 16</td><td>83</td><td>12</td></tr>
+<tr><td><a href="#listing_8" title="Link to listing">#.HandleError.HandleError.ExecuteCustomFns</a></td><td>9</td><td>88</td><td>8</td></tr>
+<tr><td><a href="#listing_9" title="Link to listing">#.HandleError.HandleError.SaveErrorWorkspace</a></td><td>9</td><td>91</td><td>11</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_10" title="Link to listing">#.HandleError.HandleError.History</a></td><td></td><td>100</td><td>0</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_11" title="Link to listing">#.HandleError.HandleError.SetTrap</a></td><td></td><td>100</td><td>14</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_12" title="Link to listing">#.HandleError.HandleError.CreateParms</a></td><td></td><td>100</td><td>22</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_13" title="Link to listing">#.HandleError.HandleError.CR</a></td><td></td><td>100</td><td>1</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_14" title="Link to listing">#.HandleError.HandleError.AssembleHTML</a></td><td></td><td>100</td><td>47</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_15" title="Link to listing">#.HandleError.HandleError.WriteWindowsLog_</a></td><td></td><td>100</td><td>8</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_16" title="Link to listing">#.HandleError.HandleError.ExchangeHtmlChars</a></td><td></td><td>100</td><td>9</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_17" title="Link to listing">#.HandleError.HandleError.CreateCrash</a></td><td></td><td>100</td><td>13</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_18" title="Link to listing">#.HandleError.HandleError.WriteToWindowsEvents</a></td><td></td><td>100</td><td>9</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_19" title="Link to listing">#.HandleError.HandleError.SaveVisibleVars</a></td><td></td><td>100</td><td>5</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_20" title="Link to listing">#.HandleError.HandleError.CheckErrorFolder</a></td><td></td><td>100</td><td>17</td></tr>
+<tr class="fullyCovered"><td><a href="#listing_21" title="Link to listing">#.HandleError.HandleError.force</a></td><td></td><td>100</td><td>0</td></tr>
 </tbody>
 </table>
 </div>
+<script>
+$(document).ready(function() {
+    var oTable;
+    oTable = $("#percent").DataTable( {
+        paging:   false,
+        ordering: true,
+        info:     true,
+        fixedHeader: true,
+        order: [2,"asc"],
+        dom: "Bft",
+        drawCallback: function( settings ) {
+             var api = this.api();
+             $('.header[id^="listing_"]').next().addBack().css("display","none");
+             api.rows( {page:"current"} ).data().each(function(data){
+              id = data[0];
+              id = id.match(/"(\#.*?)"/);
+              if (id){$(id[1]).next().addBack().css("display","block");}
+             })
+        },      
+        buttons: [
+        {
+            text: "Partly covered (7)",
+            titleAttr: "50%",
+            className: "active",
+            action: function ( e, dt, node, config ) {
+                var text = this.text();
+                var search = "^(?!(0%|100%)).*";
+                oTable.column(2)
+                    .search(search,true,false,false)
+                    .draw();
+                $(".dt-buttons button").removeClass("active");
+                this.active( true );
+            }
+        },
+        {
+            text: "Uncovered (2)",
+            titleAttr: "0%",
+            className: "active",
+            action: function ( e, dt, node, config ) {
+                var text = this.text();
+                var search = "^0%";
+                oTable.column(2)
+                    .search(search,true,false,false)
+                    .draw();
+                $(".dt-buttons button").removeClass("active");
+                this.active( true );
+            }
+        },
+        {
+            text: "Fully covered (12)",
+            titleAttr: "100%",
+            className: "active",
+            action: function ( e, dt, node, config ) {
+                var text = this.text();
+                var search = "100%";
+                oTable.column(2)
+                    .search(search,true,false,false)
+                    .draw();
+                $(".dt-buttons button").removeClass("active");
+                this.active( true );
+            }
+        },
+        {
+            text: "All (21)",
+            titleAttr: "all",
+            className: "active",
+            action: function ( e, dt, node, config ) {
+                var text = this.text();
+                var search = ".";
+                oTable.column(2)
+                    .search(search,true,false,false)
+                    .draw();
+                $(".dt-buttons button").removeClass("active");
+                this.active( true );
+            }
+        },
+    ],
+ 
+        columnDefs: [
+            {className: "align-right", targets: [2,3]
+            },
+            {
+                render: function ( data, type, row, meta ) {
+                            return data+"%" ;        
+                        },
+                targets: 2
+            }
+        ]             
+    } );
+    oTable.button(0).trigger();
+
+} );    
+</script>
+<h2>Listings</h2>
+<code class="header" id="listing_1">#.HandleError.HandleError.Version &mdash; 0%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code> r←Version</code>
+<code> [1]  :Access Public Shared</code>
+<code class="emphasize">→[2]  r←'HandleError' '4.1.2+60' '2023-04-10'</code>
+</div>
+<code class="header" id="listing_2">#.HandleError.HandleError.PrintErrorToSession &mdash; 0%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code> {r}←PrintErrorToSession msg</code>
+<code class="emphasize">→[1]  r←⍬</code>
+<code class="emphasize">→[2]  ⎕←'HandleError.Process caught ',msg</code>
+</div>
+<code class="header" id="listing_3">#.HandleError.HandleError.WriteHtmlFile &mdash; 63%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  {html}←WriteHtmlFile(parms crash filename)</code>
+<code> [1]   :If parms.createHTML</code>
+<code> [2]       html←AssembleHTML parms crash</code>
+<code> [3]       :Trap (parms.trapInternalErrors)/0</code>
+<code> [4]           (⊂html)⎕NPUT(filename,'.html')1</code>
+<code> [5]       :Else</code>
+<code class="emphasize">→[6]           :Trap parms.trapInternalErrors/0</code>
+<code class="emphasize">→[7]               :If ##.APLTreeUtils2.IsDevelopment</code>
+<code class="emphasize">→[8]                   11 ⎕SIGNAL'Writing HTML file failed: ',1⊃parms.LastError</code>
+<code> [9]               :EndIf</code>
+<code> [10]          :EndTrap</code>
+<code> [11]      :EndTrap</code>
+<code> [12]  :Else</code>
+<code> [13]      html←''</code>
+<code> [14]  :EndIf</code>
+</div>
+<code class="header" id="listing_4">#.HandleError.HandleError.SaveCrash &mdash; 71%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  {r}←SaveCrash(filename crash parms)</code>
+<code> [1]   :If parms.saveCrash</code>
+<code> [2]       :Trap (parms.trapInternalErrors)/0</code>
+<code> [3]           tno←filename ⎕FCREATE 0</code>
+<code> [4]           crash ⎕FAPPEND tno  ⍝ Might fail with a WS FULL</code>
+<code> [5]       :Else</code>
+<code class="emphasize">→[6]           :Trap 0</code>
+<code class="emphasize">→[7]               ⎕DMX.DM ⎕FAPPEND tno</code>
+<code> [8]           :EndTrap</code>
+<code> [9]       :EndTrap</code>
+<code> [10]      :Trap 0 ⋄ ⎕FUNTIE tno ⋄ :EndTrap</code>
+<code> [11]  :EndIf</code>
+</div>
+<code class="header" id="listing_5">#.HandleError.HandleError.Process &mdash; 79%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  {r}←{signal}Process parms</code>
+<code> [1]   :Access Public Shared</code>
+<code> [2]      ⍝ `⎕OFF`s in runtime or if `enforceOff` is 1 but executes `→` otherwise.\\</code>
+<code> [3]      ⍝ In case you need to save the name of the error WS you must specify a parameter space. `HandleError` will</code>
+<code> [4]      ⍝ inject a variable `∆ERROR_WS` into the parameter space.\\</code>
+<code> [5]      ⍝ All actions `Process` will execute are performed under error trapping, so it should never fail.\\</code>
+<code> [6]      ⍝ `signal`: if specified this overwrites `parms.signal`; this is for test cases only.</code>
+<code> [7]   r←⍬</code>
+<code> [8]   :Hold 'HandleError.Process'</code>
+<code> [9]       ⎕IO←1 ⋄ ⎕ML←1</code>
+<code> [10]      TRAP←⎕TRAP                                    ⍝ Remember old setting (for reporting)</code>
+<code> [11]      ⎕TRAP←(0 1000)'C' '→∆End'                     ⍝ Make sure that it does not crash itself</code>
+<code> [12]      parms←⍎⍣((0≠≢parms)∧(⎕DR parms)∊320 160 80 82)⊣parms     ⍝ Convert name into reference</code>
+<code> [13]      :If 9≠⎕NC'parms'</code>
+<code> [14]      :OrIf 0=≢parms</code>
+<code> [15]          parms←CreateParms</code>
+<code> [16]      :EndIf</code>
+<code> [17]      :If 0&lt;⎕NC'signal'</code>
+<code> [18]          parms.signal←signal</code>
+<code> [19]      :EndIf</code>
+<code> [20]      parms.(LastError LastErrorNumber)←⎕DMX.(DM EN)</code>
+<code> [21]      parms.(EN ENX EM Message)←⎕DMX.(EN ENX EM Message)</code>
+<code> [22]      CheckErrorFolder parms</code>
+<code> [23]      crash←CreateCrash parms TRAP</code>
+<code> [24]      filename←CreateFilename parms.errorFolder</code>
+<code> [25]      parms.∆ERROR_WS←filename</code>
+<code> [26]      parms.crashFilename←filename</code>
+<code> [27]      {}{0 ⎕TKILL ⍵}⍣parms.killThreads⊣⎕TNUMS~⎕TID   ⍝ Try to kill all threads but itself and the main thread</code>
+<code> [28]      :Trap 0</code>
+<code> [29]          WriteHtmlFile parms crash filename</code>
+<code> [30]      :EndTrap</code>
+<code> [31]      :Trap 0</code>
+<code> [32]          WriteToLogFile parms</code>
+<code> [33]      :EndTrap</code>
+<code> [34]      ⎕DL 0.2</code>
+<code> [35]      :Trap 0</code>
+<code> [36]          crash←SaveErrorWorkspace filename parms crash</code>
+<code> [37]      :Else</code>
+<code class="emphasize">→[38]          crash←⎕NS''</code>
+<code> [39]      :EndTrap</code>
+<code> [40]      SaveCrash filename crash parms</code>
+<code> [41]      WriteToWindowsEvents parms</code>
+<code> [42]      ExecuteCustomFns parms</code>
+<code> [43]      :If 0≠parms.signal</code>
+<code> [44]          ⎕SIGNAL parms.signal</code>
+<code class="emphasize">→[45]      :ElseIf parms.off</code>
+<code class="emphasize">→[46]          :If ##.APLTreeUtils2.IsDevelopment∧0=parms.enforceOff</code>
+<code class="emphasize">→[47]              PrintErrorToSession 1⊃parms.LastError</code>
+<code> [48]          :Else</code>
+<code class="emphasize">→[49]              ⎕OFF parms.returnCode</code>
+<code> [50]          :EndIf</code>
+<code> [51]      :Else</code>
+<code class="emphasize">→[52]          :If ##.APLTreeUtils2.IsDevelopment∧0=parms.enforceOff</code>
+<code class="emphasize">→[53]              PrintErrorToSession 1⊃parms.LastError</code>
+<code> [54]          :EndIf</code>
+<code> [55]      :EndIf</code>
+<code class="emphasize">→[56] ∆End:⎕TRAP←TRAP</code>
+<code> [57]  :EndHold</code>
+</div>
+<code class="header" id="listing_6">#.HandleError.HandleError.ReportErrorToWindowsLog &mdash; 83%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  {r}←ReportErrorToWindowsLog(appName message)</code>
+<code> [1]      ⍝ Reports an error to the Windows Event Log, by default to source="APL".\\</code>
+<code> [2]      ⍝ Note that the Dyalog bridge DLLs are required for this to work.</code>
+<code> [3]   :Access Public Shared</code>
+<code> [4]   r←⍬</code>
+<code> [5]   ⎕USING←'System,system.dll' 'System.Diagnostics,system.dll'</code>
+<code> [6]   :If 0=≢appName</code>
+<code class="emphasize">→[7]       appName←'APL'</code>
+<code> [8]   :EndIf</code>
+<code> [9]   message←⊆message</code>
+<code> [10]  WriteWindowsLog_ appName EventLogEntryType.Error message</code>
+</div>
+<code class="header" id="listing_7">#.HandleError.HandleError.WriteToLogFile &mdash; 83%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  WriteToLogFile parms</code>
+<code> [1]   :If 0≠≢parms.logFunction</code>
+<code> [2]       :Trap (parms.trapInternalErrors)/0</code>
+<code> [3]           :If '.'∊parms.logFunction</code>
+<code> [4]               fns←⍎parms.logFunction</code>
+<code> [5]           :Else</code>
+<code> [6]               :If ⍬≢parms.logFunctionParent</code>
+<code> [7]                   fns←parms.logFunctionParent⍎parms.logFunction</code>
+<code> [8]               :Else</code>
+<code class="emphasize">→[9]                   'Cannot find the log function'⎕SIGNAL 6</code>
+<code> [10]              :EndIf</code>
+<code> [11]          :EndIf</code>
+<code> [12]          fns'*** Error'</code>
+<code> [13]          fns'Error number=',⍕parms.LastErrorNumber</code>
+<code> [14]          fns parms.LastError</code>
+<code> [15]          :If 0≠≢parms.addToMsg</code>
+<code class="emphasize">→[16]              fns parms.addToMsg</code>
+<code> [17]          :EndIf</code>
+<code> [18]      :Else</code>
+<code> [19]           ⍝ Useful to realize in the tracer that something went wrong</code>
+<code> [20]      :EndTrap</code>
+<code> [21]  :EndIf</code>
+</div>
+<code class="header" id="listing_8">#.HandleError.HandleError.ExecuteCustomFns &mdash; 88%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  ExecuteCustomFns parms</code>
+<code> [1]   :If 0≠≢parms.customFns</code>
+<code> [2]       :Trap (parms.trapInternalErrors)/0</code>
+<code> [3]           :If '.'∊parms.customFns</code>
+<code> [4]               fns←⍎parms.customFns</code>
+<code> [5]           :Else</code>
+<code> [6]               :If ⍬≢parms.customFnsParent</code>
+<code> [7]                   fns←parms.customFnsParent⍎parms.customFns</code>
+<code> [8]               :Else</code>
+<code class="emphasize">→[9]                   'Cannot find the custom function'⎕SIGNAL 6</code>
+<code> [10]              :EndIf</code>
+<code> [11]          :EndIf</code>
+<code> [12]          fns parms</code>
+<code> [13]      :Else</code>
+<code> [14]         ⍝ Useful to realize in the tracer that something went wrong</code>
+<code> [15]      :EndTrap</code>
+<code> [16]  :EndIf</code>
+</div>
+<code class="header" id="listing_9">#.HandleError.HandleError.SaveErrorWorkspace &mdash; 91%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  {crash}←SaveErrorWorkspace(filename parms crash)</code>
+<code> [1]   :If parms.saveErrorWS</code>
+<code> [2]       wsid←⎕WSID</code>
+<code> [3]       ⎕WSID←filename</code>
+<code> [4]       lx←⎕LX</code>
+<code> [5]       ⎕LX←'⎕TRAP←0 ''S'' ⍝',⎕LX</code>
+<code> [6]       :Trap parms.trapSaveWSID/0</code>
+<code> [7]           ⎕SAVE ⎕WSID</code>
+<code> [8]       :Else</code>
+<code class="emphasize">→[9]           crash.SaveFailed←⎕DMX.Message</code>
+<code> [10]      :EndTrap</code>
+<code> [11]      ⎕WSID←wsid       ⍝ Potentially important (for example when running test cases)</code>
+<code> [12]      ⎕LX←lx</code>
+<code> [13]  :EndIf</code>
+<code> [14] ∆End:</code>
+</div>
+<code class="header" id="listing_10">#.HandleError.HandleError.History &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  History</code>
+<code> [1]   :Access Public Shared</code>
+<code> [2]        ⍝ * 4.1.2 ⋄ 2023-04-10</code>
+<code> [3]        ⍝   * ⎕TNUMS was reported in too many cells</code>
+<code> [4]        ⍝ * 4.1.1 ⋄ 2021-07-24</code>
+<code> [5]        ⍝   * `Process` now uses `:Hold` for preventing itself from running twice in two threads.</code>
+<code> [6]        ⍝   * Documentation polished</code>
+<code> [7]        ⍝   * Dependencies updated</code>
+<code> [8]        ⍝   * "Make" now uses the `MakeHelpers` package and is called by the newly introduced `Admin.Make` function</code>
+<code> [9]        ⍝ * 4.1.0</code>
+<code> [10]       ⍝   * Parameter `killThreads` introduced.</code>
+<code> [11]       ⍝   * `Process` hardened against unforseeable problems.</code>
+<code> [12]       ⍝   * Bug fix: `Process` executed either `⎕OFF` or `→`; in the latter case it shouldn't.</code>
+<code> [13]       ⍝ * 4.0.2</code>
+<code> [14]       ⍝   * Package config file corrected</code>
+<code> [15]       ⍝ * 4.0.1</code>
+<code> [16]       ⍝   * Documentation improved</code>
+<code> [17]       ⍝   * Tests polished</code>
+<code> [18]       ⍝ * 4.0.0</code>
+<code> [19]       ⍝   * BREAKING CHANGES:</code>
+<code> [20]       ⍝     * Requires at least Dyalog 18.0</code>
+<code> [21]       ⍝     * Requires the class `APLTreeUtils2`</code>
+<code> [22]       ⍝   * Does not `:Include APLTreeUtils` anymore</code>
+<code> [23]       ⍝   * Bug fixes:</code>
+<code> [24]       ⍝     * Empty `⎕WSID` (stand-alone-EXE!) can cause havoc (#1)</code>
+<code> [25]       ⍝     * `Process` does not return the name of the error workspace because the function either</code>
+<code> [26]       ⍝       executed `⎕OFF` or '→`. The name is now assigned to `∆ERROR_WS` in the parameter space.</code>
+<code> [27]       ⍝\\</code>
+<code> [28]       ⍝ For information regarding older versions see &lt;https://github.com/aplteam/HandleError/releases&gt;</code>
+</div>
+<code class="header" id="listing_11">#.HandleError.HandleError.SetTrap &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  r←{force}SetTrap parameterSpaceName</code>
+<code> [1]   :Access Public Shared</code>
+<code> [2]      ⍝ Returns a vector useful to set `⎕TRAP`.</code>
+<code> [3]      ⍝ It behaves differently depending on whether it's a development session or not.\\</code>
+<code> [4]      ⍝ The right argument can be either an empty vector or the **name** of a parameter space - **not** a reference!\\</code>
+<code> [5]      ⍝ The left argument defaults to 0. Setting this to 1 enforces error</code>
+<code> [6]      ⍝ trapping even under a development exe. Useful for test cases.</code>
+<code> [7]   ⎕TRAP←0⍴⎕TRAP</code>
+<code> [8]   ⎕IO←1 ⋄ ⎕ML←0</code>
+<code> [9]   force←{0=⎕NC ⍵:0 ⋄ ⍎⍵}'force'</code>
+<code> [10]  r←(0 1000)'S'</code>
+<code> [11]  calledFrom←{⌽{⍵/⍨2≤+\'.'=⍵}⌽⍵}1⊃⎕XSI</code>
+<code> [12]  :If 0≠≢parameterSpaceName</code>
+<code> [13]      :If 1≠≡,parameterSpaceName</code>
+<code> [14]      :OrIf ~(⎕DR parameterSpaceName)∊80 82 160</code>
+<code> [15]          'Invalid right argument: must be a name'⎕SIGNAL 11</code>
+<code> [16]      :EndIf</code>
+<code> [17]  :EndIf</code>
+<code> [18]  :If 0=≢parameterSpaceName  ⍝ At a very early stage error trapping does not make sense</code>
+<code> [19]  :AndIf (0=##.APLTreeUtils2.IsDevelopment)∨force</code>
+<code> [20]      r←⊂0 'E'(calledFrom,'HandleError.Process ⍬')</code>
+<code> [21]  :Else</code>
+<code> [22]      :If (0=##.APLTreeUtils2.IsDevelopment)∨force</code>
+<code> [23]          r←⊂0 'E'(calledFrom,'HandleError.Process ''',parameterSpaceName,'''')</code>
+<code> [24]      :EndIf</code>
+<code> [25]  :EndIf</code>
+</div>
+<code class="header" id="listing_12">#.HandleError.HandleError.CreateParms &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  r←CreateParms</code>
+<code> [1]      ⍝ Returns a namespace with default values for the `HandleError` method</code>
+<code> [2]      ⍝ | Parameter    | Description|</code>
+<code> [3]      ⍝ | - | - |</code>
+<code> [4]      ⍝ | `checkErrorFolder` | Boolean that defaults to 1. If this is 1 and the folder `errorFolder` does **not** exist&lt;&lt;br&gt;&gt;it will be created. |</code>
+<code> [5]      ⍝ | `createHTML` | Boolean that defaults to 1. A 0 means that no HTML file will be created.|</code>
+<code> [6]      ⍝ | `customFns`  | Fully qualified name of a monadic function to be executed by `Process`. Useful to send an email, for example. See also `customFnsParent`.|</code>
+<code> [7]      ⍝ | `customFnsParent` | No default. May be a reference pointing to the parent of the `customFns`. Needed only in case the parent is a class instance since `logFunction` may use dottet syntax.|</code>
+<code> [8]      ⍝ | `enforceOff` | Boolean that defaults to 0. With a 1 you can force `HandleError` to `⎕OFF` no matter whether it's a runtime EXE or not. Overwrites `off`. Mainly for test cases.|</code>
+<code> [9]      ⍝ | `errorFolder`| Folder that keeps the component file (`crash`), the HTML page and the error WS. See below for rules.|</code>
+<code> [10]     ⍝ | `killThreads`| Boolean that defaults to 1, meaning that all threads that can be killed will be killed.|</code>
+<code> [11]     ⍝ | `logFunction`| Name of the logging function to be used. See also `logFnsParent`.|</code>
+<code> [12]     ⍝ | `logFnsParent` | No default. May be a reference pointing to the parent of `logFunction`. Needed only in case the parent is a class instance since `logFunction` may use dottet syntax.|</code>
+<code> [13]     ⍝ | `off`        | Boolean that defaults to 1 which makes `HandleError` execute `⎕OFF` with `returnCode` only in Runtime. A 0 suppresses this, executing `→` instead. See also `enforceOff`|</code>
+<code> [14]     ⍝ | `returnCode` | The return code passed on to `⎕OFF`.|</code>
+<code> [15]     ⍝ | `saveCrash`  | Boolean that defaults to 1.&lt;&lt;br&gt;&gt;A 0 suppresses the creation of `crash` &amp; a component file in which `crash` is saved.|</code>
+<code> [16]     ⍝ | `saveErrorWS`| Boolean that defaults to 1.&lt;&lt;br&gt;&gt;A 0 suppresses the creation of a crash workspace. There is no point in attempting&lt;&lt;br&gt;&gt;to save a WS in a multi-threaded application for example.|</code>
+<code> [17]     ⍝ | `saveVars`   | Boolean that defaults to 1.&lt;&lt;br&gt;&gt;Is ignored when `saveCrash` is 0. If 1 all visible variables are saved in a&lt;&lt;br&gt;&gt;sub namespace `Vars` within `crash`.|</code>
+<code> [18]     ⍝ | `signal`     | When `off` is 0 and `signal` is not 0 then `signal` is `⎕SIGNAL`led by `Process`.&lt;&lt;br&gt;&gt;This can be used for a restart attempt.|</code>
+<code> [19]     ⍝ | `trapInternalErrors` | By default all internal errors are trapped:&lt;&lt;br&gt;&gt;`Process` should never crash an application.|</code>
+<code> [20]     ⍝ | `trapSaveWSID`       | Boolean that defaults to 1. Makes sure that the `⎕SAVE` statement is guarded.&lt;&lt;br&gt;&gt;Useful to trace through it without a problem in versions prior to 14.1.|</code>
+<code> [21]     ⍝ | `windowsEventSource` | Name of the Windows Event Log to write to. Ignored when empty.|</code>
+<code> [22]     ⍝ | `addToMsg`           | Will be added to the log file as well as the Windows Event Log messages.&lt;&lt;br&gt;&gt;Mainly for test cases.|\\</code>
+<code> [23]     ⍝ Since version 2.2.0 `errorFolder` defaults to an empty vector. Assuming that the WS or the stand-alone EXE have the name "Foo" the following rules hold true:</code>
+<code> [24]     ⍝ * If `errorFolder` is empty then it defaults to "%LOCALAPPDATA%/Foo/Errors" under Windows and "Errors/" in the current</code>
+<code> [25]     ⍝   directory otherwise.</code>
+<code> [26]     ⍝ * If `errorFolder` is "Errors/" then this folder will be expected in the current directory.</code>
+<code> [27]     ⍝ * If `errorFolder` is an absolute path it is assumed that the last part is the folder that shall hold the crash files.\\</code>
+<code> [28]     ⍝ In all three instances if the folder in question does not exist but `checkErrorFolder` is 1 the folder will be created.</code>
+<code> [29]  :Access Public Shared</code>
+<code> [30]  ⎕IO←0 ⋄ ⎕ML←3</code>
+<code> [31]  r←⎕NS''</code>
+<code> [32]  r.⎕FX'r←∆List;⎕IO' '⍝ List all variables and possible references in this namespace' '⎕IO←0' 'r←{⍵,[0.5]⍎¨⍵}'' ''~¨⍨↓⎕NL 2 9'</code>
+<code> [33]  r.checkErrorFolder←1</code>
+<code> [34]  r.createHTML←1</code>
+<code> [35]  r.customFns←''</code>
+<code> [36]  r.customFnsParent←⍬</code>
+<code> [37]  r.enforceOff←0</code>
+<code> [38]  r.errorFolder←''</code>
+<code> [39]  r.killThreads←1</code>
+<code> [40]  r.logFunction←''</code>
+<code> [41]  r.logFunctionParent←⍬</code>
+<code> [42]  r.off←1</code>
+<code> [43]  r.returnCode←1</code>
+<code> [44]  r.saveCrash←1</code>
+<code> [45]  r.saveErrorWS←1</code>
+<code> [46]  r.saveVars←1</code>
+<code> [47]  r.signal←0</code>
+<code> [48]  r.trapInternalErrors←1</code>
+<code> [49]  r.trapSaveWSID←1</code>
+<code> [50]  r.windowsEventSource←''</code>
+<code> [51]  r.addToMsg←''</code>
+<code> [52]      ⍝Done</code>
+</div>
+<code class="header" id="listing_13">#.HandleError.HandleError.CR &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code> r←CR</code>
+<code> [1]  r←⎕UCS 13</code>
+</div>
+<code class="header" id="listing_14">#.HandleError.HandleError.AssembleHTML &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  html←AssembleHTML(parms crash)</code>
+<code> [1]   html←'&lt;!DOCTYPE html&gt;',CR</code>
+<code> [2]   html,←'&lt;html lang="en"&gt;',CR</code>
+<code> [3]   html,←'&lt;head&gt;',CR</code>
+<code> [4]   html,←'  &lt;meta charset="utf-8"&gt;',CR</code>
+<code> [5]   html,←'  &lt;title&gt;',('/'##.APLTreeUtils2.Last filename),'&lt;/title&gt;',CR</code>
+<code> [6]   html,←'  &lt;style media="screen" type="text/css"&gt;',CR</code>
+<code> [7]   html,←'    pre {',CR</code>
+<code> [8]   html,←'   font-family: "APL385 Unicode"; font-size: 14px;',CR</code>
+<code> [9]   html,←'   }',CR</code>
+<code> [10]  html,←'   h1 {',CR</code>
+<code> [11]  html,←'   font-family: "Courier New";',CR</code>
+<code> [12]  html,←'   }',CR</code>
+<code> [13]  html,←'   table#apl {',CR</code>
+<code> [14]  html,←'   font-family: "APL385 Unicode"; font-size: 14px;',CR</code>
+<code> [15]  html,←'   }',CR</code>
+<code> [16]  html,←'  &lt;/style&gt;',CR</code>
+<code> [17]  html,←'&lt;/head&gt;',CR</code>
+<code> [18]  html,←'&lt;body&gt;',CR</code>
+<code> [19]  html,←'  &lt;h1&gt;',('/'##.APLTreeUtils2.Last filename),'&lt;/h1&gt;',CR</code>
+<code> [20]  html,←'  &lt;table id="apl"&gt;'</code>
+<code> [21]  html,←'  Version'MarkupAsTableRow⍕'#'⎕WG'APLVersion'</code>
+<code> [22]  html,←'  ⎕WSID'MarkupAsTableRow⍕{'/'##.APLTreeUtils2.Last ⍵ ⋄ ⍵}⍣('/'∊crash.WSID)⊣1↓' ',crash.WSID  ⍝ Enforce ⎕DR 80/82 with 1↓' ',</code>
+<code> [23]  html,←'  ⎕IO'MarkupAsTableRow⍕⎕IO</code>
+<code> [24]  html,←'  ⎕ML'MarkupAsTableRow⍕⎕ML</code>
+<code> [25]  html,←'  ⎕WA'MarkupAsTableRow⍕⎕WA</code>
+<code> [26]  html,←'  ⎕TNUMS'MarkupAsTableRow{0=≢⍵:⍵ ⋄ ⊃{⍺,',',⍵}/⍕¨⍵}⎕TNUMS</code>
+<code> [27]  html,←'  Category'MarkupAsTableRow crash.Category</code>
+<code> [28]  html,←'  EM'MarkupAsTableRow crash.EM</code>
+<code> [29]  html,←'  HelpURL'MarkupAsTableRow crash.HelpURL</code>
+<code> [30]  html,←'  EN'MarkupAsTableRow⍕crash.EN</code>
+<code> [31]  html,←'  ENX'MarkupAsTableRow⍕crash.ENX</code>
+<code> [32]  html,←'  InternalLocation'MarkupAsTableRow⍕crash.InternalLocation</code>
+<code> [33]  html,←'  Message'MarkupAsTableRow crash.Message</code>
+<code> [34]  html,←'  OSError'MarkupAsTableRow⍕crash.OSError</code>
+<code> [35]  html,←'  Current Dir'MarkupAsTableRow⍕crash.CurrentDir</code>
+<code> [36]  html,←'  Command line'MarkupAsTableRow⍕crash.CommandLine</code>
+<code> [37]  :If 0≠≢parms.addToMsg</code>
+<code> [38]      html,←'  Added Msg'MarkupAsTableRow parms.addToMsg</code>
+<code> [39]  :EndIf</code>
+<code> [40]  html,←'  &lt;/table&gt;'</code>
+<code> [41]  html,←'&lt;p&gt;&lt;b&gt;Stack:&lt;/b&gt;&lt;/p&gt;',CR</code>
+<code> [42]  :If 0≠≢crash.XSI</code>
+<code> [43]      html,←'&lt;pre&gt;',(⊃,/CR,¨crash.XSI,¨{'[',(⍕⍵),']'}¨crash.LC),CR,'&lt;/pre&gt;',CR</code>
+<code> [44]  :EndIf</code>
+<code> [45]  html,←'&lt;p&gt;&lt;b&gt;Error Message:&lt;/b&gt;&lt;/p&gt;',CR</code>
+<code> [46]  :If 0≠≢crash.DM</code>
+<code> [47]      html,←'&lt;pre&gt;',(ExchangeHtmlChars⊃,/CR,¨crash.DM),CR,'&lt;/pre&gt;',CR</code>
+<code> [48]  :EndIf</code>
+<code> [49]  html,←'&lt;/body&gt;',CR</code>
+<code> [50]  html,←'&lt;/html&gt;',CR</code>
+</div>
+<code class="header" id="listing_15">#.HandleError.HandleError.WriteWindowsLog_ &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  {r}←WriteWindowsLog_(source type message)</code>
+<code> [1]      ⍝ This function writes to the Windows Event Log.</code>
+<code> [2]      ⍝ "message" must either be a string or a vector of strings.</code>
+<code> [3]      ⍝ "type"</code>
+<code> [4]   ⎕ML←1</code>
+<code> [5]   r←⍬</code>
+<code> [6]   ⎕USING←'System,system.dll' 'System.Diagnostics,system.dll'</code>
+<code> [7]      ⍝ Should check the source/log exist.</code>
+<code> [8]   eventLog←⎕NEW EventLog</code>
+<code> [9]   eventLog.Source←source</code>
+<code> [10]  sep←⎕UCS 10</code>
+<code> [11]  buffer←¯1↓⊃,/message,¨sep</code>
+<code> [12]  eventLog.WriteEntry buffer type</code>
+</div>
+<code class="header" id="listing_16">#.HandleError.HandleError.ExchangeHtmlChars &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  html←ExchangeHtmlChars html</code>
+<code> [1]   :If 0&lt;+/b←html='&amp;'</code>
+<code> [2]       (b/html)←⊂'&amp;amp;'</code>
+<code> [3]       html←∊html</code>
+<code> [4]   :EndIf</code>
+<code> [5]   :If 0&lt;+/b←html='&lt;'</code>
+<code> [6]       (b/html)←⊂'&amp;lt;'</code>
+<code> [7]       html←∊html</code>
+<code> [8]   :EndIf</code>
+<code> [9]   :If 0&lt;+/b←html='&gt;'</code>
+<code> [10]      (b/html)←⊂'&amp;gt;'</code>
+<code> [11]      html←∊html</code>
+<code> [12]  :EndIf</code>
+</div>
+<code class="header" id="listing_17">#.HandleError.HandleError.CreateCrash &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  crash←CreateCrash(parms Trap)</code>
+<code> [1]   crash←⎕NS''</code>
+<code> [2]   crash.(AN DM EN XSI LC WSID TID TNUMS)←⎕AN ⎕DM ⎕EN ⎕XSI ⎕LC ⎕WSID ⎕TID ⎕TNUMS</code>
+<code> [3]   crash.WA←⎕WA</code>
+<code> [4]   crash.Trap←Trap</code>
+<code> [5]   crash.CurrentDir←##.FilesAndDirs.PWD</code>
+<code> [6]   crash.CommandLine←2 ⎕NQ'#' 'GetCommandLine'</code>
+<code> [7]   :Trap (parms.trapInternalErrors)/0</code>
+<code> [8]       crash.(Category DM EM HelpURL EN ENX InternalLocation Message OSError)←⎕DMX.(Category DM EM HelpURL EN ENX InternalLocation Message OSError)</code>
+<code> [9]       crash.(XSI LC)←1↓¨crash.(XSI LC)</code>
+<code> [10]  :EndTrap</code>
+<code> [11]  :If 0≠≢parms.addToMsg</code>
+<code> [12]      crash.addedMsg←parms.addToMsg</code>
+<code> [13]  :EndIf</code>
+<code> [14]  :If parms.saveVars</code>
+<code> [15]      crash←SaveVisibleVars crash</code>
+<code> [16]  :EndIf</code>
+</div>
+<code class="header" id="listing_18">#.HandleError.HandleError.WriteToWindowsEvents &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  {r}←WriteToWindowsEvents parms</code>
+<code> [1]   r←⍬</code>
+<code> [2]   :If 'Win'≡##.APLTreeUtils2.GetOperatingSystem ⍬</code>
+<code> [3]   :AndIf 0≠≢parms.windowsEventSource</code>
+<code> [4]       :Trap (parms.trapInternalErrors)/0</code>
+<code> [5]           msg←⊂'Application has crashed, RC=',(⍕crash.EN),'; MSG=',crash.EM</code>
+<code> [6]           msg,←(0&lt;≢parms.errorFolder)/''('Details can be found in ',parms.errorFolder)</code>
+<code> [7]           :If 0≠≢parms.addToMsg</code>
+<code> [8]               msg,←{(≡⍵)∊0 1:,⊂,⍵ ⋄ ⍵}parms.addToMsg</code>
+<code> [9]           :EndIf</code>
+<code> [10]          ReportErrorToWindowsLog parms.windowsEventSource msg</code>
+<code> [11]      :EndTrap</code>
+<code> [12]  :EndIf</code>
+</div>
+<code class="header" id="listing_19">#.HandleError.HandleError.SaveVisibleVars &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code> crash←SaveVisibleVars crash</code>
+<code> [1]  rf←{⊃⍵~⊃⍵}⎕RSI</code>
+<code> [2]  list←' '~¨⍨↓rf.⎕NL 2</code>
+<code> [3]  'Vars'crash.⎕NS''</code>
+<code> [4]  :For this :In list</code>
+<code> [5]      ⍎'crash.Vars.',this,'←rf.⍎this'</code>
+<code> [6]  :EndFor</code>
+</div>
+<code class="header" id="listing_20">#.HandleError.HandleError.CheckErrorFolder &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block"><code>  {r}←CheckErrorFolder parms</code>
+<code> [1]   r←⍬</code>
+<code> [2]   :If 0=≢parms.errorFolder</code>
+<code> [3]       :If 0=≢wsid←⎕WSID</code>
+<code> [4]           ⎕WSID←'Error-WS'</code>
+<code> [5]       :EndIf</code>
+<code> [6]       :If 0=≢buff←2⊃⎕NPARTS wsid</code>
+<code> [7]           buff←2⊃⎕NPARTS{'"'∊⍵:1↓⍵/⍨1=+\'"'=⍵ ⋄ ⍵↑⍨¯1+⍵⍳' '}2 ⎕NQ'#' 'GetCommandLine' ⍝ Probably a stand-alone EXE</code>
+<code> [8]       :EndIf</code>
+<code> [9]       :If 'Win'≡##.APLTreeUtils2.GetOperatingSystem ⍬</code>
+<code> [10]          parms.errorFolder←(⊃⎕CMD'ECHO %LOCALAPPDATA%'),'/',buff,'\Errors'</code>
+<code> [11]      :Else</code>
+<code> [12]          parms.errorFolder←##.FilesAndDirs.PWD,'/Errors'</code>
+<code> [13]      :EndIf</code>
+<code> [14]  :EndIf</code>
+<code> [15]  parms.errorFolder←{(-(¯1↑⍵)∊'/\')↓⍵}##.FilesAndDirs.NormalizePath parms.errorFolder</code>
+<code> [16]  :If 0=+/'/\'∊parms.errorFolder</code>
+<code> [17]      parms.errorFolder←##.FilesAndDirs.NormalizePath ##.FilesAndDirs.PWD,'/',parms.errorFolder</code>
+<code> [18]  :EndIf</code>
+<code> [19]  :If 0=⎕NEXISTS parms.errorFolder</code>
+<code> [20]  :AndIf parms.checkErrorFolder</code>
+<code> [21]      :If 'Win'≡##.APLTreeUtils2.GetOperatingSystem ⍬</code>
+<code> [22]          ##.FilesAndDirs.MkDir parms.errorFolder</code>
+<code> [23]      :Else</code>
+<code> [24]          ⎕SH'mkdir -p "',parms.errorFolder,'"'</code>
+<code> [25]      :EndIf</code>
+<code> [26]  :EndIf</code>
+</div>
+<code class="header" id="listing_21">#.HandleError.HandleError.force &mdash; 100%<a class="float-right no-print no-underline top-links" href="#top" title="Go to the top of the document">&#8607;</a><a  class="float-right no-print no-underline top-links" href="#partly-covered" title="Go to the beginning of 'Partly-covered'">↑</a></code>
+<div class="code-block missing">Could not get canonical representation.</div>
 <div id="footer">
 <hr>
-<p>Created by "CodeCoverage" version 0.7.2+40 from 2021-03-01</p>
+<p>Created by "CodeCoverage" version 0.10.2+52 from 2023-04-09</p>
 </div>
+
 </body>
 </html>

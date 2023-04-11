@@ -3,6 +3,10 @@
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 
+ :If 'win'≢⎕C APLTreeUtils2.GetOperatingSystem ⍬
+     R←T._WindowsOnly ⋄ →0
+ :EndIf
+
 ⍝ Preconditions...
  #.⎕SHADOW'TEMP'
  'TEMP'#.⎕NS''
