@@ -6,7 +6,7 @@
 ⍝ Preconditions...
  #.⎕SHADOW'TEMP'
  #.HandleErrorParms←##.HandleError.CreateParms
- #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
  'TEMP'#.⎕NS''
  #.TEMP.∆TheLog←''
  #.TEMP.⎕FX'{r}←∆CustomLogFns msg' '∆TheLog←msg'

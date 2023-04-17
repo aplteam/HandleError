@@ -10,7 +10,7 @@
  'TEMP'#.⎕NS''
  #.TEMP.TheLog←''
  #.TEMP.⎕FX'{r}←∆LOG msg' 'TheLog,←⊆msg'
- #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
 
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  'Create!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder

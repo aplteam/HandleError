@@ -1,3 +1,3 @@
  Cleanup
- FilesAndDirs.RmDir ∆GetTempPath''
+ FilesAndDirs.RmDir GetTempPath''
  FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'

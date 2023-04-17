@@ -8,7 +8,7 @@
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.saveCrash←0
- #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
 

@@ -6,7 +6,7 @@
 ⍝ Preconditions...
  #.⎕SHADOW'parms'
  #.parms←##.HandleError.CreateParms
- #.parms.errorFolder←∆GetTempPath⊃⎕SI
+ #.parms.errorFolder←GetTempPath⊃⎕SI
  #.parms.checkErrorFolder←1
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(0 'S')
 

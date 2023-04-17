@@ -1,4 +1,4 @@
- {(rc more)}←∆GetResultFromSecondDyalogInstance wsname;buff;cmd;dmx;ridePort
+ {(rc more)}←GetResultFromSecondDyalogInstance wsname;buff;cmd;dmx;ridePort
 ⍝ This starts a second session of Dyalog and waits for it to finish. Whatever `⎕OFF` returns
 ⍝ is then returned as `rc`. `more` may provide additional information.
  ridePort←9995

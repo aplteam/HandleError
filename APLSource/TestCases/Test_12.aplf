@@ -18,11 +18,11 @@
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.returnCode←123
- #.HandleErrorParms.errorFolder←∆GetTempPath⊃⎕SI
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
 
- (rc more)←∆GetResultFromSecondDyalogInstance wsname
+ (rc more)←GetResultFromSecondDyalogInstance wsname
 
  →T.GoToTidyUp~FilesAndDirs.Exists ##.CiderConfig.HOME,'/Tests/CONTINUE.dws'
  →T.GoToTidyUp 0≠≢⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'
