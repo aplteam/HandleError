@@ -5,10 +5,10 @@
 
 ⍝ Preconditions...
  #.⎕SHADOW'parms'
- #.parms←##.HandleError.CreateParms
+ #.parms←##.HandleError.HandleError.CreateParms
  #.parms.errorFolder←GetTempPath⊃⎕SI
  #.parms.checkErrorFolder←1
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.HandleError.Process #.parms')(0 'S')
 
  :Trap 406
      {⎕SIGNAL ⍵}405

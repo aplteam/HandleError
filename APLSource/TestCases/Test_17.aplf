@@ -5,12 +5,12 @@
 
 ⍝ Preconditions...
  #.⎕SHADOW'TEMP'
- #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms←##.HandleError.HandleError.CreateParms
  #.HandleErrorParms.errorFolder←'HandleErrorTest_17'
  'TEMP'#.⎕NS''
  list1←↑FilesAndDirs.Dir''
  list2←''
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.HandleError.Process  #.HandleErrorParms')(0 'S')
 
  :Trap 406
      {⎕SIGNAL ⍵}405

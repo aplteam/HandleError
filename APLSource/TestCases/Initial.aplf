@@ -2,6 +2,6 @@
  FilesAndDirs.PolishCurrentDir
 ⍝ Because the test workspaces need the latest version for the tests:
  targetFilename←'expand'FilesAndDirs.NormalizePath ##.CiderConfig.HOME,'/Tests/HandleError.aplc'
- body←⎕SRC ##.HandleError
+ body←⎕SRC ##.HandleError.HandleError
  (⊂body)⎕NPUT targetFilename 1
 ⍝Done

@@ -1,0 +1,8 @@
+ home Init ns;folder;list;names
+⍝ Create refs for all dependencies in HandleError (one level down).
+⍝ Only required in the project, not in the package
+ folder←home,'/',{⍵↑⍨¯1+⍵⍳','}ns.CIDER.tatinFolder
+ list←⊃⎕NGET(folder,'/apl-dependencies.txt')1
+ names←{⍵↑⍨¯1+⍵⍳'-'}∘{⍵↓⍨⍵⍳'-'}¨list
+⍝ HandleError.{⍎⍵,'←⍎''##.'',⍵'}¨names
+⍝Done

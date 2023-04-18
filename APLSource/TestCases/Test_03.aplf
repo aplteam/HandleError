@@ -10,13 +10,13 @@
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
- myEventLog←⎕NEW ##.WindowsEventLog(,⊂'Foo')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.HandleError.Process  #.HandleErrorParms')(0 'S')
+ myEventLog←⎕NEW ##.HandleError.WindowsEventLog(,⊂'Foo')
  myEventLog.WriteInfo'"Foo" created'
  ⎕EX'myEventLog'
 
  #.⎕SHADOW'HandleErrorParms'
- #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms←##.HandleError.HandleError.CreateParms
  #.HandleErrorParms.addToMsg←QTS←⍕⎕TS
  #.HandleErrorParms.windowsEventSource←'Foo'
  #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
@@ -29,7 +29,7 @@
 
  →T.GoToTidyUp 406≠⎕EN
  →T.GoToTidyUp 3≠⍴⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
- myEventLog←⎕NEW ##.WindowsEventLog(,⊂'Foo')
+ myEventLog←⎕NEW ##.HandleError.WindowsEventLog(,⊂'Foo')
  buffer←myEventLog.ReadThese{⎕IO←0 ⋄ (10>⍵):⍳⍵ ⋄ ⍵+-⍳10}myEventLog.NumberOfLogEntries
  →T.GoToTidyUp 1≠+/∨/¨#.HandleErrorParms.addToMsg∘⍷¨buffer
  R←T._OK

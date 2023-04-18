@@ -5,7 +5,7 @@
 
 ⍝ Preconditions...
  #.⎕SHADOW'HandleErrorParms'
- #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms←##.HandleError.HandleError.CreateParms
  #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
  #.⎕SHADOW'TEMP'
  'TEMP'#.⎕NS''
@@ -15,7 +15,7 @@
  #.HandleErrorParms.customFnsParent←#.TEMP
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.HandleError.Process  #.HandleErrorParms')(0 'S')
  :Trap 406
      {⎕SIGNAL ⍵}405
      →T.GoToTidyUp 1
@@ -23,7 +23,7 @@
 
  →T.GoToTidyUp 406≠⎕EN
  →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'    ⍝ DCF & HTML & DWS (since acre 4)
- →T.GoToTidyUp(8+1⊃⍴##.HandleError.CreateParms.∆List)≠≢#.TEMP.TheLog
+ →T.GoToTidyUp(8+1⊃⍴##.HandleError.HandleError.CreateParms.∆List)≠≢#.TEMP.TheLog
  R←T._OK
 
 ∆TidyUp:

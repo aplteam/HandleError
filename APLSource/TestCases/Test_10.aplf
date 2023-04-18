@@ -4,7 +4,7 @@
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  ''''')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.HandleError.Process  ''''')(0 'S')
  home←'Errors'
  {}FilesAndDirs.RmDir home
  {}'CREATE!'FilesAndDirs.CheckPath home

@@ -5,9 +5,9 @@
 
 ⍝ Preconditions...
  #.⎕SHADOW'parms'
- #.parms←##.HandleError.CreateParms
+ #.parms←##.HandleError.HandleError.CreateParms
  #.parms.saveVars←0
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.HandleError.Process #.parms')(0 'S')
  home←'Errors'
  :If 'WIN'≡APLTreeUtils2.Uppercase APLTreeUtils2.GetOperatingSystem ⍬
      fullHome←FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\',home

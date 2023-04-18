@@ -4,9 +4,9 @@
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.HandleError.Process  #.HandleErrorParms')(0 'S')
  #.⎕SHADOW'HandleErrorParms'
- #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms←##.HandleError.HandleError.CreateParms
  #.HandleErrorParms.errorFolder←'Special'
  #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
