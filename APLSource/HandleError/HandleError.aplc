@@ -83,11 +83,13 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←'HandleError' '4.1.4+60' '2023-04-18'
+      r←'HandleError' '4.2.0-beta-1+60' '2024-04-26'
     ∇
 
     ∇ History
-      :Access Public Shared 
+      :Access Public Shared
+      ⍝ * 4.2.0 ⋄ 2024-04-26
+      ⍝   `Message` is now added to the error message at the bottom of the HTML report, and removed from the top. (#4)
       ⍝ * 4.1.4 ⋄ 2023-04-18
       ⍝   * Bug fix: the structure of the project was wrong, resulting in test-related stuff being including
       ⍝     in the package: that caused the naming problem.
@@ -338,7 +340,6 @@
       html,←'  EN'MarkupAsTableRow⍕crash.EN
       html,←'  ENX'MarkupAsTableRow⍕crash.ENX
       html,←'  InternalLocation'MarkupAsTableRow⍕crash.InternalLocation
-      html,←'  Message'MarkupAsTableRow crash.Message
       html,←'  OSError'MarkupAsTableRow⍕crash.OSError
       html,←'  Current Dir'MarkupAsTableRow⍕crash.CurrentDir
       html,←'  Command line'MarkupAsTableRow⍕crash.CommandLine
@@ -352,7 +353,11 @@
       :EndIf
       html,←'<p><b>Error Message:</b></p>',CR
       :If 0≠≢crash.DM
-          html,←'<pre>',(ExchangeHtmlChars⊃,/CR,¨crash.DM),CR,'</pre>',CR
+          html,←'<pre>',(ExchangeHtmlChars⊃,/CR,¨crash.DM),CR
+          :If 0<≢crash.Message
+              html,←crash.Message,CR
+          :EndIf
+          html,←'</pre>',CR
       :EndIf
       html,←'</body>',CR
       html,←'</html>',CR
