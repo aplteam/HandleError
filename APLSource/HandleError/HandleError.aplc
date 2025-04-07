@@ -83,12 +83,22 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←'HandleError' '4.2.0-beta-1+60' '2024-04-26'
+    ⍝ Returns the version number from `TatinVars` if possible.
+    ⍝ See also `History`
+      :If 0<⎕NC'TatinVars.CONFIG'
+          r←(⎕JSON⍠('Dialect' 'JSON5')⊢TatinVars.CONFIG).version
+      :ElseIf 0<##.⎕NC'TatinVars.CONFIG'
+          r←(⎕JSON⍠('Dialect' 'JSON5')⊢##.TatinVars.CONFIG).version
+      :Else
+    ⍝ When a script was not loaded with Tatin, there will be no namespace `TatinVars`.
+    ⍝ In such cases we cannot provide a version number, so we return just ''.
+          r←''
+      :EndIf
     ∇
 
     ∇ History
       :Access Public Shared
-      ⍝ * 4.2.0 ⋄ 2024-04-26
+      ⍝ * 4.2.0 ⋄ 2025-04-07
       ⍝   `Message` is now added to the error message at the bottom of the HTML report, and removed from the top. (#4)
       ⍝ * 4.1.4 ⋄ 2023-04-18
       ⍝   * Bug fix: the structure of the project was wrong, resulting in test-related stuff being including
