@@ -1,7 +1,8 @@
- Initial;body;targetFilename
+ Initial;targetFolder
  FilesAndDirs.PolishCurrentDir
-⍝ Because the test workspaces need the latest version for the tests:
- targetFilename←'expand'FilesAndDirs.NormalizePath ##.CiderConfig.HOME,'/Tests/HandleError.aplc'
- body←⎕SRC ##.HandleError.HandleError
- (⊂body)⎕NPUT targetFilename 1
+⍝ Because the test workspaces need the latest version of HandleError for the tests:
+ targetFolder←'expand'FilesAndDirs.NormalizePath ##.CiderConfig.HOME,'/Tests/'
+ FilesAndDirs.RmDir targetFolder,'/HandleError'
+ 'Create!'FilesAndDirs.CheckPath targetFolder,'/HandleError'
+ targetFolder ⎕NCOPY ##.CiderConfig.HOME,'/APLSource/HandleError'
 ⍝Done

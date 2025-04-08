@@ -1,0 +1,8 @@
+ R←Test_84(stopFlag batchFlag);⎕TRAP
+⍝ Exercise the "PrintErrorToSession" function
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+ {}##.HandleError.PrintErrorToSession'<Ignore this message>'
+
+ R←T._OK

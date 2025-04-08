@@ -11,12 +11,12 @@
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.HandleError.Process  #.HandleErrorParms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
  FilesAndDirs.DeleteFile ##.CiderConfig.HOME,'/Tests/CONTINUE.dws'
  path←'"',1⊃APLTreeUtils2.SplitPath 1⊃#.GetCommandLineArgs
  wsname←##.CiderConfig.HOME,'\Tests\test_ws_2.dws'
  #.⎕SHADOW'HandleErrorParms'
- #.HandleErrorParms←##.HandleError.HandleError.CreateParms
+ #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.returnCode←123
  #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

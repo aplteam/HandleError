@@ -4,7 +4,7 @@
  R←T._Failed
 
  #.⎕SHADOW'HandleErrorParms'
- #.HandleErrorParms←##.HandleError.HandleError.CreateParms
+ #.HandleErrorParms←##.HandleError.CreateParms
  →T.FailsIf 1≠⍴#.HandleErrorParms.⎕NL-3
 
  R←T._OK

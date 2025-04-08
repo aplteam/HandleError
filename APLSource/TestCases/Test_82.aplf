@@ -1,0 +1,8 @@
+ R←Test_82(stopFlag batchFlag);⎕TRAP
+⍝ Exercise the "Init" function
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+ ##.HandleError.Init
+
+ R←T._OK

@@ -1,5 +1,5 @@
 {
-  api: "HandleError",
+  api: "API",
   assets: "",
   date: "2021-03-02",
   description: "Allows to catch errors on an application level; saves information useful to analyze the error",
@@ -8,7 +8,7 @@
   group: "aplteam",
   io: 1,
   license: "MIT",
-  lx: "",
+  lx: "Init",
   maintainer: "kai@aplteam.com",
   minimumAplVersion: "18.0",
   ml: 1,
@@ -20,5 +20,5 @@
   source: "APLSource/HandleError",
   tags: "error-trapping",
   userCommandScript: "",
-  version: "4.1.4+66",
+  version: "5.0.0+69",
 }
