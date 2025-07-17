@@ -1,4 +1,6 @@
 (
+ '  * 5.0.1 ⋄ 2025-07-17'
+ '    * The documentation on `ADOC_Doc` was flawed.  '
  '  * 5.0.0 ⋄ 2025-04-08'
  '    * Class converted to an ordinary namespace'
  '    * `Version` nor returns just a char vector with the version info from the package config file (potentially breaking)'

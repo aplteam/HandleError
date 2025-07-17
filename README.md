@@ -58,7 +58,7 @@ This example calls `HandleError.CreateParms` in order to create a parameter name
  trapSaveWSID        1 
  windowsEventSource    
 
-      ⎕TRAP←(405 'E' '#.HandleError.Process #.HandleErrorParms')
+      ⎕TRAP←#.HandleError.SetTrap '#.HandleErrorParms'
 ```
 
 A detailed documentation is available via
@@ -66,3 +66,4 @@ A detailed documentation is available via
 ```
 ]adoc HandleError
 ```
+
