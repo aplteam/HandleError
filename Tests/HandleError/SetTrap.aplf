@@ -9,8 +9,10 @@
  force←{0=⎕NC ⍵:0 ⋄ ⍎⍵}'force'
  r←(0 1000)'S'
  calledFrom←{⌽{⍵/⍨2≤+\'.'=⍵}⌽⍵}1⊃⎕XSI
- 'Invalid right argument - not a named namespace'⎕SIGNAL 11/⍨∧/'[]'∊⍕parameterSpaceName
- 'Invalid right argument - not a named namespace'⎕SIGNAL 11/⍨~{11::0 ⋄ 9=⎕NC ⍵}parameterSpaceName
+ :If ~(⊂parameterSpaceName)∊''⍬
+     'Invalid right argument - not a named namespace'⎕SIGNAL 11/⍨∧/'[]'∊⍕parameterSpaceName
+     'Invalid right argument - not a named namespace'⎕SIGNAL 11/⍨~{11::0 ⋄ 9=⎕NC ⍵}parameterSpaceName
+ :EndIf
  parameterSpaceName←⍕parameterSpaceName
  :If 0≠≢parameterSpaceName
      :If 1≠≡,parameterSpaceName
