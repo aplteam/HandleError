@@ -25,6 +25,11 @@
      r←⊂0 'E'(calledFrom,'HandleError.Process ⍬')
  :Else
      :If (0=APLTreeUtils2.IsDevelopment)∨force
-         r←⊂0 'E'(calledFrom,'HandleError.Process ''',parameterSpaceName,'''')
+         :If ∨/'._tatin.'⍷calledFrom
+             calledFrom←({⌽{⍵/⍨1≤+\'.'=⍵}⌽⍵}1⊃⎕XSI),'API.'
+             r←⊂0 'E'(calledFrom,'Process ''',parameterSpaceName,'''')
+         :Else
+             r←⊂0 'E'(calledFrom,'HandleError.Process ''',parameterSpaceName,'''')
+         :EndIf
      :EndIf
  :EndIf

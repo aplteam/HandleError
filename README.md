@@ -10,7 +10,7 @@ It has the following goals:
 
  * Create a namespace `crash` and populate it with variables providing all sorts of information potentially important for analyzing the error. This namespace is saved in a component file by default. This is mainly for applications that cannot save an error workspace because threads are used.
  * Create an HTML page with essential information regarding the error.
- * Attempt to save an error workspace. In order to achieve that all running threads are killed by default; the main thread will always survive anyway, and so will the thread dealing with the error since a thread cannot kill itself. (See `killThreads` or how to change this default behaviour)
+ * Attempt to save an error workspace. In order to achieve that all running threads are killed by default; the main thread will always survive anyway, and so will the thread dealing with the error since a thread cannot kill itself. (See `killThreads` on how to change this default behaviour)
 
 All options can be changed by setting variables in a parameter namespace returned by `CreateParms`. Such a namespace can then be passed as right argument to the main function `Process`. For defaults just pass an empty vector to `Process`. 
 
@@ -66,4 +66,5 @@ A detailed documentation is available via
 ```
 ]adoc HandleError
 ```
+
 
