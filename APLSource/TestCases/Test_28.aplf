@@ -1,0 +1,33 @@
+ R←Test_28(stopFlag batchFlag);⎕TRAP;list;html
+⍝ Text taken from the error (EM) and from `addToMsg` is HTML-escaped
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.saveErrorWS←0
+ #.HandleErrorParms.addToMsg←'a<i>b'
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :Trap 406
+     {'x<b>y & z'⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ →T.GoToTidyUp 406≠⎕EN
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.html'
+ →T.GoToTidyUp 1≠≢list
+ html←⊃⎕NGET⊃list
+ →T.GoToTidyUp∨/'x<b>y'⍷html
+ →T.GoToTidyUp~∨/'x&lt;b&gt;y &amp; z'⍷html
+ →T.GoToTidyUp∨/'a<i>b'⍷html
+ →T.GoToTidyUp~∨/'a&lt;i&gt;b'⍷html
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

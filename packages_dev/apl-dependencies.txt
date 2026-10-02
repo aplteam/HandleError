@@ -4,3 +4,4 @@ aplteam-Tester2-5.0.0
 aplteam-CodeCoverage-1.0.0
 aplteam-Execute-4.0.0
 aplteam-CommTools-3.2.0
+aplteam-WindowsEventLog-4.1.0

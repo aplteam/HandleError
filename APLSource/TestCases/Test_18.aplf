@@ -1,4 +1,4 @@
- R←Test_18(stopFlag batchFlag);⎕TRAP;home;ALIEN;parms;test;filename;fno;crash;fullHome
+ R←Test_18(stopFlag batchFlag);⎕TRAP;ALIEN;parms;test;filename;fno;crash;fullHome
 ⍝ Test "HandleError.Process" without saving any variables
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
@@ -7,13 +7,8 @@
  #.⎕SHADOW'parms'
  #.parms←##.HandleError.CreateParms
  #.parms.saveVars←0
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(0 'S')
- home←'Errors'
- :If 'WIN'≡APLTreeUtils2.Uppercase APLTreeUtils2.GetOperatingSystem ⍬
-     fullHome←FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\',home
- :Else
-     fullHome←FilesAndDirs.PWD,'/Errors'
- :EndIf
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ fullHome←GetDefaultErrorFolder
 
  {}FilesAndDirs.RmDir fullHome
  ALIEN←'Hello world'
@@ -35,4 +30,4 @@
  R←T._OK
 
 ∆TidyUp:
- {}FilesAndDirs.RmDir home
+ {}FilesAndDirs.RmDir fullHome

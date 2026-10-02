@@ -1,0 +1,25 @@
+ R←Test_22(stopFlag batchFlag);⎕TRAP;expected;r
+⍝ `SetTrap` builds the ⎕TRAP expression from the namespace HandleError actually lives in
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ expected←(⍕##.HandleError),'.Process ⍬'
+
+ r←1 ##.HandleError.SetTrap ⍬
+ →T.PassesIf 1=≢r
+ →T.PassesIf(0 'E'expected)≡⊃r
+
+ r←1 ##.HandleError.SetTrap''
+ →T.PassesIf(0 'E'expected)≡⊃r
+
+ r←1 ##.HandleError.SetTrap'#.HandleErrorParms'
+ →T.PassesIf(0 'E'((⍕##.HandleError),'.Process ''#.HandleErrorParms'''))≡⊃r
+
+ :If APLTreeUtils2.IsDevelopment
+     →T.PassesIf((0 1000)'S')≡##.HandleError.SetTrap'#.HandleErrorParms'
+ :EndIf
+
+ R←T._OK

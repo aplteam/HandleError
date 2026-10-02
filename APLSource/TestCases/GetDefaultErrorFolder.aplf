@@ -1,0 +1,7 @@
+ r←GetDefaultErrorFolder;parms
+⍝ Returns the folder `HandleError.Process` saves its files into when `errorFolder` is empty.
+⍝ Asks `CheckErrorFolder` itself rather than mimicking its rules.
+ parms←##.HandleError.CreateParms
+ parms.checkErrorFolder←0
+ ##.HandleError.CheckErrorFolder parms
+ r←parms.errorFolder

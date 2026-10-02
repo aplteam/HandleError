@@ -4,7 +4,7 @@
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.errorFolder←'Special'

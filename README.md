@@ -20,12 +20,12 @@ You can make `Process` execute your own code by setting `logFunction` and/or `cu
 
 This example sets error trapping for an application so that `HandleError.Process` uses defaults (empty right argument): 
 ```
-      ⎕TRAP←(405 'E' '#.HandleError.Process ⍬')
+      ⎕TRAP←(0 'E' '#.HandleError.Process ⍬')
 ```
 
 This is typically done at a very early stage of an application, when we don't know yet where to save stuff etc.
 
-This example uses the internal function `SetTrap` for setting `⎕TRAP`:
+This example uses the function `SetTrap` for setting `⎕TRAP`:
 
 ```
       ⎕TRAP←#.HandleError.SetTrap ⍬

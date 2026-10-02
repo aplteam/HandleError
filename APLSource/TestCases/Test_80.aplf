@@ -11,7 +11,7 @@
  #.⎕SHADOW'TEMP'
  'TEMP'#.⎕NS''
  #.TEMP.ErrorParms←##.HandleError.CreateParms
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.TEMP.ErrorParms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.TEMP.ErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  WSID←⎕WSID
  ⎕WSID←''
  home←2⊃⎕NPARTS{'"'∊⍵:1↓⍵/⍨1=+\'"'=⍵ ⋄ ⍵↑⍨¯1+⍵⍳' '}2 ⎕NQ'#' 'GetCommandLine'

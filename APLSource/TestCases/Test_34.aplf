@@ -1,0 +1,37 @@
+ R←Test_34(stopFlag batchFlag);⎕TRAP;ALIEN;list;fno;crash;own;QEN
+⍝ `API.Process`, called with the name of a parameter space (as `SetTrap` does), saves the variables
+⍝ visible where the error occurred, and the stack holds none of HandleError's own functions (API included)
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.API.CreateParms
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.saveErrorWS←0
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ ALIEN←'Hello world'
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.API.Process ''#.HandleErrorParms''')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ QEN←⎕EN
+ →T.GoToTidyUp 406≠QEN
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.dcf'
+ →T.GoToTidyUp 1≠≢list
+ fno←(⊃list)⎕FTIE 0
+ crash←⎕FREAD fno 1
+ ⎕FUNTIE fno
+ →T.GoToTidyUp 9≠crash.⎕NC'Vars'
+ →T.GoToTidyUp'Hello world'≢crash.Vars.ALIEN
+ own←(⍕##.HandleError),'.'
+ →T.GoToTidyUp∨/(⊂own)≡¨(≢own)↑¨crash.XSI
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

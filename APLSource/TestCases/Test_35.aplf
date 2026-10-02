@@ -1,0 +1,24 @@
+ R←Test_35(stopFlag batchFlag);⎕TRAP;myEventLog;msg;buffer
+⍝ `API.ReportErrorToWindowsLog` writes to the Windows Event Log
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+
+ :If 'Win'≢APLTreeUtils2.GetOperatingSystem ⍬
+     R←T._WindowsOnly
+     :Return
+ :EndIf
+
+ R←T._Failed
+
+⍝ Preconditions...
+ myEventLog←⎕NEW WindowsEventLog(,⊂'Foo')
+ myEventLog.WriteInfo'"Foo" created'
+ ⎕EX'myEventLog'
+ msg←'HandleError Test_35 ',⍕⎕TS
+
+ {}##.HandleError.API.ReportErrorToWindowsLog'Foo'msg
+
+ myEventLog←⎕NEW WindowsEventLog(,⊂'Foo')
+ buffer←myEventLog.ReadThese{⎕IO←0 ⋄ (10>⍵):⍳⍵ ⋄ ⍵+-⍳10}myEventLog.NumberOfLogEntries
+ →T.PassesIf 1=+/∨/¨msg∘⍷¨buffer
+
+ R←T._OK

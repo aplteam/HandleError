@@ -1,0 +1,31 @@
+ R←Test_33(stopFlag batchFlag);⎕TRAP;api;p1;p2;apiNames;public
+⍝ The API functions `CreateParms`, `History`, `Version` and `SetTrap` behave like their internal counterparts
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+ api←##.HandleError.API
+
+ apiNames←api.⎕NL-3
+ public←##.HandleError.Public
+ →T.PassesIf∧/apiNames∊public
+ →T.PassesIf∧/public∊apiNames
+
+ →T.PassesIf api.Version≡##.HandleError.Version
+ →T.PassesIf api.History≡##.HandleError.History
+
+ p1←api.CreateParms
+ p2←##.HandleError.CreateParms
+ →T.PassesIf 9=⎕NC'p1'
+ →T.PassesIf(p1.⎕NL 2)≡p2.⎕NL 2
+
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←api.CreateParms
+ →T.PassesIf(1 api.SetTrap ⍬)≡1 ##.HandleError.SetTrap ⍬
+ →T.PassesIf(api.SetTrap ⍬)≡##.HandleError.SetTrap ⍬
+ →T.PassesIf(1 api.SetTrap'#.HandleErrorParms')≡1 ##.HandleError.SetTrap'#.HandleErrorParms'
+ :Trap 11
+     {}api.SetTrap #.HandleErrorParms
+     →T.PassesIf 0
+ :EndTrap
+
+ R←T._OK

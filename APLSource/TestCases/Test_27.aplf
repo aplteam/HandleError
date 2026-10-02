@@ -1,0 +1,38 @@
+ R←Test_27(stopFlag batchFlag);⎕TRAP;fns;MyFns;tid;list;fno;crash
+⍝ When the error WS cannot be saved, `crash` must survive and say why.
+⍝ A thread that is not killed (`killThreads←0`) makes `⎕SAVE` fail.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.killThreads←0
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ fns←⍎⎕FX'MyFns dummy' '⎕DL 0.1 ⋄ →1'
+ tid←fns&1
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ →T.GoToTidyUp 406≠⎕EN
+ →T.GoToTidyUp 0≠≢FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.dws'
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.dcf'
+ →T.GoToTidyUp 1≠≢list
+ fno←(⊃list)⎕FTIE 0
+ crash←⎕FREAD fno 1
+ ⎕FUNTIE fno
+ →T.GoToTidyUp 9≠⎕NC'crash'
+ →T.GoToTidyUp 2≠crash.⎕NC'SaveFailed'
+ →T.GoToTidyUp 405≢crash.EN                        ⍝ The rest of `crash` is still there
+
+ R←T._OK
+
+∆TidyUp:
+ ⎕TKILL tid
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

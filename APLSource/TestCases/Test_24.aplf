@@ -1,0 +1,41 @@
+ R←Test_24(stopFlag batchFlag);⎕TRAP;wsid;Folder;local;exe
+⍝ `CheckErrorFolder` names the default folder after the WS, the EXE or "ERROR_WS", and leaves ⎕WSID alone
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ wsid←⎕WSID
+ Folder←{
+     parms←##.HandleError.CreateParms
+     parms.checkErrorFolder←0
+     _←##.HandleError.CheckErrorFolder parms
+     parms.errorFolder
+ }
+
+ :If 'Win'≡APLTreeUtils2.GetOperatingSystem ⍬
+     local←2 ⎕NQ'.' 'GetEnvironment' 'LOCALAPPDATA'
+     exe←2⊃⎕NPARTS{'"'∊⍵:1↓⍵/⍨1=+\'"'=⍵ ⋄ ⍵↑⍨¯1+⍵⍳' '}2 ⎕NQ'#' 'GetCommandLine'
+
+     ⎕WSID←'C:\apps\MyApp.dws'
+     →T.GoToTidyUp(FilesAndDirs.NormalizePath local,'/MyApp/Errors')≢Folder 0
+     →T.GoToTidyUp ⎕WSID≢'C:\apps\MyApp.dws'
+
+     ⎕WSID←'CLEAR WS'
+     →T.GoToTidyUp(FilesAndDirs.NormalizePath local,'/ERROR_WS/Errors')≢Folder 0
+     →T.GoToTidyUp ⎕WSID≢'CLEAR WS'
+
+     ⎕WSID←''
+     →T.GoToTidyUp(FilesAndDirs.NormalizePath local,'/',exe,'/Errors')≢Folder 0
+     →T.GoToTidyUp ⎕WSID≢''
+ :Else
+     ⎕WSID←'/apps/MyApp.dws'
+     →T.GoToTidyUp(FilesAndDirs.PWD,'/Errors')≢Folder 0
+     ⎕WSID←''
+     →T.GoToTidyUp(FilesAndDirs.PWD,'/Errors')≢Folder 0
+     →T.GoToTidyUp ⎕WSID≢''
+ :EndIf
+
+ R←T._OK
+
+∆TidyUp:
+ ⎕WSID←wsid

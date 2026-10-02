@@ -1,0 +1,31 @@
+ R←Test_30(stopFlag batchFlag);⎕TRAP;parms;filename1;filename2
+⍝ Two crashes in quick succession must not collide: file names carry milliseconds
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ parms←##.HandleError.CreateParms
+ parms.errorFolder←GetTempPath⊃⎕SI
+ parms.(killThreads saveErrorWS createHTML saveVars)←0
+ parms.signal←501
+ {}FilesAndDirs.RmDir parms.errorFolder
+
+ :Trap 501
+     ##.HandleError.Process parms
+     →T.GoToTidyUp 1
+ :EndTrap
+ filename1←parms.∆ERROR_WS
+
+ :Trap 501
+     ##.HandleError.Process parms
+     →T.GoToTidyUp 1
+ :EndTrap
+ filename2←parms.∆ERROR_WS
+
+ →T.GoToTidyUp filename1≡filename2
+ →T.GoToTidyUp 2≠≢FilesAndDirs.ListFiles parms.errorFolder,'/*.dcf'
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir parms.errorFolder

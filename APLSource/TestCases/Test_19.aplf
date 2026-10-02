@@ -8,7 +8,7 @@
  #.parms←##.HandleError.CreateParms
  #.parms.errorFolder←GetTempPath⊃⎕SI
  #.parms.checkErrorFolder←1
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(999 'C' '. ⍝ Deliberate error')(0 'N')
 
  :Trap 406
      {⎕SIGNAL ⍵}405
@@ -27,7 +27,7 @@
  :EndTrap
 
  →T.GoToTidyUp ⎕EN≠406
- →T.GoToTidyUp 0=FilesAndDirs.Exists #.parms.errorFolder  ⍝ This fails in 2016-09-01 due to a bug in Dyalog: <01234>
+ →T.GoToTidyUp 0=FilesAndDirs.Exists #.parms.errorFolder
 
  {}FilesAndDirs.RmDir #.parms.errorFolder
 

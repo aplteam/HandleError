@@ -5,6 +5,7 @@
 
 ⍝ Preconditions...
  #.⎕SHADOW'TEMP'
+ #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
  #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
  'TEMP'#.⎕NS''
@@ -15,7 +16,7 @@
  #.HandleErrorParms.trapInternalErrors←0
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  :Trap 406
      {⎕SIGNAL ⍵}405
      →T.GoToTidyUp 1

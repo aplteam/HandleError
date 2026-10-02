@@ -1,0 +1,26 @@
+ R←Test_31(stopFlag batchFlag);⎕TRAP;parms;folder;file
+⍝ When collecting the crash information fails, `Process` must still do its final duty (here: `signal`).
+⍝ The error folder is made impossible to create by putting it "below" a file.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ folder←GetTempPath⊃⎕SI
+ {}FilesAndDirs.RmDir folder
+ {}'CREATE!'FilesAndDirs.CheckPath folder
+ file←folder,'/AFile.txt'
+ (⊂'Not a folder')⎕NPUT file
+ parms←##.HandleError.CreateParms
+ parms.errorFolder←file,'/Errors'
+ parms.killThreads←0
+ parms.signal←501
+
+ :Trap 501
+     ##.HandleError.Process parms
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir folder

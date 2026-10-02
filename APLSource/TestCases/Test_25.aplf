@@ -1,0 +1,44 @@
+ R←Test_25(stopFlag batchFlag);⎕TRAP;⎕IO;⎕ML;trap;list;fno;crash;own;QEN
+⍝ `crash` reports the caller's ⎕IO, ⎕ML and ⎕TRAP, and the stack holds none of HandleError's own functions
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ trap←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(406 'C' '→∆CarryOn')(999 'C' '. ⍝ Deliberate error')(0 'N')
+
+⍝ No :Trap around the error here: within a :Trap, ⎕TRAP reports that :Trap (`406 ':'`) instead of the real setting
+ ⎕TRAP←trap
+ trap←⎕TRAP                                       ⍝ The form Dyalog reports it in
+ ⎕IO←0 ⋄ ⎕ML←3
+ {⎕SIGNAL ⍵}405
+ ⎕IO←1 ⋄ ⎕ML←1
+ →T.GoToTidyUp 1
+
+∆CarryOn:
+ QEN←⎕EN
+ ⎕IO←1 ⋄ ⎕ML←1
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+
+ →T.GoToTidyUp 406≠QEN
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.dcf'
+ →T.GoToTidyUp 1≠≢list
+ fno←(⊃list)⎕FTIE 0
+ crash←⎕FREAD fno 1
+ ⎕FUNTIE fno
+ →T.GoToTidyUp 0≢crash.IO
+ →T.GoToTidyUp 3≢crash.ML
+ →T.GoToTidyUp trap≢crash.Trap
+ own←(⍕##.HandleError),'.'
+ →T.GoToTidyUp 0=≢crash.XSI
+ →T.GoToTidyUp∨/(⊂own)≡¨(≢own)↑¨crash.XSI
+ →T.GoToTidyUp(≢crash.XSI)≢≢crash.LC
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

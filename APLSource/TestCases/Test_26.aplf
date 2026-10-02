@@ -1,0 +1,36 @@
+ R←Test_26(stopFlag batchFlag);⎕TRAP;fns;MyFns;tid;html;s;row;list
+⍝ The HTML page reports ⎕TNUMS as they were before `Process` killed the threads
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.saveErrorWS←0
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ fns←⍎⎕FX'MyFns dummy' '⎕DL 0.1 ⋄ →1'
+ tid←fns&1
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ →T.GoToTidyUp 406≠⎕EN
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.html'
+ →T.GoToTidyUp 1≠≢list
+ html←⊃⎕NGET⊃list
+ s←'⎕TNUMS: </b></td><td>'
+ →T.GoToTidyUp~∨/s⍷html
+ row←html↓⍨(¯1+≢s)+⊃⍸s⍷html
+ row←row↑⍨¯1+row⍳'<'
+ →T.GoToTidyUp~tid∊2⊃','⎕VFI row
+
+ R←T._OK
+
+∆TidyUp:
+ ⎕TKILL tid
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

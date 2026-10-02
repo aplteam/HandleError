@@ -4,12 +4,8 @@
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process ⍬')(0 'S')
- :If 'WIN'≡APLTreeUtils2.Uppercase APLTreeUtils2.GetOperatingSystem ⍬
-     home←FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors'
- :Else
-     home←FilesAndDirs.PWD,'/Errors'
- :EndIf
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process ⍬')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ home←GetDefaultErrorFolder
  FilesAndDirs.RmDir home
  {}'CREATE!'FilesAndDirs.CheckPath home
  ALIEN←'Hello world'
@@ -21,7 +17,7 @@
 
  filename←⊃FilesAndDirs.ListFiles home,'\*.html'
  html←⊃⎕NGET filename
- →T.GoToTidyUp 2≠+/'&amp; and &lt; and&gt; are special characters'⍷html
+ →T.GoToTidyUp 3≠+/'&amp; and &lt; and&gt; are special characters'⍷html
 
  R←T._OK
 

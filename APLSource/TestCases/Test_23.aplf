@@ -1,0 +1,28 @@
+ R←Test_23(stopFlag batchFlag);⎕TRAP;rejected;qdmx
+⍝ `SetTrap` rejects anything but an empty vector or the name of an existing namespace
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'TEMP'
+ 'TEMP'#.⎕NS''
+ rejected←{11::1 ⋄ _←1 ##.HandleError.SetTrap ⍵ ⋄ 0}
+
+ →T.PassesIf rejected #.TEMP                      ⍝ A reference, though to a named namespace
+ →T.PassesIf rejected ⎕NS''                       ⍝ A reference to an unnamed namespace
+ →T.PassesIf rejected ⎕NULL
+ →T.PassesIf rejected 1 2 3
+ →T.PassesIf rejected'#.TEMP.DoesNotExist'
+ →T.PassesIf~rejected'#.TEMP'
+ →T.PassesIf~rejected''
+ →T.PassesIf~rejected ⍬
+
+ :Trap 11
+     {}1 ##.HandleError.SetTrap #.TEMP
+     →T.PassesIf 0
+ :Else
+     qdmx←⎕DMX
+     →T.PassesIf∨/'not a reference'⍷qdmx.EM
+ :EndTrap
+
+ R←T._OK

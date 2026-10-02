@@ -1,11 +1,11 @@
- R←Test_10(stopFlag batchFlag);fns;MyFns;⎕TRAP;home;path;rc;en;more
+ R←Test_10(stopFlag batchFlag);fns;MyFns;⎕TRAP;home;rc;en;more
 ⍝ Test "HandleError.Process": fires up a thread. Should still save an error WS.
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  ''''')(0 'S')
- home←'Errors'
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  ''''')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ home←GetDefaultErrorFolder
  {}FilesAndDirs.RmDir home
  {}'CREATE!'FilesAndDirs.CheckPath home
 
@@ -17,12 +17,7 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- :If 'WIN'≡APLTreeUtils2.Uppercase APLTreeUtils2.GetOperatingSystem ⍬
-     path←FilesAndDirs.NormalizePath'%LOCALAPPDATA%','/',(2⊃⎕NPARTS ⎕WSID),'\Errors\'
- :Else
-     path←FilesAndDirs.PWD,'/Errors/'
- :EndIf
- →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir path   ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir home,'\'   ⍝ DCF & HTML & DWS
  R←T._OK
 
 ∆TidyUp:

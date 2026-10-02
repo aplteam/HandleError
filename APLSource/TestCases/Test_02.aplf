@@ -15,7 +15,7 @@
  'Create!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
  #.HandleErrorParms.logFunction←'#.TEMP.∆LOG'
 
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(0 'S')
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
 
@@ -26,7 +26,7 @@
  :EndTrap
 
  →T.GoToTidyUp 406≠⎕EN
- →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS (since acre 4)
+ →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir #.HandleErrorParms.errorFolder,'\'  ⍝ DCF & HTML & DWS
  →T.GoToTidyUp 5≠≢#.TEMP.TheLog
  →T.GoToTidyUp~∨/'Error number=405'⍷∊#.TEMP.TheLog
 
