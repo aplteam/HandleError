@@ -11,7 +11,7 @@
  #.⎕SHADOW'TEMP'
  'TEMP'#.⎕NS''
  #.HandleErrorParms.addToMsg←'Set by the application'
- #.TEMP.⎕FX'∆CustomFns ps' '÷0'
+ #.TEMP.⎕FX'∆CustomFns ps' '∘∘∘'
  #.HandleErrorParms.customFns←'#.TEMP.∆CustomFns'
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
@@ -28,7 +28,7 @@
  html←⊃⎕NGET⊃list
  →T.GoToTidyUp~∨/'Set by the application'⍷html
  →T.GoToTidyUp~∨/'customFns failed:'⍷html
- →T.GoToTidyUp~∨/'DOMAIN ERROR'⍷html
+ →T.GoToTidyUp~∨/'SYNTAX ERROR'⍷html
 
  R←T._OK
 

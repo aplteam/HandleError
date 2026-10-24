@@ -10,7 +10,7 @@
  #.HandleErrorParms.saveErrorWS←0
  #.⎕SHADOW'TEMP'
  'TEMP'#.⎕NS''
- #.TEMP.⎕FX'∆CustomFns ps' '÷0'
+ #.TEMP.⎕FX'∆CustomFns ps' '∘∘∘'
  #.HandleErrorParms.customFns←'#.TEMP.∆CustomFns'
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
@@ -26,7 +26,7 @@
  →T.GoToTidyUp 1≠≢list
  html←⊃⎕NGET⊃list
  →T.GoToTidyUp~∨/'customFns failed:'⍷html
- →T.GoToTidyUp~∨/'DOMAIN ERROR'⍷html
+ →T.GoToTidyUp~∨/'SYNTAX ERROR'⍷html
 
  R←T._OK
 

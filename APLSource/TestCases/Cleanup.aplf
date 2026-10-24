@@ -1,3 +1,9 @@
- Cleanup
+ Cleanup;folder
  FilesAndDirs.RmDir GetTempPath''
  FilesAndDirs.DeleteFile'Tests/CONTINUE.dws'
+ FilesAndDirs.RmDir ##.CiderConfig.HOME,'/Tests/HandleError'    ⍝ Created by `Initial`
+ folder←⊃⎕NPARTS GetDefaultErrorFolder                          ⍝ Tests remove "Errors" but not its parent...
+ :If ⎕NEXISTS folder
+ :AndIf 0=≢⎕NINFO⍠1⊢folder,'*'                                  ⍝ ...which might be in use by an application
+     FilesAndDirs.RmDir folder
+ :EndIf

@@ -1,8 +1,0 @@
- {html}←WriteHtmlFile(parms crash filename)
- html←''
- :If parms.createHTML
-     :Trap parms.trapInternalErrors/0
-         html←AssembleHTML parms crash filename
-         (⊂html)⎕NPUT(filename,'.html')1
-     :EndTrap
- :EndIf

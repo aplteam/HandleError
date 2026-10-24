@@ -1,8 +1,0 @@
-r←Public
-r←''
-r,←⊂'CreateParms'
-r,←⊂'History'
-r,←⊂'Process'
-r,←⊂'ReportErrorToWindowsLog'
-r,←⊂'SetTrap'
-r,←⊂'Version'
