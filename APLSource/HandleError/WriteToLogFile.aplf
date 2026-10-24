@@ -7,7 +7,7 @@
              :If ⍬≢parms.logFunctionParent
                  fns←parms.logFunctionParent⍎parms.logFunction
              :Else
-                 'Cannot find the log function'⎕SIGNAL 6
+                 'Cannot find the log function'{⍺ ⎕SIGNAL ⍵}6 ⍝ A dfn, so that our own :Trap catches it
              :EndIf
          :EndIf
          fns'*** Error'

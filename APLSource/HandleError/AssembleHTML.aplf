@@ -35,7 +35,7 @@
  html,←'  Current Dir'MarkupAsTableRow ExchangeHtmlChars⍕crash.CurrentDir
  html,←'  Command line'MarkupAsTableRow ExchangeHtmlChars⍕crash.CommandLine
  :If 0≠≢parms.addToMsg
-     html,←'  Added Msg'MarkupAsTableRow ExchangeHtmlChars parms.addToMsg
+     html,←'  Added Msg'MarkupAsTableRow⊃{⍺,'<br>',⍵}/ExchangeHtmlChars¨⊆parms.addToMsg ⍝ Text or a list of texts
  :EndIf
  html,←'  </table>'
  html,←'<p><b>Stack:</b></p>',CR

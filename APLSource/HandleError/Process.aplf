@@ -31,13 +31,13 @@
          parms.∆ERROR_WS←filename
          parms.crashFilename←filename
          {}{0 ⎕TKILL ⍵}⍣parms.killThreads⊣⎕TNUMS~⎕TID ⍝ Try to kill all threads but itself and the main thread
-         WriteHtmlFile parms crash filename
          WriteToLogFile parms
          ⎕DL 0.2
          crash←SaveErrorWorkspace filename parms crash
          SaveCrash filename crash parms
          WriteToWindowsEvents parms crash
-         ExecuteCustomFns parms
+         parms←ExecuteCustomFns parms
+         WriteHtmlFile parms crash filename
      :EndTrap
      ⍝ Outside the :Trap: whatever went wrong above, this must still happen
      :If 0≠parms.signal

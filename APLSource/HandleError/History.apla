@@ -1,4 +1,9 @@
 (
+ '* 5.1.0 ⋄ 2026-10-24'
+ '  * The sequence in `Process` got changed: creating the HTML report is now the very last step. That allows'
+ '    referring to data inferred by a custom function, something that was not possible so far for no reason.'
+ '  * A faulty custom function went undetected. Now it''s part of the HTML report.'
+ '  * `addToMsg` may now be a list of texts as well; the HTML report shows them line by line.'
  '* 5.0.3 ⋄ 2026-10-02'
  '  * Bug fixes'
  '    * `SetTrap` with an empty right argument produced a `⎕TRAP` pointing to a non-existing function'
