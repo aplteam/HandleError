@@ -30,7 +30,9 @@
          filename←CreateFilename parms.errorFolder crash
          parms.∆ERROR_WS←filename
          parms.crashFilename←filename
-         {}{0 ⎕TKILL ⍵}⍣parms.killThreads⊣⎕TNUMS~⎕TID ⍝ Try to kill all threads but itself and the main thread
+         ⍝ Kill all threads but itself and the main thread - but not in development unless `enforceOff` is 1:
+         ⍝ there the session's own threads (Link, Cider, Tatin...) would be killed as well
+         {}{0 ⎕TKILL ⍵}⍣(parms.killThreads∧(~APLTreeUtils2.IsDevelopment)∨parms.enforceOff)⊣⎕TNUMS~⎕TID
          WriteToLogFile parms
          ⎕DL 0.2
          crash←SaveErrorWorkspace filename parms crash

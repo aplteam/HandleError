@@ -4,6 +4,8 @@
  '    referring to data inferred by a custom function, something that was not possible so far for no reason.'
  '  * A faulty custom function went undetected. Now it''s part of the HTML report.'
  '  * `addToMsg` may now be a list of texts as well; the HTML report shows them line by line.'
+ '  * In development `Process` does not kill threads anymore unless `enforceOff` is 1, just as it does'
+ '    not `⎕OFF` there: it killed the session''s own threads (Link, Cider, Tatin...) as well.'
  '* 5.0.3 ⋄ 2026-10-02'
  '  * Bug fixes'
  '    * `SetTrap` with an empty right argument produced a `⎕TRAP` pointing to a non-existing function'

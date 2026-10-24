@@ -1,26 +1,27 @@
- R←Test_10(stopFlag batchFlag);fns;MyFns;⎕TRAP;home;rc;en;more
-⍝ Test "HandleError.Process": fires up a thread. Should still save an error WS.
+ R←Test_10(stopFlag batchFlag);⎕TRAP;rc;more;wsname;folder;fno;crash
+⍝ Fires up a runtime instance (Test_WS_3.DWS) that has a thread running when the error occurs:
+⍝ `Process` must kill the thread and still save an error WS. This cannot be done in the development
+⍝ session: killing all threads would kill the session's own threads (Link, Cider, Tatin...) as well.
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process  ''''')(999 'C' '. ⍝ Deliberate error')(0 'N')
- home←GetDefaultErrorFolder
- {}FilesAndDirs.RmDir home
- {}'CREATE!'FilesAndDirs.CheckPath home
+ wsname←FilesAndDirs.NormalizePath ##.CiderConfig.HOME,'/Tests/Test_WS_3.DWS'
+ folder←FilesAndDirs.NormalizePath ##.CiderConfig.HOME,'/Tests/Errors_WS_3'     ⍝ As defined in Test_WS_3.DWS
+ {}FilesAndDirs.RmDir folder
 
- fns←⍎⎕FX'MyFns dummy' '⎕dl .1 ⋄ →1'
- fns&1
- :Trap 406
-     {⎕SIGNAL ⍵}405
-     →T.GoToTidyUp 1
- :EndTrap
-
- →T.GoToTidyUp 406≠⎕EN
- →T.GoToTidyUp 3≠≢⊃FilesAndDirs.Dir home,'\'   ⍝ DCF & HTML & DWS
+ (rc more)←GetResultFromSecondDyalogInstance wsname
+ →T.GoToTidyUp 124≠rc                                          ⍝ `returnCode` as defined in Test_WS_3.DWS
+ →T.GoToTidyUp 1≠≢FilesAndDirs.ListFiles folder,'/*.dws'       ⍝ The error WS got saved...
+ →T.GoToTidyUp 1≠≢FilesAndDirs.ListFiles folder,'/*.dcf'
+ fno←(⊃FilesAndDirs.ListFiles folder,'/*.dcf')⎕FTIE 0
+ crash←⎕FREAD fno 1
+ ⎕FUNTIE fno
+ →T.GoToTidyUp 0 1≢crash.TNUMS                                ⍝ The thread was running when the error occurred...
+ →T.GoToTidyUp 0≠crash.⎕NC'SaveFailed'
+ →T.GoToTidyUp 1≠≢FilesAndDirs.ListFiles folder,'/*.html'
+ →T.GoToTidyUp(,'0')≢⊃⊃⎕NGET(folder,'/TNUMS.txt')1            ⍝ ...and the thread is gone (written by `customFns`)
  R←T._OK
 
 ∆TidyUp:
- (rc en more)←FilesAndDirs.RmDir home
-
-⍝Done
+ {}FilesAndDirs.RmDir folder

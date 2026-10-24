@@ -11,6 +11,7 @@
  #.⎕SHADOW'TEMP'
  'TEMP'#.⎕NS''
  #.TEMP.ErrorParms←##.HandleError.CreateParms
+ #.TEMP.ErrorParms.killThreads←0                    ⍝ Killing threads would kill the session's own threads
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.TEMP.ErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  WSID←⎕WSID
  ⎕WSID←''

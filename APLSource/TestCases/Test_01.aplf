@@ -1,10 +1,13 @@
  R←Test_01(stopFlag batchFlag);⎕TRAP;home;ALIEN;parms;test;filename;fno;crash;QEN
-⍝ Test "HandleError.Process" without any parameters; just the defaults.
+⍝ Test "HandleError.Process" with the defaults (except `killThreads`).
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process ⍬')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.killThreads←0                    ⍝ The only deviation from the defaults: killing threads would kill the session's own threads
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  home←GetDefaultErrorFolder
  FilesAndDirs.RmDir home
  {}'CREATE!'FilesAndDirs.CheckPath home

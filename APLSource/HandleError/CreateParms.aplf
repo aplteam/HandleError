@@ -8,7 +8,7 @@
 ⍝ | `customFnsParent` | No default. May be a reference pointing to the parent of the `customFns`. Needed only in case the parent is a class instance since it may use dotted syntax.|
 ⍝ | `enforceOff` | Boolean that defaults to 0. With a 1 you can force `HandleError` to `⎕OFF` no matter whether it's a runtime EXE or not. Mainly for test cases.|
 ⍝ | `errorFolder`| Folder that keeps the component file (`crash`), the HTML page and the error WS. See below for rules.|
-⍝ | `killThreads`| Boolean that defaults to 1, meaning that all threads that can be killed will be killed.|
+⍝ | `killThreads`| Boolean that defaults to 1, meaning that all threads that can be killed will be killed.<br>Has no effect in development unless `enforceOff` is 1: there the session's own threads would be killed as well.|
 ⍝ | `logFunction`| Name of the logging function to be used. See also `logFunctionParent`.|
 ⍝ | `logFunctionParent` | No default. May be a reference pointing to the parent of `logFunction`. Needed only in case the parent is a class instance since it may use dotted syntax.|
 ⍝ | `off`        | Boolean that defaults to 1 which makes `HandleError` execute `⎕OFF` with `returnCode` only in Runtime. A 0 suppresses this. See also `enforceOff`|

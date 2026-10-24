@@ -6,6 +6,7 @@
 ⍝ Preconditions...
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.killThreads←0                    ⍝ Killing threads would kill the session's own threads
  #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
  {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
  {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder

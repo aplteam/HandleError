@@ -6,6 +6,7 @@
 ⍝ Preconditions...
  #.⎕SHADOW'parms'
  #.parms←##.HandleError.CreateParms
+ #.parms.killThreads←0                    ⍝ Killing threads would kill the session's own threads
  #.parms.saveVars←0
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.parms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  fullHome←GetDefaultErrorFolder

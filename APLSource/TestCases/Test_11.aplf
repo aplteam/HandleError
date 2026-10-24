@@ -1,4 +1,4 @@
- R←Test_11(stopFlag batchFlag);rc;⎕TRAP;successFlag;wsname;more
+ R←Test_11(stopFlag batchFlag);rc;⎕TRAP;successFlag;wsname;more;folder
 ⍝ Test "HandleError". Fires up a runtime instance (test_ws_1.dws) which should return 123.
 ⍝ This makes sure that in a WS with very little stuff it all still works fine.
 ⍝ This way we may detect unwanted dependencies.
@@ -8,6 +8,14 @@
 ⍝ Preconditions...
  ⎕TRAP←(405 'E' '406 ##.HandleError.Process  #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  wsname←FilesAndDirs.NormalizePath ##.CiderConfig.HOME,'/Tests/test_ws_1.dws'
+⍝ test_ws_1.dws uses the default error folder, which is named after its ⎕WSID:
+ :If 'Win'≡APLTreeUtils2.GetOperatingSystem ⍬
+     folder←(2 ⎕NQ'.' 'GetEnvironment' 'LOCALAPPDATA'),'/test_ws_1'
+ :Else
+     folder←##.CiderConfig.HOME,'/Tests'
+ :EndIf
+ folder,←'/Errors'
+ {}FilesAndDirs.RmDir folder
 
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms
@@ -18,8 +26,10 @@
 
  (rc more)←GetResultFromSecondDyalogInstance wsname
  →T.GoToTidyUp 123≠rc
+ →T.GoToTidyUp 3≠≢FilesAndDirs.ListFiles folder              ⍝ DCF & HTML & DWS: `Process` did more than just `⎕OFF`
 
  R←T._OK
 
 ∆TidyUp:
  FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}FilesAndDirs.RmDir folder

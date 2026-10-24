@@ -1,10 +1,13 @@
  R←Test_20(stopFlag batchFlag);⎕TRAP;home;ALIEN;parms;test;filename;html
-⍝ Test "HandleError.Process" with just the defaults but an error message that carries special characters
+⍝ Test "HandleError.Process" with the defaults (except `killThreads`) but an error message that carries special characters
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
 
 ⍝ Preconditions...
- ⎕TRAP←(405 'E' '406 ##.HandleError.Process ⍬')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.killThreads←0                    ⍝ The only deviation from the defaults: killing threads would kill the session's own threads
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
  home←GetDefaultErrorFolder
  FilesAndDirs.RmDir home
  {}'CREATE!'FilesAndDirs.CheckPath home
