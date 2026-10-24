@@ -1,0 +1,33 @@
+ R←Test_39(stopFlag batchFlag);⎕TRAP;list;html
+⍝ A `customFns` that cannot be found (no dot in the name, no `customFnsParent`) is reported in the HTML report
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.saveErrorWS←0
+ #.⎕SHADOW'TEMP'
+ 'TEMP'#.⎕NS''
+ #.HandleErrorParms.customFns←'NoSuchFunction'
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ →T.GoToTidyUp 406≠⎕EN
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.html'
+ →T.GoToTidyUp 1≠≢list
+ html←⊃⎕NGET⊃list
+ →T.GoToTidyUp~∨/'customFns failed:'⍷html
+ →T.GoToTidyUp~∨/'Cannot find the custom function'⍷html
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

@@ -1,0 +1,33 @@
+ R←Test_36(stopFlag batchFlag);⎕TRAP;list;html
+⍝ Whatever `customFns` adds to `addToMsg` makes it into the HTML report: the report is written last
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.saveErrorWS←0
+ #.⎕SHADOW'TEMP'
+ 'TEMP'#.⎕NS''
+ #.TEMP.⎕FX'∆CustomFns ps' 'ps.addToMsg←''Added by customFns'''
+ #.HandleErrorParms.customFns←'#.TEMP.∆CustomFns'
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ →T.GoToTidyUp 406≠⎕EN
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.html'
+ →T.GoToTidyUp 1≠≢list
+ html←⊃⎕NGET⊃list
+ →T.GoToTidyUp~∨/'Added by customFns'⍷html
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
