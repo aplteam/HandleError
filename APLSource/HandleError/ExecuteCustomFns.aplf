@@ -1,4 +1,4 @@
- ExecuteCustomFns parms;fns
+ parms←ExecuteCustomFns parms;fns;qdmx
  :If 0≠≢parms.customFns
      :Trap (parms.trapInternalErrors)/0
          :If '.'∊parms.customFns
@@ -7,11 +7,12 @@
              :If ⍬≢parms.customFnsParent
                  fns←parms.customFnsParent⍎parms.customFns
              :Else
-                 'Cannot find the custom function'⎕SIGNAL 6
+                 'Cannot find the custom function'{⍺ ⎕SIGNAL ⍵}6 ⍝ A dfn, so that our own :Trap catches it
              :EndIf
          :EndIf
          fns parms
      :Else
-        ⍝ Useful to realize in the tracer that something went wrong
+         qdmx←⎕DMX
+         parms.addToMsg←((⊆parms.addToMsg)~⊂''),⊂'customFns failed: ',⍕2↑qdmx.DM
      :EndTrap
  :EndIf
