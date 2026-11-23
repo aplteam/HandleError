@@ -19,10 +19,10 @@ This describes HandleError 5.1.0. `HandleError` catches the error through the `�
 | 3 | `CreateFilename` | — | — |
 | 4 | kill all threads but its own and the main one; not in development unless `enforceOff` is 1 | — | `killThreads` |
 | 5 | `WriteToLogFile` | the log entry | `logFunction` |
-| 6 | `⎕DL 0.2` | — | — |
-| 7 | `SaveErrorWorkspace` | the error workspace | `saveErrorWS` |
-| 8 | `SaveCrash` | the `crash` component file | `saveCrash`, `saveVars` |
-| 9 | `WriteToWindowsEvents` | a Windows event | `windowsEventSource` |
+| 6 | `WriteToWindowsEvents` | a Windows event | `windowsEventSource` |
+| 7 | `⎕DL 0.2` | — | — |
+| 8 | `SaveErrorWorkspace` | the error workspace | `saveErrorWS` |
+| 9 | `SaveCrash` | the `crash` component file | `saveCrash`, `saveVars` |
 | 10 | `ExecuteCustomFns` | whatever the application does | `customFns` |
 | 11 | `WriteHtmlFile` | the HTML report | `createHTML` |
 
@@ -30,7 +30,9 @@ Steps 1 to 11 run under `:Trap parms.trapInternalErrors/0 1000`. After that trap
 
 `ExecuteCustomFns` traps whatever the custom function throws and adds "customFns failed" and the error to `addToMsg`. The HTML report comes last so that it shows this and anything else a custom function added to `addToMsg`.
 
-The log entry, the workspace and the component file are written before step 10, so a guard in a custom function could hold back a notification, and with some effort the HTML report, but never those three. The guard therefore has to live in `HandleError`.
+The two records, the log entry and the Windows event, come straight after each other and before the workspace is saved. `⎕SAVE` is the slowest step and the one most likely to fail badly, and if it takes the interpreter down, both records have already been written. (Up to 5.1.0 the Windows event came after `SaveCrash`.)
+
+The log entry, the Windows event, the workspace and the component file are written before step 10, so a guard in a custom function could hold back a notification, and with some effort the HTML report, but never those four. The guard therefore has to live in `HandleError`.
 
 ### Workspaces
 
@@ -63,9 +65,11 @@ A signature that has not occurred for `stormResetAfter` hours has its count and 
 
 A crash that does not get the full treatment still runs steps 1 to 4 and does everything that follows step 11 (signal, `⎕OFF`, printing to the session) as before.
 
-It also always writes the log entry, step 5, with the signature and its count and a note that the storm guard held the rest back. The log is the record that the error happened at all, and it is what explains a silence afterwards. The Windows event, step 9, is treated the same way.
+It also always writes the log entry, step 5, with the signature and its count and a note that the storm guard held the rest back. The log is the record that the error happened at all, and it is what explains a silence afterwards. The Windows event, step 6, is treated the same way, for the same reason: it is often the only record an operations team or a monitoring tool watches. Its text says "Details can be found in" the error folder, which is not true for a suppressed crash, so it gets the same note as the log entry instead.
 
-It skips the HTML report, the delay before the workspace is saved, the error workspace, the component file and the custom functions.
+It skips steps 7 to 11: the delay, the error workspace, the component file, the custom functions and the HTML report. Since the two records are steps 5 and 6, a suppressed crash simply stops after step 6.
+
+The guard therefore runs between steps 4 and 5: the log entry needs the signature and the count.
 
 ### What the custom functions get
 
@@ -124,5 +128,6 @@ The application decides where the values come from. The Tatin server, for exampl
 ## Open
 
 - The defaults for `stormCeiling` and `stormResetAfter` are first guesses. Before the release they should be checked against what a real storm looked like.
+
 
 

@@ -75,27 +75,27 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 </tr>
 <tr>
 <td style="text-align: right;">6</td>
+<td><code>WriteToWindowsEvents</code></td>
+<td>a Windows event</td>
+<td><code>windowsEventSource</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
 <td><code>⎕DL 0.2</code></td>
 <td>—</td>
 <td>—</td>
 </tr>
 <tr>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">8</td>
 <td><code>SaveErrorWorkspace</code></td>
 <td>the error workspace</td>
 <td><code>saveErrorWS</code></td>
 </tr>
 <tr>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">9</td>
 <td><code>SaveCrash</code></td>
 <td>the <code>crash</code> component file</td>
 <td><code>saveCrash</code>, <code>saveVars</code></td>
-</tr>
-<tr>
-<td style="text-align: right;">9</td>
-<td><code>WriteToWindowsEvents</code></td>
-<td>a Windows event</td>
-<td><code>windowsEventSource</code></td>
 </tr>
 <tr>
 <td style="text-align: right;">10</td>
@@ -113,7 +113,8 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 </table>
 <p>Steps 1 to 11 run under <code>:Trap parms.trapInternalErrors/0 1000</code>. After that trap, <code>Process</code> signals <code>parms.signal</code> when it is not <code>0</code>, otherwise it either <code>⎕OFF</code>s in runtime or prints the error to the session.</p>
 <p><code>ExecuteCustomFns</code> traps whatever the custom function throws and adds “customFns failed” and the error to <code>addToMsg</code>. The HTML report comes last so that it shows this and anything else a custom function added to <code>addToMsg</code>.</p>
-<p>The log entry, the workspace and the component file are written before step 10, so a guard in a custom function could hold back a notification, and with some effort the HTML report, but never those three. The guard therefore has to live in <code>HandleError</code>.</p>
+<p>The two records, the log entry and the Windows event, come straight after each other and before the workspace is saved. <code>⎕SAVE</code> is the slowest step and the one most likely to fail badly, and if it takes the interpreter down, both records have already been written. (Up to 5.1.0 the Windows event came after <code>SaveCrash</code>.)</p>
+<p>The log entry, the Windows event, the workspace and the component file are written before step 10, so a guard in a custom function could hold back a notification, and with some effort the HTML report, but never those four. The guard therefore has to live in <code>HandleError</code>.</p>
 <div class="h_tag">
 <a href="#workspaces" id="workspaces" class="autoheader_anchor">
 <h3 data-id="Workspaces">Workspaces</h3>
@@ -130,8 +131,9 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 <h3 data-id="The-signature">The signature</h3>
 </a>
 </div>
-<p>Everything is keyed on a signature that identifies the error: <code>EN</code>, <code>EM</code> and the name and line of the function where it occurred, <code>Foo[6]</code>, taken from the second line of <code>⎕DMX.DM</code>. All of them are known when <code>Process</code> starts, so the signature costs nothing to compute.</p>
-<p>A signature is only an approximation. The same fault reported from two different lines counts twice, and two different faults reported from one line count once. Both are acceptable: the first costs a few extra artefacts, and the second is rare.</p>
+<p>Everything is keyed on a signature that identifies the error: <code>EN</code> and the name and line of the function where it occurred, <code>Foo[6]</code>, taken from the second line of <code>⎕DMX.DM</code>. Both are known when <code>Process</code> starts, so the signature costs nothing to compute.</p>
+<p><code>EM</code> is deliberately left out. A message passed to <code>⎕SIGNAL</code> often carries data such as a filename or an ID, which would give every occurrence of one fault a signature of its own, and the backoff would never kick in.</p>
+<p>A signature is only an approximation. The same fault reported from two different lines counts twice, and two different faults with the same error number on one line count once. Both are acceptable: the first costs a few extra artefacts, and the second is rare.</p>
 <div class="h_tag">
 <a href="#the-rules" id="the-rules" class="autoheader_anchor">
 <h3 data-id="The-rules">The rules</h3>
@@ -139,19 +141,21 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 </div>
 <p>With <code>stormGuard</code> set to 1, every crash increments the count for its signature. A crash then gets the <em>full treatment</em>, all eleven steps as they are today, only when both of these rules allow it:</p>
 <ol start="1">
-<li>Exponential backoff per signature: the count is 1, 2, 4, 8, 16 and so on. A thousand occurrences cost ten sets of artefacts. A new error is never held back by an old one, because it has its own signature and its own first occurrence.</li>
-<li>A ceiling across all signatures: fewer than <code>stormCeiling</code> crashes got the full treatment within the last hour. This catches a storm of <em>distinct</em> signatures, which the backoff cannot see and which a corrupted workspace or an exhausted resource produces.</li>
+<li>Exponential backoff per signature: the count is at least twice <code>lastFull</code>, the count at which this signature last got the full treatment, which starts at 0. Normally that means occurrences 1, 2, 4, 8, 16 and so on, so a thousand occurrences cost ten sets of artefacts. The backoff never holds a new error back, because a new error has its own signature and its own first occurrence.</li>
+<li>A ceiling across all signatures: fewer than <code>stormCeiling</code> crashes got the full treatment within the last hour. This catches a storm of <em>distinct</em> signatures, which the backoff cannot see and which a corrupted workspace or an exhausted resource produces: one cause, many different errors. During such a storm the ceiling can hold back a new error too. That is deliberate.</li>
 </ol>
-<p>Together they keep a single recurring fault down to a handful of artefacts, leave a new fault visible and bound the total whatever the mix of signatures.</p>
-<p>A signature that has not occurred for <code>stormResetAfter</code> hours starts again at 1, so a fault that comes back after a quiet day is reported again.</p>
+<p>Together they keep a single recurring fault down to a handful of artefacts, leave a new fault visible outside a storm and bound the total whatever the mix of signatures.</p>
+<p>Comparing with <code>lastFull</code> rather than testing for a power of two means that an occurrence the ceiling blocks is not lost. When the ceiling blocks occurrence 8, <code>lastFull</code> stays at 4, so occurrence 9 qualifies again, and so does every later one until the ceiling lets one through. That one becomes the new <code>lastFull</code>, and the doubling continues from there.</p>
+<p>A signature that has not occurred for <code>stormResetAfter</code> hours has its count and <code>lastFull</code> set back to 0, so a fault that comes back after a quiet day is reported again.</p>
 <div class="h_tag">
 <a href="#what-a-suppressed-crash-still-does" id="what-a-suppressed-crash-still-does" class="autoheader_anchor">
 <h3 data-id="What-a-suppressed-crash-still-does">What a suppressed crash still does</h3>
 </a>
 </div>
 <p>A crash that does not get the full treatment still runs steps 1 to 4 and does everything that follows step 11 (signal, <code>⎕OFF</code>, printing to the session) as before.</p>
-<p>It also always writes the log entry, step 5, with the signature and its count and a note that the storm guard held the rest back. The log is the record that the error happened at all, and it is what explains a silence afterwards. The Windows event, step 9, is treated the same way.</p>
-<p>It skips the HTML report, the delay before the workspace is saved, the error workspace, the component file and the custom functions.</p>
+<p>It also always writes the log entry, step 5, with the signature and its count and a note that the storm guard held the rest back. The log is the record that the error happened at all, and it is what explains a silence afterwards. The Windows event, step 6, is treated the same way, for the same reason: it is often the only record an operations team or a monitoring tool watches. Its text says “Details can be found in” the error folder, which is not true for a suppressed crash, so it gets the same note as the log entry instead.</p>
+<p>It skips steps 7 to 11: the delay, the error workspace, the component file, the custom functions and the HTML report. Since the two records are steps 5 and 6, a suppressed crash simply stops after step 6.</p>
+<p>The guard therefore runs between steps 4 and 5: the log entry needs the signature and the count.</p>
 <div class="h_tag">
 <a href="#what-the-custom-functions-get" id="what-the-custom-functions-get" class="autoheader_anchor">
 <h3 data-id="What-the-custom-functions-get">What the custom functions get</h3>
@@ -163,8 +167,16 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 <h3 data-id="Where-the-counts-live">Where the counts live</h3>
 </a>
 </div>
-<p>In a small text file in the error folder: one line per signature with its count and the times of its first and last occurrence, followed by the times of the most recent full treatments, for the ceiling.</p>
+<p>In a small text file in the error folder: one line per signature with its count, its <code>lastFull</code> and the times of its first and last occurrence, followed by the times of the most recent full treatments, for the ceiling.</p>
+<p>All times are UTC. Local time jumps when daylight saving time starts or ends, which would stretch or shrink “the last hour” and the <code>stormResetAfter</code> period.</p>
+<p>Whenever the guard writes the file, it drops the signatures that have not occurred for <code>stormResetAfter</code> hours and the full-treatment times older than an hour. Neither is needed any more, and the file stays small however long the application runs.</p>
 <p>A file survives a restart. A crash storm often involves restarts, so counts held in the workspace would reset exactly when they are needed. A human trying to work out what happened can read it, and it needs no configuration, since the error folder already belongs to the handler.</p>
+<div class="h_tag">
+<a href="#one-process-per-error-folder" id="one-process-per-error-folder" class="autoheader_anchor">
+<h3 data-id="One-process-per-error-folder">One process per error folder</h3>
+</a>
+</div>
+<p>The guard requires that only one process writes crash files to a given error folder. <code>:Hold</code> serialises crashes within one process, but not across processes: two processes sharing an error folder would read and write the counts file at the same time and lose updates. HandleError's own documentation must state this restriction.</p>
 <div class="h_tag">
 <a href="#fail-open" id="fail-open" class="autoheader_anchor">
 <h3 data-id="Fail-open">Fail open</h3>

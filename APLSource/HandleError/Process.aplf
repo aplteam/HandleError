@@ -34,10 +34,10 @@
          ⍝ there the session's own threads (Link, Cider, Tatin...) would be killed as well
          {}{0 ⎕TKILL ⍵}⍣(parms.killThreads∧(~APLTreeUtils2.IsDevelopment)∨parms.enforceOff)⊣⎕TNUMS~⎕TID
          WriteToLogFile parms
+         WriteToWindowsEvents parms crash               ⍝ Both records before ⎕SAVE, the step most likely to fail badly
          ⎕DL 0.2
          crash←SaveErrorWorkspace filename parms crash
          SaveCrash filename crash parms
-         WriteToWindowsEvents parms crash
          parms←ExecuteCustomFns parms
          WriteHtmlFile parms crash filename
      :EndTrap

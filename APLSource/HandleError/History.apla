@@ -1,4 +1,6 @@
 (
+ '* 5.2.0 ⋄ 2026-11-24'
+ '  * Steps in `Process` got changed: the Windows Event Log is now written straight after the log file.'
  '* 5.1.0 ⋄ 2026-10-24'
  '  * The sequence in `Process` got changed: creating the HTML report is now the very last step. That allows'
  '    referring to data inferred by a custom function, something that was not possible so far for no reason.'
