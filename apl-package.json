@@ -20,5 +20,5 @@
   source: "APLSource/HandleError",
   tags: "error-trapping",
   userCommandScript: "",
-  version: "5.2.0+85",
+  version: "5.2.0+86",
 }

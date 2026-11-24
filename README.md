@@ -10,11 +10,13 @@ It has the following goals:
 
  * Create a namespace `crash` and populate it with variables providing all sorts of information potentially important for analyzing the error. This namespace is saved in a component file by default. This is mainly for applications that cannot save an error workspace because threads are used.
  * Create an HTML page with essential information regarding the error.
- * Attempt to save an error workspace. In order to achieve that all running threads are killed by default; the main thread will always survive anyway, and so will the thread dealing with the error since a thread cannot kill itself. (See `killThreads` on how to change this default behaviour)
+ * Attempt to save an error workspace. In order to achieve that all running threads are killed by default; the main thread will always survive anyway, and so will the thread dealing with the error since a thread cannot kill itself. (See `killThreads` on how to change this default behaviour.) In a development session threads are not killed unless `enforceOff` is 1.
 
 All options can be changed by setting variables in a parameter namespace returned by `CreateParms`. Such a namespace can then be passed as right argument to the main function `Process`. For defaults just pass an empty vector to `Process`. 
 
 You can make `Process` execute your own code by setting `logFunction` and/or `customFns`.
+
+`Process` can also write to the Windows Event Log (`windowsEventSource`), and with `stormGuard` set to 1 it guards against a crash storm: an error that occurs again and again gets the full set of crash files only now and then, while every occurrence is still logged.
 
 ## Examples 
 
@@ -39,24 +41,29 @@ This example calls `HandleError.CreateParms` in order to create a parameter name
       #.⎕SHADOW'HandleErrorParms'
       #.HandleErrorParms←#.HandleError.CreateParms
 ⍝ The variables and their settings:
- addToMsg              
- checkErrorFolder    1 
- createHTML          1 
- customFns             
- customFnsParent       
- enforceOff          0 
- errorFolder           
- logFunction           
- logFunctionParent     
- off                 1 
- returnCode          1 
- saveCrash           1 
- saveErrorWS         1 
- saveVars            1 
- signal              0 
- trapInternalErrors  1 
- trapSaveWSID        1 
- windowsEventSource    
+ addToMsg
+ checkErrorFolder    1
+ createHTML          1
+ customFns
+ customFnsParent
+ enforceOff          0
+ errorFolder
+ killThreads         1
+ logFunction
+ logFunctionParent
+ off                 1
+ returnCode          1
+ saveCrash           1
+ saveErrorWS         1
+ saveVars            1
+ signal              0
+ stormCeiling       10
+ stormGuard          0
+ stormRepeatAfter   24
+ stormResetAfter    24
+ trapInternalErrors  1
+ trapSaveWSID        1
+ windowsEventSource
 
       ⎕TRAP←#.HandleError.SetTrap '#.HandleErrorParms'
 ```
