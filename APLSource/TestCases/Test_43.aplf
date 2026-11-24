@@ -1,0 +1,34 @@
+ R←Test_43(stopFlag batchFlag);⎕TRAP;H;state;state2;folder;filename;now;names
+⍝ `WriteStormFile` and `ReadStormFile`: what is written is read back unchanged; times are written as UTC
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+ H←##.HandleError
+ folder←GetTempPath⊃⎕SI
+ {}FilesAndDirs.RmDir folder
+ {}'CREATE!'FilesAndDirs.CheckPath folder
+ filename←folder,'/StormGuard.txt'
+
+ →T.GoToTidyUp 0≠≢(H.ReadStormFile filename).signatures      ⍝ No file: empty state
+
+ now←H.UtcNow
+ state←H.NewStormState
+ state.signatures←'11 Foo[6]'(,'6')
+ state.counts←9 1
+ state.lastFulls←8 1
+ state.firsts←(now-7200)(now-60)
+ state.lasts←(now-30)(now-60)
+ state.fulls←(now-30)(now-60)
+ filename H.WriteStormFile state
+ state2←H.ReadStormFile filename
+
+ names←'signatures' 'counts' 'lastFulls' 'firsts' 'lasts' 'fulls'
+ →T.GoToTidyUp(state∘⍎¨names)≢state2∘⍎¨names
+
+ →T.GoToTidyUp'2026-11-23T16:00:00Z'≢H.SecondsToIso 1795449600
+ →T.GoToTidyUp 1795449600≢H.IsoToSeconds'2026-11-23T16:00:00Z'
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir folder

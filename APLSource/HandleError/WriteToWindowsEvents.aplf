@@ -1,12 +1,19 @@
- {r}←WriteToWindowsEvents (parms crash);msg
+ {r}←{storm}WriteToWindowsEvents (parms crash);msg;note;full
+⍝ `storm` is the storm guard's note and whether the crash gets the full treatment; defaults to '' 1.
+⍝ Without the full treatment there are no details in the error folder, so the event does not point there.
  r←⍬
+ storm←{0=⎕NC ⍵:'' 1 ⋄ ⍎⍵}'storm'
+ (note full)←storm
  :If 'Win'≡APLTreeUtils2.GetOperatingSystem ⍬
  :AndIf 0≠≢parms.windowsEventSource
      :Trap (parms.trapInternalErrors)/0
          msg←⊂'Application has crashed, RC=',(⍕crash.EN),'; MSG=',crash.EM
-         msg,←(0<≢parms.errorFolder)/''('Details can be found in ',parms.errorFolder)
+         msg,←(full∧0<≢parms.errorFolder)/''('Details can be found in ',parms.errorFolder)
          :If 0≠≢parms.addToMsg
              msg,←{(≡⍵)∊0 1:,⊂,⍵ ⋄ ⍵}parms.addToMsg
+         :EndIf
+         :If 0≠≢note
+             msg,←⊂note
          :EndIf
          ReportErrorToWindowsLog parms.windowsEventSource msg
      :EndTrap

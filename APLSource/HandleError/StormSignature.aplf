@@ -1,0 +1,16 @@
+ r←StormSignature error;line;location
+⍝ Returns the signature the storm guard keys on: the error number and the place where the error
+⍝ occurred, for example "11 Foo[6]".\\
+⍝ `error` is a copy of `⎕DMX`. The place is taken from the second line of its `DM`; it is empty
+⍝ when the error did not occur in a function.\\
+⍝ `EM` is deliberately left out: a message passed to `⎕SIGNAL` often carries data such as a filename,
+⍝ which would give every occurrence of one fault a signature of its own.
+ r←⍕error.EN
+ line←''
+ :If 2≤≢error.DM
+     line←2⊃error.DM
+ :EndIf
+ location←'^\S+\[\d+\]'⎕S'&'⊢line
+ :If 0<≢location
+     r,←' ',⊃location
+ :EndIf

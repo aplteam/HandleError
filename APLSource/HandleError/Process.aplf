@@ -1,4 +1,4 @@
- {r}←{signal}Process parms;crash;filename;qdmx;TRAP;⎕IO;⎕ML
+ {r}←{signal}Process parms;crash;filename;qdmx;TRAP;full;note;⎕IO;⎕ML
 ⍝ `⎕OFF`s in runtime or if `enforceOff` is 1.\\
 ⍝ In case you need to save the name of the error WS you must specify a parameter space. `HandleError` will
 ⍝ inject a variable `∆ERROR_WS` into the parameter space.\\
@@ -33,13 +33,16 @@
          ⍝ Kill all threads but itself and the main thread - but not in development unless `enforceOff` is 1:
          ⍝ there the session's own threads (Link, Cider, Tatin...) would be killed as well
          {}{0 ⎕TKILL ⍵}⍣(parms.killThreads∧(~APLTreeUtils2.IsDevelopment)∨parms.enforceOff)⊣⎕TNUMS~⎕TID
-         WriteToLogFile parms
-         WriteToWindowsEvents parms crash               ⍝ Both records before ⎕SAVE, the step most likely to fail badly
-         ⎕DL 0.2
-         crash←SaveErrorWorkspace filename parms crash
-         SaveCrash filename crash parms
-         parms←ExecuteCustomFns parms
-         WriteHtmlFile parms crash filename
+         (parms full note)←StormGuard parms qdmx       ⍝ `full` is 1 unless the storm guard holds the rest back
+         note WriteToLogFile parms
+         (note full)WriteToWindowsEvents parms crash    ⍝ Both records before ⎕SAVE, the step most likely to fail badly
+         :If full
+             ⎕DL 0.2
+             crash←SaveErrorWorkspace filename parms crash
+             SaveCrash filename crash parms
+             parms←ExecuteCustomFns parms
+             WriteHtmlFile parms crash filename
+         :EndIf
      :EndTrap
      ⍝ Outside the :Trap: whatever went wrong above, this must still happen
      :If 0≠parms.signal

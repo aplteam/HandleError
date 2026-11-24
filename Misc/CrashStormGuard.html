@@ -131,7 +131,7 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 <h3 data-id="The-signature">The signature</h3>
 </a>
 </div>
-<p>Everything is keyed on a signature that identifies the error: <code>EN</code> and the name and line of the function where it occurred, <code>Foo[6]</code>, taken from the second line of <code>⎕DMX.DM</code>. Both are known when <code>Process</code> starts, so the signature costs nothing to compute.</p>
+<p>Everything is keyed on a signature that identifies the error: <code>EN</code> and the name and line of the function where it occurred, <code>Foo[6]</code>, taken from the second line of <code>⎕DMX.DM</code>. Both are known when <code>Process</code> starts, so the signature costs nothing to compute. When the error did not occur in a function, the signature is the error number alone.</p>
 <p><code>EM</code> is deliberately left out. A message passed to <code>⎕SIGNAL</code> often carries data such as a filename or an ID, which would give every occurrence of one fault a signature of its own, and the backoff would never kick in.</p>
 <p>A signature is only an approximation. The same fault reported from two different lines counts twice, and two different faults with the same error number on one line count once. Both are acceptable: the first costs a few extra artefacts, and the second is rare.</p>
 <div class="h_tag">
@@ -167,7 +167,12 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 <h3 data-id="Where-the-counts-live">Where the counts live</h3>
 </a>
 </div>
-<p>In a small text file in the error folder: one line per signature with its count, its <code>lastFull</code> and the times of its first and last occurrence, followed by the times of the most recent full treatments, for the ceiling.</p>
+<p>In a small text file in the error folder, <code>StormGuard.txt</code>: one line per signature with its count, its <code>lastFull</code> and the times of its first and last occurrence, followed by the times of the most recent full treatments, for the ceiling. Fields are separated by tabs, and comment lines starting with <code>#</code> explain them:</p>
+<pre tabindex="0"><code># HandleError storm guard. All times are UTC.
+signature    5 Foo[2]    5    4    2026-11-23T16:11:50Z    2026-11-23T16:11:51Z
+full    2026-11-23T16:11:50Z
+full    2026-11-23T16:11:50Z
+full    2026-11-23T16:11:51Z</code></pre>
 <p>All times are UTC. Local time jumps when daylight saving time starts or ends, which would stretch or shrink “the last hour” and the <code>stormResetAfter</code> period.</p>
 <p>Whenever the guard writes the file, it drops the signatures that have not occurred for <code>stormResetAfter</code> hours and the full-treatment times older than an hour. Neither is needed any more, and the file stays small however long the application runs.</p>
 <p>A file survives a restart. A crash storm often involves restarts, so counts held in the workspace would reset exactly when they are needed. A human trying to work out what happened can read it, and it needs no configuration, since the error folder already belongs to the handler.</p>
@@ -183,6 +188,8 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 </a>
 </div>
 <p>The guard has a trap of its own. When it cannot read or write its file, the crash gets the full treatment and the log entry says that the guard failed. Without that trap, the outer trap around steps 1 to 11 would swallow the guard's failure and silence crash reporting, with nothing anywhere to say so.</p>
+<p>A file that cannot be read, because it is damaged for example, is replaced by a fresh one. Otherwise a single damaged file would switch the guard off for good, and every crash of a storm would get the full treatment again. The cost is that the counts start again at 1, which means a few extra artefacts.</p>
+<p>Like all of HandleError's traps, the guard's trap is governed by <code>trapInternalErrors</code>.</p>
 <p>The file is small and is read and written once per crash, so the guard does not lengthen the hold measurably.</p>
 <div class="h_tag">
 <a href="#parameters" id="parameters" class="autoheader_anchor">
@@ -282,5 +289,42 @@ html{line-height:1.15;-webkit-text-size-adjust:100%;}body{margin:0;}main{display
 <ul>
 <li>The defaults for <code>stormCeiling</code> and <code>stormResetAfter</code> are first guesses. Before the release they should be checked against what a real storm looked like.</li>
 </ul>
+
+<script>
+
+// Adds a "Copy" button to every code block & established the event handler
+const copyButtonLabel = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true" style="vertical-align:text-bottom"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg>` ;
+
+let blocks = document.querySelectorAll("pre");
+
+blocks.forEach((block) => {
+  if (navigator.clipboard) {
+    let button = document.createElement("button");
+
+    button.innerHTML = copyButtonLabel;
+    button.title = "Copies the code block to the clipboard.";
+    block.appendChild(button);
+     
+    button.addEventListener("click", async () => {
+      await copyCode(block, button);
+    });
+  }  
+});  
+
+async function copyCode(block, button) {
+  let code = block.querySelector("code");
+  let text = code.innerText;
+
+  await navigator.clipboard.writeText(text);
+
+  button.innerHTML = `✓`;
+
+  setTimeout(() => {
+    button.innerHTML = copyButtonLabel;
+  }, 700);
+}
+
+</script>
+
 </body>
 </html>

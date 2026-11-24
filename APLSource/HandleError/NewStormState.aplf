@@ -1,0 +1,13 @@
+ state←NewStormState
+⍝ Returns an empty state for the storm guard.\\
+⍝ `signatures`, `counts`, `lastFulls`, `firsts` and `lasts` hold one item per signature: the signature,
+⍝ the number of occurrences, the count at which it last got the full treatment, and the times of its
+⍝ first and last occurrence. `fulls` holds the times of the most recent full treatments.\\
+⍝ All times are seconds since 1970-01-01, UTC.
+ state←⎕NS''
+ state.signatures←0⍴⊂''
+ state.counts←⍬
+ state.lastFulls←⍬
+ state.firsts←⍬
+ state.lasts←⍬
+ state.fulls←⍬

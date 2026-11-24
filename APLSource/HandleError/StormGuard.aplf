@@ -1,0 +1,44 @@
+ (parms full note)←StormGuard(parms error);signature;count;filename;state;problem;qdmx;now
+⍝ The crash storm guard: decides whether a crash gets the full treatment. See `Misc/CrashStormGuard.md`.\\
+⍝ `error` is the copy of `⎕DMX` taken by `Process`.\\
+⍝ Returns `parms`, a Boolean that is 1 for the full treatment, and a note for the log entry and the
+⍝ Windows event. With `stormGuard` 0 that is just `parms`, 1 and an empty note.\\
+⍝ With `stormGuard` 1 it adds `stormSignature` and `stormCount` to `parms`.\\
+⍝ Fails open: whatever goes wrong, the crash gets the full treatment and the note says why. A file
+⍝ that cannot be read is replaced by a fresh one, so a damaged file does not disable the guard for good.\\
+⍝ Requires that only one process writes to the error folder: `:Hold` does not reach across processes.
+ full←1
+ note←''
+ :If parms.stormGuard
+     signature←''
+     count←0
+     problem←''
+     :Trap parms.trapInternalErrors/0
+         signature←StormSignature error
+         filename←parms.errorFolder,'/StormGuard.txt'
+         :Trap parms.trapInternalErrors/0
+             state←ReadStormFile filename
+         :Else
+             qdmx←⎕DMX
+             problem←'could not read its file (',qdmx.EM,((0<≢qdmx.Message)/': ',qdmx.Message),') and started afresh'
+             state←NewStormState
+         :EndTrap
+         now←UtcNow
+         (state count full)←StormRule state signature now parms.stormCeiling parms.stormResetAfter
+         filename WriteStormFile state
+     :Else
+         qdmx←⎕DMX
+         problem←'failed (',qdmx.EM,((0<≢qdmx.Message)/': ',qdmx.Message),')'
+     :EndTrap
+     full∨←0<≢problem                           ⍝ Fail open
+     parms.stormSignature←signature
+     parms.stormCount←count
+     :If 0<≢problem
+         note←'Storm guard ',problem,'; full treatment'
+     :Else
+         note←'Storm guard: occurrence ',(⍕count),' of "',signature,'"'
+         :If ~full
+             note,←'; everything but the log entry and the Windows event held back'
+         :EndIf
+     :EndIf
+ :EndIf

@@ -1,0 +1,5 @@
+ r←ToNumber text;valid;values
+⍝ Returns the single number held by `text`; signals a DOMAIN ERROR when there is not exactly one
+ (valid values)←⎕VFI text
+ 'Not a number'⎕SIGNAL 11/⍨(1≠≢valid)∨~∧/valid
+ r←⊃values

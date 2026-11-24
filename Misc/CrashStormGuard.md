@@ -42,7 +42,7 @@ In general the error workspace is by far the largest artefact, and also the best
 
 ### The signature
 
-Everything is keyed on a signature that identifies the error: `EN` and the name and line of the function where it occurred, `Foo[6]`, taken from the second line of `⎕DMX.DM`. Both are known when `Process` starts, so the signature costs nothing to compute.
+Everything is keyed on a signature that identifies the error: `EN` and the name and line of the function where it occurred, `Foo[6]`, taken from the second line of `⎕DMX.DM`. Both are known when `Process` starts, so the signature costs nothing to compute. When the error did not occur in a function, the signature is the error number alone.
 
 `EM` is deliberately left out. A message passed to `⎕SIGNAL` often carries data such as a filename or an ID, which would give every occurrence of one fault a signature of its own, and the backoff would never kick in.
 
@@ -77,7 +77,15 @@ When `stormGuard` is 1, `Process` adds two variables to `parms` before it calls 
 
 ### Where the counts live
 
-In a small text file in the error folder: one line per signature with its count, its `lastFull` and the times of its first and last occurrence, followed by the times of the most recent full treatments, for the ceiling.
+In a small text file in the error folder, `StormGuard.txt`: one line per signature with its count, its `lastFull` and the times of its first and last occurrence, followed by the times of the most recent full treatments, for the ceiling. Fields are separated by tabs, and comment lines starting with `#` explain them:
+
+```
+# HandleError storm guard. All times are UTC.
+signature    5 Foo[2]    5    4    2026-11-23T16:11:50Z    2026-11-23T16:11:51Z
+full    2026-11-23T16:11:50Z
+full    2026-11-23T16:11:50Z
+full    2026-11-23T16:11:51Z
+```
 
 All times are UTC. Local time jumps when daylight saving time starts or ends, which would stretch or shrink "the last hour" and the `stormResetAfter` period.
 
@@ -92,6 +100,10 @@ The guard requires that only one process writes crash files to a given error fol
 ### Fail open
 
 The guard has a trap of its own. When it cannot read or write its file, the crash gets the full treatment and the log entry says that the guard failed. Without that trap, the outer trap around steps 1 to 11 would swallow the guard's failure and silence crash reporting, with nothing anywhere to say so.
+
+A file that cannot be read, because it is damaged for example, is replaced by a fresh one. Otherwise a single damaged file would switch the guard off for good, and every crash of a storm would get the full treatment again. The cost is that the counts start again at 1, which means a few extra artefacts.
+
+Like all of HandleError's traps, the guard's trap is governed by `trapInternalErrors`.
 
 The file is small and is read and written once per crash, so the guard does not lengthen the hold measurably.
 
@@ -128,6 +140,7 @@ The application decides where the values come from. The Tatin server, for exampl
 ## Open
 
 - The defaults for `stormCeiling` and `stormResetAfter` are first guesses. Before the release they should be checked against what a real storm looked like.
+
 
 
 

@@ -1,0 +1,27 @@
+ R←Test_40(stopFlag batchFlag);⎕TRAP;H;state;count;full;fulls;signature;ceiling;resetAfter;i
+⍝ `StormRule`: one recurring error gets the full treatment at its 1st, 2nd, 4th, 8th and 16th occurrence only
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+ H←##.HandleError
+ state←H.NewStormState
+ signature←'11 Foo[6]'
+ ceiling←100
+ resetAfter←24
+ fulls←⍬
+ :For i :In ⍳20
+     (state count full)←H.StormRule state signature(1000000+i)ceiling resetAfter
+     fulls,←full
+ :EndFor
+
+ →T.GoToTidyUp fulls≢(⍳20)∊1 2 4 8 16
+ →T.GoToTidyUp 20≢count
+ →T.GoToTidyUp(,⊂signature)≢state.signatures
+ →T.GoToTidyUp(,16)≢state.lastFulls
+ →T.GoToTidyUp 5≢≢state.fulls
+ →T.GoToTidyUp(,1000001)≢state.firsts
+ →T.GoToTidyUp(,1000020)≢state.lasts
+
+ R←T._OK
+
+∆TidyUp:

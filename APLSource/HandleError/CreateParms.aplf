@@ -17,6 +17,9 @@
 ⍝ | `saveErrorWS`| Boolean that defaults to 1.<br>A 0 suppresses the creation of a crash workspace. There is no point in attempting<br>to save a WS in a multi-threaded application for example.|
 ⍝ | `saveVars`   | Boolean that defaults to 1.<br>Is ignored when `saveCrash` is 0. If 1 all visible variables are saved in a<br>sub namespace `Vars` within `crash`.|
 ⍝ | `signal`     | When `signal` is not 0 then `signal` is `⎕SIGNAL`led by `Process`.<br>This can be used for a restart attempt.|
+⍝ | `stormCeiling` | Defaults to 10. With `stormGuard` 1, the maximum number of crashes within one hour that get the full treatment, across all signatures.|
+⍝ | `stormGuard` | Boolean that defaults to 0. 1 switches on the guard against crash storms: a recurring error gets the full treatment<br>only at its 1st, 2nd, 4th, 8th... occurrence; otherwise just the log entry and the Windows event are written.<br>Requires that only one process writes to the error folder.|
+⍝ | `stormResetAfter` | Defaults to 24. With `stormGuard` 1, the number of hours after which an error that has not occurred starts again at 1.|
 ⍝ | `trapInternalErrors` | Boolean that defaults to 1: all internal errors are trapped,<br>`Process` should never crash an application. Set it to 0 to investigate a problem within `HandleError`.|
 ⍝ | `trapSaveWSID`       | **Deprecated** since 5.0.3 and ignored: `trapInternalErrors` now governs the `⎕SAVE` statement as well.|
 ⍝ | `windowsEventSource` | Name of the Windows Event Source to write to. Ignored when empty.|
@@ -45,6 +48,9 @@
  r.saveErrorWS←1
  r.saveVars←1
  r.signal←0
+ r.stormCeiling←10
+ r.stormGuard←0
+ r.stormResetAfter←24
  r.trapInternalErrors←1
  r.trapSaveWSID←1
  r.windowsEventSource←''

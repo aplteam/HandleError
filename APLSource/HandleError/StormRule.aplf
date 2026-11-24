@@ -1,0 +1,28 @@
+ (state count full)←StormRule(state signature now ceiling resetAfter);keep;ind
+⍝ Applies the storm guard's rules to one crash. Changes nothing on disk.\\
+⍝ `state` is what `NewStormState` and `ReadStormFile` return, `now` the time of the crash in seconds (UTC),
+⍝ `ceiling` and `resetAfter` are the parameters `stormCeiling` and `stormResetAfter`.\\
+⍝ Returns the updated `state`, the number of occurrences of `signature`, and a Boolean that is 1
+⍝ when the crash gets the full treatment, which requires both:
+⍝ * the count is at least twice the count at which the signature last got the full treatment
+⍝ * fewer than `ceiling` crashes got the full treatment within the last hour\\
+⍝ A signature that has not occurred for `resetAfter` hours starts afresh.
+ keep←(now-state.lasts)<resetAfter×3600
+ state.(signatures counts lastFulls firsts lasts)←keep∘/¨state.(signatures counts lastFulls firsts lasts)
+ state.fulls←((now-state.fulls)<3600)/state.fulls
+ ind←state.signatures⍳⊂signature
+ :If ind>≢state.signatures
+     state.signatures,←⊂signature
+     state.counts,←0
+     state.lastFulls,←0
+     state.firsts,←now
+     state.lasts,←now
+ :EndIf
+ state.counts[ind]+←1
+ state.lasts[ind]←now
+ count←ind⊃state.counts
+ full←(count≥2×ind⊃state.lastFulls)∧ceiling>≢state.fulls
+ :If full
+     state.lastFulls[ind]←count
+     state.fulls,←now
+ :EndIf

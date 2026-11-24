@@ -1,0 +1,24 @@
+ state←ReadStormFile filename;lines;fields;records
+⍝ Reads the storm guard's file and returns its contents; see `NewStormState`.\\
+⍝ A file that does not exist yields an empty state; one that cannot be parsed signals an error.
+ state←NewStormState
+ :If ⎕NEXISTS filename
+     lines←⊃⎕NGET filename 1
+     lines←(0<≢¨lines)/lines
+     lines←('#'≠⊃¨lines)/lines                  ⍝ Comments
+     fields←{⍵⊆⍨⍵≠⎕UCS 9}¨lines
+     records←('signature'∘≡¨⊃¨fields)/fields
+     :If 0<≢records
+         'Invalid signature record'⎕SIGNAL 11/⍨∨/6≠≢¨records
+         state.signatures←2⊃¨records
+         state.counts←ToNumber¨3⊃¨records
+         state.lastFulls←ToNumber¨4⊃¨records
+         state.firsts←IsoToSeconds¨5⊃¨records
+         state.lasts←IsoToSeconds¨6⊃¨records
+     :EndIf
+     records←('full'∘≡¨⊃¨fields)/fields
+     :If 0<≢records
+         'Invalid full-treatment record'⎕SIGNAL 11/⍨∨/2≠≢¨records
+         state.fulls←IsoToSeconds¨2⊃¨records
+     :EndIf
+ :EndIf

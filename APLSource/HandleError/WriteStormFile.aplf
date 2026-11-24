@@ -1,0 +1,14 @@
+ filename WriteStormFile state;lines;tab;i;fields
+⍝ Writes `state` (see `NewStormState`) to `filename`, overwriting the file: one tab-separated line per
+⍝ signature, followed by one line per recent full treatment. All times are written as UTC.
+ tab←⎕UCS 9
+ lines←⊂'# HandleError storm guard. All times are UTC.'
+ lines,←⊂'# signature',tab,'<signature>',tab,'<count>',tab,'<count at last full treatment>',tab,'<first occurrence>',tab,'<last occurrence>'
+ lines,←⊂'# full',tab,'<time of a full treatment within the last hour>'
+ :For i :In ⍳≢state.signatures
+     fields←'signature'(i⊃state.signatures)(⍕i⊃state.counts)(⍕i⊃state.lastFulls)
+     fields,←SecondsToIso¨(i⊃state.firsts)(i⊃state.lasts)
+     lines,←⊂¯1↓⊃,/fields,¨tab
+ :EndFor
+ lines,←(⊂'full',tab),¨SecondsToIso¨state.fulls
+ (⊂lines)⎕NPUT filename 1

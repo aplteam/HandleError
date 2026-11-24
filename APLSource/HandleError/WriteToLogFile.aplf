@@ -1,4 +1,6 @@
- WriteToLogFile parms;fns
+ {note}WriteToLogFile parms;fns
+⍝ `note` is the storm guard's note; it is logged as well unless it is empty, the default.
+ note←{0=⎕NC ⍵:'' ⋄ ⍎⍵}'note'
  :If 0≠≢parms.logFunction
      :Trap (parms.trapInternalErrors)/0
          :If '.'∊parms.logFunction
@@ -15,6 +17,9 @@
          fns parms.LastError
          :If 0≠≢parms.addToMsg
              fns parms.addToMsg
+         :EndIf
+         :If 0≠≢note
+             fns note
          :EndIf
      :Else
           ⍝ Useful to realize in the tracer that something went wrong
