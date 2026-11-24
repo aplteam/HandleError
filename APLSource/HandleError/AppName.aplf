@@ -1,0 +1,14 @@
+ r←AppName wsid
+⍝ Returns the name the crash files and the default error folder are named after.\\
+⍝ That is the name of the workspace `wsid` without path and extension. When `wsid` is empty, which is the case
+⍝ in a stand-alone EXE, it is the name of the EXE, and in a clear workspace it is "ERROR_WS".
+ :If 'CLEAR WS'≡wsid
+     r←''
+ :ElseIf 0=≢wsid
+     r←2⊃⎕NPARTS ExeFromCommandLine 2 ⎕NQ'#' 'GetCommandLine'
+ :Else
+     r←2⊃⎕NPARTS wsid
+ :EndIf
+ :If 0=≢r
+     r←'ERROR_WS'
+ :EndIf

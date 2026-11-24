@@ -1,4 +1,7 @@
  parms←ExecuteCustomFns parms;fns;qdmx
+⍝ Calls the custom function, if there is one, with `parms` as its argument.\\
+⍝ A custom function that fails or cannot be found is recorded as a problem; see `AddProblem`.\\
+⍝ Returns `parms`.
  :If 0≠≢parms.customFns
      :Trap (parms.trapInternalErrors)/0
          :If '.'∊parms.customFns
@@ -13,6 +16,6 @@
          fns parms
      :Else
          qdmx←⎕DMX
-         parms.addToMsg←((⊆parms.addToMsg)~⊂''),⊂'customFns failed: ',⍕2↑qdmx.DM
+         parms←('customFns failed: ',⍕2↑qdmx.DM)AddProblem parms
      :EndTrap
  :EndIf

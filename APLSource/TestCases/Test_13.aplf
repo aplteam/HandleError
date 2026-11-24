@@ -26,7 +26,7 @@
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  →T.GoToTidyUp 0=FilesAndDirs.Exists home
  →T.GoToTidyUp 0=≢list←FilesAndDirs.ListFiles home,'\*'
- →T.GoToTidyUp∨/('-'~⍨10↑APLTreeUtils2.FormatDateTime ⎕TS)∘≢¨{8↑⍵↓⍨⍵⍳'_'}¨{2⊃⎕NPARTS ⍵}¨list
+ →T.GoToTidyUp∨/('-'~⍨10↑APLTreeUtils2.FormatDateTime ⎕TS)∘≢¨{8↑¯17↑⍵}¨{2⊃⎕NPARTS ⍵}¨list
 
  #.⎕SHADOW'HandleErrorParms'
  #.HandleErrorParms←##.HandleError.CreateParms

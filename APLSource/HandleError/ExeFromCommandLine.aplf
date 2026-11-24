@@ -1,0 +1,9 @@
+ r←ExeFromCommandLine cmd
+⍝ Returns the EXE from the command line `cmd`: what is between the first pair of double quotes when `cmd`
+⍝ starts with a double quote, otherwise everything up to the first blank.
+ :If '"'=⊃cmd
+     r←1↓cmd
+     r←r↑⍨¯1+r⍳'"'
+ :Else
+     r←cmd↑⍨¯1+cmd⍳' '
+ :EndIf

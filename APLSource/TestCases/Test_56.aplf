@@ -1,0 +1,22 @@
+ R←Test_56(stopFlag batchFlag);⎕TRAP;parms
+⍝ `Process` called while no error is pending must not fail itself
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ parms←##.HandleError.CreateParms
+ parms.errorFolder←GetTempPath⊃⎕SI
+ parms.(killThreads saveErrorWS createHTML saveCrash saveVars off)←0
+ {}FilesAndDirs.RmDir parms.errorFolder
+ ⎕SIGNAL 0                                           ⍝ Resets `⎕DMX`: its `DM` is empty now
+
+ :Trap 3
+     ##.HandleError.Process parms
+ :Else
+     →T.GoToTidyUp 1                                  ⍝ INDEX ERROR on the first line of an empty `DM`
+ :EndTrap
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir parms.errorFolder

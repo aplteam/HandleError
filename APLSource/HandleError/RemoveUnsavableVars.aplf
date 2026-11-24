@@ -1,0 +1,16 @@
+ crash←tno RemoveUnsavableVars crash;names;name;removed
+⍝ Removes from `crash.Vars` every variable that cannot be written to a component file, and lists their
+⍝ names in `crash.VarsNotSaved`.\\
+⍝ `tno` is the tie number of the component file `crash` is going to be saved in; see `CanBeSaved`.\\
+⍝ Returns `crash`.
+ removed←0⍴⊂''
+ :If 9=crash.⎕NC'Vars'
+     names←' '~¨⍨↓crash.Vars.⎕NL 2
+     :For name :In names
+         :If ~tno CanBeSaved crash.Vars⍎name
+             removed,←⊂name
+             crash.Vars.⎕EX name
+         :EndIf
+     :EndFor
+ :EndIf
+ crash.VarsNotSaved←removed

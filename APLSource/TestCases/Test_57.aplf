@@ -1,0 +1,20 @@
+ R←Test_57(stopFlag batchFlag);⎕TRAP;H;crash;name
+⍝ `CreateFilename` names the files the way `CheckErrorFolder` names the default folder: "ERROR_WS" in a
+⍝ clear workspace, and never an empty name. See also Test_24.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+ H←##.HandleError
+ crash←⎕NS''
+ crash.WSID←'CLEAR WS'
+ name←2⊃⎕NPARTS H.CreateFilename'C:/Temp/Errors'crash
+ →T.GoToTidyUp' '∊name
+ →T.GoToTidyUp'ERROR_WS_'≢9↑name
+
+ crash.WSID←''                                       ⍝ A stand-alone EXE
+ name←2⊃⎕NPARTS H.CreateFilename'C:/Temp/Errors'crash
+ →T.GoToTidyUp'_'=⊃name
+
+ R←T._OK
+
+∆TidyUp:

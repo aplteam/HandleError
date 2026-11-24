@@ -1,0 +1,35 @@
+ R←Test_48(stopFlag batchFlag);⎕TRAP;parms;folder;file;log
+⍝ When the error folder cannot be created, the log entry must still be written: it does not need the folder.
+⍝ The error folder is made impossible to create by putting it "below" a file. See also Test_31.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ folder←GetTempPath⊃⎕SI
+ {}FilesAndDirs.RmDir folder
+ {}'CREATE!'FilesAndDirs.CheckPath folder
+ file←folder,'/AFile.txt'
+ (⊂'Not a folder')⎕NPUT file
+ #.⎕SHADOW'TEMP'
+ 'TEMP'#.⎕NS''
+ #.TEMP.∆TheLog←''
+ #.TEMP.⎕FX'{r}←∆CustomLogFns msg' '∆TheLog,←{1≥≡⍵:⊂⍵ ⋄ ⍵}msg'
+ parms←##.HandleError.CreateParms
+ parms.errorFolder←file,'/Errors'
+ parms.killThreads←0
+ parms.logFunction←'#.TEMP.∆CustomLogFns'
+ parms.signal←501
+
+ :Trap 501
+     ##.HandleError.Process parms
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ log←#.TEMP.∆TheLog
+ →T.GoToTidyUp 0=≢log
+ →T.GoToTidyUp~∨/∨/¨'*** Error'∘⍷¨log
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir folder

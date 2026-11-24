@@ -1,0 +1,34 @@
+ R←Test_49(stopFlag batchFlag);⎕TRAP;i;list;noOf
+⍝ A `customFns` that fails is reported, but not by changing the application's `addToMsg`:
+⍝ that would pile up one note per crash
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.killThreads←0                    ⍝ Killing threads would kill the session's own threads
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.saveErrorWS←0
+ #.HandleErrorParms.customFns←'NoSuchFunction'      ⍝ No dot and no parent: cannot be found
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :For i :In ⍳2
+     :Trap 406
+         {⎕SIGNAL ⍵}405
+         →T.GoToTidyUp 1
+     :EndTrap
+ :EndFor
+
+ →T.GoToTidyUp''≢#.HandleErrorParms.addToMsg
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.html'
+ →T.GoToTidyUp 2≠≢list
+ noOf←{+/'customFns failed:'⍷⊃⎕NGET ⍵}¨list
+ →T.GoToTidyUp 1 1≢noOf                               ⍝ Each report carries the note of its own crash only
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

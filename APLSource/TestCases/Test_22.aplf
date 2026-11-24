@@ -19,7 +19,8 @@
  →T.PassesIf(0 'E'((⍕##.HandleError),'.Process ''#.HandleErrorParms'''))≡⊃r
 
  :If APLTreeUtils2.IsDevelopment
-     →T.PassesIf((0 1000)'S')≡##.HandleError.SetTrap'#.HandleErrorParms'
+     →T.PassesIf(⊂(0 1000)'S')≡##.HandleError.SetTrap'#.HandleErrorParms'   ⍝ Enclosed, like the other branch: a trap can be catenated
+     →T.PassesIf((999 'C' '→0')((0 1000)'S'))≡(⊂999 'C' '→0'),##.HandleError.SetTrap'#.HandleErrorParms'
  :EndIf
 
  R←T._OK

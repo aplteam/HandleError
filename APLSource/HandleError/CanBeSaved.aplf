@@ -1,0 +1,11 @@
+ r←tno CanBeSaved value
+⍝ Returns 1 when `value` can be written to a component file and 0 otherwise. An instance of a class or a GUI
+⍝ object cannot, and neither can an array that contains one.\\
+⍝ `tno` is the tie number of a component file used for trying; the component is removed again.
+ :Trap 1 11                                     ⍝ WS FULL and DOMAIN ERROR
+     value ⎕FAPPEND tno
+     ⎕FDROP tno ¯1
+     r←1
+ :Else
+     r←0
+ :EndTrap

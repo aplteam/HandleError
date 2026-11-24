@@ -1,14 +1,9 @@
- {r}←CheckErrorFolder parms;buff
- r←⍬
+ {parms}←CheckErrorFolder parms;buff;qdmx
+⍝ Establishes `parms.errorFolder` as a full path and creates the folder if it does not exist and
+⍝ `checkErrorFolder` is 1. A folder that cannot be created is recorded as a problem; see `AddProblem`.\\
+⍝ Returns `parms`.
  :If 0=≢parms.errorFolder
-     :If 'CLEAR WS'≡⎕WSID
-         buff←''
-     :ElseIf 0=≢⎕WSID                           ⍝ Probably a stand-alone EXE
-         buff←2⊃⎕NPARTS{'"'∊⍵:1↓⍵/⍨1=+\'"'=⍵ ⋄ ⍵↑⍨¯1+⍵⍳' '}2 ⎕NQ'#' 'GetCommandLine'
-     :Else
-         buff←2⊃⎕NPARTS ⎕WSID
-     :EndIf
-     buff←{0=≢⍵:'ERROR_WS' ⋄ ⍵}buff
+     buff←AppName ⎕WSID
      :If 'Win'≡APLTreeUtils2.GetOperatingSystem ⍬
          parms.errorFolder←(2 ⎕NQ'.' 'GetEnvironment' 'LOCALAPPDATA'),'/',buff,'\Errors'
      :Else
@@ -21,5 +16,10 @@
  :EndIf
  :If 0=⎕NEXISTS parms.errorFolder
  :AndIf parms.checkErrorFolder
-     3 ⎕MKDIR parms.errorFolder
+     :Trap parms.trapInternalErrors/0
+         3 ⎕MKDIR parms.errorFolder
+     :Else
+         qdmx←⎕DMX
+         parms←('The error folder could not be created: ',qdmx.EM,(0<≢qdmx.Message)/': ',qdmx.Message)AddProblem parms
+     :EndTrap
  :EndIf

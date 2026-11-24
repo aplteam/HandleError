@@ -37,6 +37,14 @@
  :If 0≠≢parms.addToMsg
      html,←'  Added Msg'MarkupAsTableRow⊃{⍺,'<br>',⍵}/ExchangeHtmlChars¨⊆parms.addToMsg ⍝ Text or a list of texts
  :EndIf
+ :If 0≠parms.⎕NC'problems'
+ :AndIf 0≠≢parms.problems
+     html,←'  Problems'MarkupAsTableRow⊃{⍺,'<br>',⍵}/ExchangeHtmlChars¨parms.problems ⍝ HandleError's own; see `AddProblem`
+ :EndIf
+ :If 0≠crash.⎕NC'VarsNotSaved'
+ :AndIf 0≠≢crash.VarsNotSaved
+     html,←'  Vars not saved'MarkupAsTableRow⊃{⍺,', ',⍵}/crash.VarsNotSaved
+ :EndIf
  html,←'  </table>'
  html,←'<p><b>Stack:</b></p>',CR
  :If 0≠≢crash.XSI

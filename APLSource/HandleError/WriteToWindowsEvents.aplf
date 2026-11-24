@@ -1,7 +1,9 @@
- {r}←{storm}WriteToWindowsEvents (parms crash);msg;note;full
+ {parms}←{storm}WriteToWindowsEvents(parms crash);msg;note;full;qdmx
 ⍝ `storm` is the storm guard's note and whether the crash gets the full treatment; defaults to '' 1.
-⍝ Without the full treatment there are no details in the error folder, so the event does not point there.
- r←⍬
+⍝ Without the full treatment there are no details in the error folder, so the event does not point there.\\
+⍝ Problems `HandleError` ran into so far go into the event as well. A failure to write the event is recorded
+⍝ as such a problem; see `AddProblem`.\\
+⍝ Returns `parms`.
  storm←{0=⎕NC ⍵:'' 1 ⋄ ⍎⍵}'storm'
  (note full)←storm
  :If 'Win'≡APLTreeUtils2.GetOperatingSystem ⍬
@@ -15,6 +17,13 @@
          :If 0≠≢note
              msg,←⊂note
          :EndIf
+         :If 0≠parms.⎕NC'problems'
+         :AndIf 0≠≢parms.problems
+             msg,←parms.problems
+         :EndIf
          ReportErrorToWindowsLog parms.windowsEventSource msg
+     :Else
+         qdmx←⎕DMX
+         parms←('Writing the Windows event failed: ',qdmx.EM,(0<≢qdmx.Message)/': ',qdmx.Message)AddProblem parms
      :EndTrap
  :EndIf

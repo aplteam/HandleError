@@ -1,0 +1,10 @@
+ parms←ApplyDefaults parms;defaults;names;missing;name
+⍝ Adds to the parameter space `parms` every parameter it lacks, with its default from `CreateParms`.
+⍝ A parameter space created by an earlier version lacks the parameters introduced since.\\
+⍝ Returns `parms`.
+ defaults←CreateParms
+ names←' '~¨⍨↓defaults.⎕NL 2
+ missing←(0=parms.⎕NC↑names)/names
+ :For name :In missing
+     ⍎'parms.',name,'←defaults.',name
+ :EndFor

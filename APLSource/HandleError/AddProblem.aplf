@@ -1,0 +1,10 @@
+ parms←text AddProblem parms
+⍝ Records `text` as a problem `HandleError` ran into itself while it was dealing with a crash: a log function
+⍝ that cannot be found, for example.\\
+⍝ Such problems are collected in `parms.problems`, a list of texts that `Process` empties whenever it starts.
+⍝ They go into the log entry, the Windows event, `crash` and the HTML page, as far as those are written later.\\
+⍝ Returns `parms`.
+ :If 0=parms.⎕NC'problems'
+     parms.problems←0⍴⊂''
+ :EndIf
+ parms.problems,←⊂text

@@ -1,11 +1,20 @@
- {r}←SaveCrash(filename crash parms);tno;qdmx
+ crash←SaveCrash(filename crash parms);tno;qdmx
+⍝ Saves `crash` as the first component of a component file, unless `saveCrash` is 0.\\
+⍝ Variables in `crash.Vars` that cannot be written to a component file, instances of classes for example,
+⍝ would make that fail for all of `crash`. Should it fail, they are removed and listed in `crash.VarsNotSaved`.\\
+⍝ Returns `crash`.
  :If parms.saveCrash
      :Trap (parms.trapInternalErrors)/0
          tno←filename ⎕FCREATE 0
-         crash ⎕FAPPEND tno  ⍝ Might fail with a WS FULL
+         :Trap 11
+             crash ⎕FAPPEND tno
+         :Else
+             crash←tno RemoveUnsavableVars crash
+             crash ⎕FAPPEND tno                  ⍝ Might fail with a WS FULL
+         :EndTrap
      :Else
+         qdmx←⎕DMX
          :Trap 0
-             qdmx←⎕DMX
              qdmx.DM ⎕FAPPEND tno
          :EndTrap
      :EndTrap

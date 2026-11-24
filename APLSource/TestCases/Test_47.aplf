@@ -1,0 +1,38 @@
+ R←Test_47(stopFlag batchFlag);⎕TRAP;ALIEN;list;fno;crash
+⍝ A variable holding instances of a class cannot be written to a component file: `SaveCrash` must still
+⍝ save the crash, without what cannot be serialised
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.killThreads←0                    ⍝ Killing threads would kill the session's own threads
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.saveErrorWS←0
+ #.⎕SHADOW'TEMP'
+ 'TEMP'#.⎕NS''
+ {}#.TEMP.⎕FIX':Class Dummy' ':EndClass'
+ ALIEN←(⎕NEW #.TEMP.Dummy)(⎕NEW #.TEMP.Dummy)        ⍝ Nameclass 2, so `SaveVisibleVars` collects it
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :Trap 406
+     {⎕SIGNAL ⍵}405
+     →T.GoToTidyUp 1
+ :EndTrap
+
+ →T.GoToTidyUp 406≠⎕EN
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.dcf'
+ →T.GoToTidyUp 1≠≢list
+ fno←(⊃list)⎕FTIE 0
+ crash←⎕FREAD fno 1
+ ⎕FUNTIE fno
+ →T.GoToTidyUp 9≠⎕NC'crash'                          ⍝ Not just the message of the DOMAIN ERROR `⎕FAPPEND` ran into
+ →T.GoToTidyUp 405≠crash.EN
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

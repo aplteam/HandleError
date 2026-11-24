@@ -1,5 +1,9 @@
- {note}WriteToLogFile parms;fns
-⍝ `note` is the storm guard's note; it is logged as well unless it is empty, the default.
+ {parms}←{note}WriteToLogFile parms;fns;qdmx
+⍝ Calls the log function, if there is one, with what is to be logged about the crash.\\
+⍝ `note` is the storm guard's note; it is logged as well unless it is empty, the default.\\
+⍝ Problems `HandleError` ran into so far are logged too. A log function that fails or cannot be found is
+⍝ recorded as such a problem; see `AddProblem`.\\
+⍝ Returns `parms`.
  note←{0=⎕NC ⍵:'' ⋄ ⍎⍵}'note'
  :If 0≠≢parms.logFunction
      :Trap (parms.trapInternalErrors)/0
@@ -21,7 +25,12 @@
          :If 0≠≢note
              fns note
          :EndIf
+         :If 0≠parms.⎕NC'problems'
+         :AndIf 0≠≢parms.problems
+             fns parms.problems
+         :EndIf
      :Else
-          ⍝ Useful to realize in the tracer that something went wrong
+         qdmx←⎕DMX
+         parms←('logFunction failed: ',⍕2↑qdmx.DM)AddProblem parms
      :EndTrap
  :EndIf
