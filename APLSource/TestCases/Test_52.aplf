@@ -1,0 +1,27 @@
+ R←Test_52(stopFlag batchFlag);⎕TRAP;H;state;count;full;byTime;fulls;byTimes;signature;ceiling;resetAfter;repeatAfter;t0;hour
+⍝ `StormRule`: with `stormRepeatAfter` 1, an error that occurs once an hour gets the full treatment every time
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+ H←##.HandleError
+ state←H.NewStormState
+ signature←'11 Foo[6]'
+ ceiling←100
+ resetAfter←24
+ repeatAfter←1
+ t0←1000000
+ fulls←⍬
+ byTimes←⍬
+ :For hour :In ¯1+⍳10
+     (state count full byTime)←H.StormRule state signature(t0+3600×hour)ceiling resetAfter repeatAfter
+     fulls,←full
+     byTimes,←byTime
+ :EndFor
+
+ →T.GoToTidyUp fulls≢10⍴1
+ →T.GoToTidyUp byTimes≢0 0,8⍴1                       ⍝ Occurrences 1 and 2 qualify by their count
+ →T.GoToTidyUp(,10)≢state.lastFulls
+
+ R←T._OK
+
+∆TidyUp:

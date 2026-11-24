@@ -1,0 +1,52 @@
+ R←Test_54(stopFlag batchFlag);⎕TRAP;H;i;list;log;state;filename
+⍝ `Process` with `stormGuard` 1: an occurrence the backoff would hold back gets the full treatment when the
+⍝ last one is older than `stormRepeatAfter` hours, and the note in the log says so
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+⍝ Preconditions...
+ #.⎕SHADOW'HandleErrorParms'
+ #.HandleErrorParms←##.HandleError.CreateParms
+ #.HandleErrorParms.killThreads←0                    ⍝ Killing threads would kill the session's own threads
+ #.HandleErrorParms.errorFolder←GetTempPath⊃⎕SI
+ #.HandleErrorParms.saveErrorWS←0
+ #.HandleErrorParms.stormGuard←1
+ #.⎕SHADOW'TEMP'
+ 'TEMP'#.⎕NS''
+ #.TEMP.∆TheLog←''
+ #.TEMP.⎕FX'{r}←∆CustomLogFns msg' '∆TheLog,←{1≥≡⍵:⊂⍵ ⋄ ⍵}msg'
+ #.HandleErrorParms.logFunction←'#.TEMP.∆CustomLogFns'
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder
+ {}'CREATE!'FilesAndDirs.CheckPath #.HandleErrorParms.errorFolder
+ H←##.HandleError
+ filename←#.HandleErrorParms.errorFolder,'/StormGuard.txt'
+
+ ⎕TRAP←(405 'E' '406 ##.HandleError.Process #.HandleErrorParms')(999 'C' '. ⍝ Deliberate error')(0 'N')
+ :For i :In ⍳2
+     :Trap 406
+         {⎕SIGNAL ⍵}405
+         →T.GoToTidyUp 1
+     :EndTrap
+     :If 1=i                                          ⍝ Pretend it was occurrence 5, with the full treatment at 4, 25 hours ago
+         state←H.ReadStormFile filename
+         state.counts←,5
+         state.lastFulls←,4
+         state.lastFullTimes-←25×3600
+         state.fulls←⍬
+         filename H.WriteStormFile state
+         #.TEMP.∆TheLog←''
+     :EndIf
+ :EndFor
+
+ list←FilesAndDirs.ListFiles #.HandleErrorParms.errorFolder,'/*.html'
+ →T.GoToTidyUp 2≠≢list                                ⍝ Occurrence 6 was not held back
+ →T.GoToTidyUp 6≢#.HandleErrorParms.stormCount
+ log←#.TEMP.∆TheLog
+ →T.GoToTidyUp~∨/∨/¨'Storm guard: occurrence 6 '∘⍷¨log
+ →T.GoToTidyUp∨/∨/¨'held back'∘⍷¨log
+ →T.GoToTidyUp~∨/∨/¨'hours old'∘⍷¨log
+
+ R←T._OK
+
+∆TidyUp:
+ {}FilesAndDirs.RmDir #.HandleErrorParms.errorFolder

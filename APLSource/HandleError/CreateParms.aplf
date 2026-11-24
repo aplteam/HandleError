@@ -1,32 +1,34 @@
  r←CreateParms;⎕IO;⎕ML
-⍝ Returns a namespace with default values for the `HandleError` method
+⍝ Returns a namespace with default values for `Process`. Its niladic function `∆List` lists all parameters
+⍝ with their current values.
 ⍝ | Parameter    | Description|
 ⍝ | - | - |
+⍝ | `addToMsg`   | Empty by default. A text or a list of texts that is added to the log entry, the Windows event and the HTML report.|
 ⍝ | `checkErrorFolder` | Boolean that defaults to 1. If this is 1 and the folder `errorFolder` does **not** exist<br>it will be created. |
 ⍝ | `createHTML` | Boolean that defaults to 1. A 0 means that no HTML file will be created.|
-⍝ | `customFns`  | Fully qualified name of a monadic function to be executed by `Process`. Useful to send an email, for example. See also `customFnsParent`.|
-⍝ | `customFnsParent` | No default. May be a reference pointing to the parent of the `customFns`. Needed only in case the parent is a class instance since it may use dotted syntax.|
-⍝ | `enforceOff` | Boolean that defaults to 0. With a 1 you can force `HandleError` to `⎕OFF` no matter whether it's a runtime EXE or not. Mainly for test cases.|
-⍝ | `errorFolder`| Folder that keeps the component file (`crash`), the HTML page and the error WS. See below for rules.|
+⍝ | `customFns`  | Empty by default. Name of a monadic function to be executed by `Process`, with the parameter space as right argument. Useful to send an email, for example.<br>Either a fully qualified name like `#.MyApp.OnCrash`, or a simple name together with `customFnsParent`.|
+⍝ | `customFnsParent` | No default. A reference to the parent of `customFns`, which must then be a simple name, without dots. Needed only in case the parent is a class instance.<br>Ignored when `customFns` contains a dot.|
+⍝ | `enforceOff` | Boolean that defaults to 0. With a 1 `Process` acts in a development session as it does in a runtime: it `⎕OFF`s (unless `off` is 0 or `signal` is set), kills threads and prints nothing to the session. Mainly for test cases.|
+⍝ | `errorFolder`| Folder that keeps the crash files: the HTML page, the component file with `crash`, the error WS and, with `stormGuard` 1, `StormGuard.txt`. See below for rules.<br>`Process` replaces the value by the full path of the folder.|
 ⍝ | `killThreads`| Boolean that defaults to 1, meaning that all threads that can be killed will be killed.<br>Has no effect in development unless `enforceOff` is 1: there the session's own threads would be killed as well.|
-⍝ | `logFunction`| Name of the logging function to be used. See also `logFunctionParent`.|
-⍝ | `logFunctionParent` | No default. May be a reference pointing to the parent of `logFunction`. Needed only in case the parent is a class instance since it may use dotted syntax.|
-⍝ | `off`        | Boolean that defaults to 1 which makes `HandleError` execute `⎕OFF` with `returnCode` only in Runtime. A 0 suppresses this. See also `enforceOff`|
-⍝ | `returnCode` | The return code passed on to `⎕OFF`.|
-⍝ | `saveCrash`  | Boolean that defaults to 1.<br>A 0 suppresses the creation of `crash` & a component file in which `crash` is saved.|
+⍝ | `logFunction`| Empty by default. Name of a monadic function that is called several times per crash, with a text or a list of texts to be logged.<br>Named like `customFns`: either a fully qualified name, or a simple name together with `logFunctionParent`.|
+⍝ | `logFunctionParent` | No default. A reference to the parent of `logFunction`, which must then be a simple name, without dots. Needed only in case the parent is a class instance.<br>Ignored when `logFunction` contains a dot.|
+⍝ | `off`        | Boolean that defaults to 1 which makes `Process` execute `⎕OFF` with `returnCode`, but only in a runtime or with `enforceOff` 1.<br>With 0 `Process` just returns, and the function that failed does not continue. Ignored when `signal` is not 0.|
+⍝ | `returnCode` | Defaults to 1. The return code passed on to `⎕OFF`.|
+⍝ | `saveCrash`  | Boolean that defaults to 1.<br>A 0 suppresses the component file in which `crash` is saved.|
 ⍝ | `saveErrorWS`| Boolean that defaults to 1.<br>A 0 suppresses the creation of a crash workspace. There is no point in attempting<br>to save a WS in a multi-threaded application for example.|
-⍝ | `saveVars`   | Boolean that defaults to 1.<br>Is ignored when `saveCrash` is 0. If 1 all visible variables are saved in a<br>sub namespace `Vars` within `crash`.|
-⍝ | `signal`     | When `signal` is not 0 then `signal` is `⎕SIGNAL`led by `Process`.<br>This can be used for a restart attempt.|
+⍝ | `saveVars`   | Boolean that defaults to 1.<br>If 1 the variables (no references) of the namespace the failing function was running in are saved in a<br>sub namespace `Vars` within `crash`, and with that in the component file and the error WS.|
+⍝ | `signal`     | Defaults to 0. Any other number is `⎕SIGNAL`led by `Process` once the crash is recorded, instead of `⎕OFF`.<br>This can be used for a restart attempt, but the application must trap that number ahead of `Process`:<br>see "Carrying on after an error" in the documentation. Use a number between 500 and 999.|
 ⍝ | `stormCeiling` | Defaults to 10. With `stormGuard` 1, the maximum number of crashes within one hour that get the full treatment, across all signatures.|
-⍝ | `stormGuard` | Boolean that defaults to 0. 1 switches on the guard against crash storms: a recurring error gets the full treatment<br>only at its 1st, 2nd, 4th, 8th... occurrence; otherwise just the log entry and the Windows event are written.<br>Requires that only one process writes to the error folder.|
+⍝ | `stormGuard` | Boolean that defaults to 0. 1 switches on the guard against crash storms: a recurring error gets the full treatment<br>only at its 1st, 2nd, 4th, 8th... occurrence, and when its last one is `stormRepeatAfter` hours old; otherwise just the log entry and the Windows event are written.<br>Requires that only one process writes to the error folder.|
+⍝ | `stormRepeatAfter` | Defaults to 24. With `stormGuard` 1, the number of hours after which an error that keeps occurring gets the full treatment again, whatever its count. 0 switches this off.|
 ⍝ | `stormResetAfter` | Defaults to 24. With `stormGuard` 1, the number of hours after which an error that has not occurred starts again at 1.|
 ⍝ | `trapInternalErrors` | Boolean that defaults to 1: all internal errors are trapped,<br>`Process` should never crash an application. Set it to 0 to investigate a problem within `HandleError`.|
 ⍝ | `trapSaveWSID`       | **Deprecated** since 5.0.3 and ignored: `trapInternalErrors` now governs the `⎕SAVE` statement as well.|
-⍝ | `windowsEventSource` | Name of the Windows Event Source to write to. Ignored when empty.|
-⍝ | `addToMsg`           | Will be added to the log file as well as the Windows Event Log messages.<br>Mainly for test cases.|\\
+⍝ | `windowsEventSource` | Empty by default. Name of the Windows Event Source to write to. The source must exist: creating one requires admin rights.<br>Ignored when empty.|\\
 ⍝ Since version 2.2.0 `errorFolder` defaults to an empty vector. Assuming that the WS or the stand-alone EXE have the name "Foo" the following rules hold true:
 ⍝ * If `errorFolder` is empty then it defaults to "%LOCALAPPDATA%/Foo/Errors" under Windows and "Errors/" in the current
-⍝   directory otherwise.
+⍝   directory otherwise. In a clear workspace "ERROR_WS" takes the place of "Foo".
 ⍝ * If `errorFolder` is "Errors/" then this folder will be expected in the current directory.
 ⍝ * If `errorFolder` is an absolute path it is assumed that the last part is the folder that shall hold the crash files.\\
 ⍝ In all three instances if the folder in question does not exist but `checkErrorFolder` is 1 the folder will be created.
@@ -50,6 +52,7 @@
  r.signal←0
  r.stormCeiling←10
  r.stormGuard←0
+ r.stormRepeatAfter←24
  r.stormResetAfter←24
  r.trapInternalErrors←1
  r.trapSaveWSID←1

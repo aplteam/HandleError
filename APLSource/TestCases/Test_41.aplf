@@ -1,4 +1,4 @@
- R←Test_41(stopFlag batchFlag);⎕TRAP;H;state;count;full;fulls;t0;ceiling;resetAfter;ind
+ R←Test_41(stopFlag batchFlag);⎕TRAP;H;state;count;full;fulls;t0;ceiling;resetAfter;repeatAfter;byTime;ind
 ⍝ `StormRule`: the ceiling holds back crashes across signatures, and an occurrence it blocks is not lost
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
@@ -8,23 +8,24 @@
  t0←1000000
  ceiling←2
  resetAfter←24
+ repeatAfter←24
  fulls←⍬
- (state count full)←H.StormRule state'11 A[1]'(t0+0)ceiling resetAfter     ⍝ A1: full
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+0)ceiling resetAfter repeatAfter     ⍝ A1: full
  fulls,←full
- (state count full)←H.StormRule state'11 A[1]'(t0+1)ceiling resetAfter     ⍝ A2: full; the ceiling is now reached
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+1)ceiling resetAfter repeatAfter     ⍝ A2: full; the ceiling is now reached
  fulls,←full
- (state count full)←H.StormRule state'11 A[1]'(t0+2)ceiling resetAfter     ⍝ A3: backoff
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+2)ceiling resetAfter repeatAfter     ⍝ A3: backoff
  fulls,←full
- (state count full)←H.StormRule state'11 A[1]'(t0+3)ceiling resetAfter     ⍝ A4: ceiling
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+3)ceiling resetAfter repeatAfter     ⍝ A4: ceiling
  fulls,←full
- (state count full)←H.StormRule state'6 B[2]'(t0+4)ceiling resetAfter      ⍝ B1, a new error: ceiling
+ (state count full byTime)←H.StormRule state'6 B[2]'(t0+4)ceiling resetAfter repeatAfter      ⍝ B1, a new error: ceiling
  fulls,←full
- (state count full)←H.StormRule state'11 A[1]'(t0+3600)ceiling resetAfter  ⍝ A5: the ceiling has expired, and 5≥2×2
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+3600)ceiling resetAfter repeatAfter  ⍝ A5: the ceiling has expired, and 5≥2×2
  fulls,←full
  →T.GoToTidyUp 5≢count
- (state count full)←H.StormRule state'11 A[1]'(t0+3601)ceiling resetAfter  ⍝ A6: backoff, 6<2×5
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+3601)ceiling resetAfter repeatAfter  ⍝ A6: backoff, 6<2×5
  fulls,←full
- (state count full)←H.StormRule state'6 B[2]'(t0+3602)ceiling resetAfter   ⍝ B2: full, 2≥2×0
+ (state count full byTime)←H.StormRule state'6 B[2]'(t0+3602)ceiling resetAfter repeatAfter   ⍝ B2: full, 2≥2×0
  fulls,←full
 
  →T.GoToTidyUp fulls≢1 1 0 0 0 1 0 1

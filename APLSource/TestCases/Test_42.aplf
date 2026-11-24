@@ -1,4 +1,4 @@
- R←Test_42(stopFlag batchFlag);⎕TRAP;H;state;count;full;fulls;t0;ceiling;resetAfter;signature
+ R←Test_42(stopFlag batchFlag);⎕TRAP;H;state;count;full;fulls;t0;ceiling;resetAfter;repeatAfter;byTime;signature
 ⍝ `StormRule`: an error that has not occurred for `stormResetAfter` hours starts again at 1
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←T._Failed
@@ -9,18 +9,19 @@
  t0←1000000
  ceiling←100
  resetAfter←1
+ repeatAfter←24
  fulls←⍬
- (state count full)←H.StormRule state signature t0 ceiling resetAfter
+ (state count full byTime)←H.StormRule state signature t0 ceiling resetAfter repeatAfter
  fulls,←full
- (state count full)←H.StormRule state signature(t0+10)ceiling resetAfter
+ (state count full byTime)←H.StormRule state signature(t0+10)ceiling resetAfter repeatAfter
  fulls,←full
- (state count full)←H.StormRule state signature(t0+20)ceiling resetAfter
+ (state count full byTime)←H.StormRule state signature(t0+20)ceiling resetAfter repeatAfter
  fulls,←full
  →T.GoToTidyUp 3≢count
- (state count full)←H.StormRule state signature(t0+20+3599)ceiling resetAfter   ⍝ Not quite quiet long enough
+ (state count full byTime)←H.StormRule state signature(t0+20+3599)ceiling resetAfter repeatAfter   ⍝ Not quite quiet long enough
  fulls,←full
  →T.GoToTidyUp 4≢count
- (state count full)←H.StormRule state signature(t0+20+3599+3600)ceiling resetAfter ⍝ Quiet for exactly one hour
+ (state count full byTime)←H.StormRule state signature(t0+20+3599+3600)ceiling resetAfter repeatAfter ⍝ Quiet for exactly one hour
  fulls,←full
  →T.GoToTidyUp 1≢count
 

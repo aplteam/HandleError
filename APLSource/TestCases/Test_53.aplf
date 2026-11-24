@@ -1,0 +1,49 @@
+ R←Test_53(stopFlag batchFlag);⎕TRAP;H;state;count;full;byTime;fulls;byTimes;t0;t1;ceiling;resetAfter;repeatAfter;ind
+⍝ `StormRule`: the ceiling also holds back an error that is due by time, and lets it through later
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←T._Failed
+
+ H←##.HandleError
+ state←H.NewStormState
+ t0←1000000
+ t1←t0+3700
+ ceiling←3
+ resetAfter←24
+ repeatAfter←1
+ fulls←⍬
+ byTimes←⍬
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+0)ceiling resetAfter repeatAfter     ⍝ A1: full
+ fulls,←full
+ byTimes,←byTime
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+1)ceiling resetAfter repeatAfter     ⍝ A2: full
+ fulls,←full
+ byTimes,←byTime
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+2)ceiling resetAfter repeatAfter     ⍝ A3: backoff
+ fulls,←full
+ byTimes,←byTime
+ (state count full byTime)←H.StormRule state'11 A[1]'(t0+3)ceiling resetAfter repeatAfter     ⍝ A4: full, 4≥2×2
+ fulls,←full
+ byTimes,←byTime
+ (state count full byTime)←H.StormRule state'6 B[2]'(t1+0)ceiling resetAfter repeatAfter      ⍝ More than an hour later three new errors...
+ →T.GoToTidyUp~full
+ (state count full byTime)←H.StormRule state'6 C[3]'(t1+1)ceiling resetAfter repeatAfter
+ →T.GoToTidyUp~full
+ (state count full byTime)←H.StormRule state'6 D[4]'(t1+2)ceiling resetAfter repeatAfter      ⍝ ...reach the ceiling
+ →T.GoToTidyUp~full
+ (state count full byTime)←H.StormRule state'11 A[1]'(t1+3)ceiling resetAfter repeatAfter     ⍝ A5: due by time (5<2×4), but: ceiling
+ fulls,←full
+ byTimes,←byTime
+ (state count full byTime)←H.StormRule state'11 A[1]'(t1+3700)ceiling resetAfter repeatAfter  ⍝ A6: the ceiling has expired; still 6<2×4
+ fulls,←full
+ byTimes,←byTime
+
+ →T.GoToTidyUp fulls≢1 1 0 1 0 1
+ →T.GoToTidyUp byTimes≢0 0 0 0 0 1
+ ind←state.signatures⍳⊂'11 A[1]'
+ →T.GoToTidyUp 6≢ind⊃state.counts
+ →T.GoToTidyUp 6≢ind⊃state.lastFulls
+ →T.GoToTidyUp(t1+3700)≢ind⊃state.lastFullTimes
+
+ R←T._OK
+
+∆TidyUp:

@@ -10,7 +10,7 @@ When the same error repeats, `HandleError` writes a full set of artefacts and ru
 
 ## What happens today
 
-This describes HandleError 5.1.0. `HandleError` catches the error through the `⎕TRAP` installed by `SetTrap`, which calls `Process`. Everything below happens inside `:Hold 'HandleError.Process'`, so crashes are serialised:
+This describes HandleError 5.2.0 with `stormGuard` 0. `HandleError` catches the error through the `⎕TRAP` installed by `SetTrap`, which calls `Process`. Everything below happens inside `:Hold 'HandleError.Process'`, so crashes are serialised:
 
 | # | Step | Artefact | Switch |
 |---|------|----------|--------|
@@ -50,12 +50,15 @@ A signature is only an approximation. The same fault reported from two different
 
 ### The rules
 
-With `stormGuard` set to 1, every crash increments the count for its signature. A crash then gets the *full treatment*, all eleven steps as they are today, only when both of these rules allow it:
+With `stormGuard` set to 1, every crash increments the count for its signature. A crash then gets the *full treatment*, all eleven steps as they are today, only when the signature is due under rule 1 or rule 2, and rule 3 allows it:
 
 1. Exponential backoff per signature: the count is at least twice `lastFull`, the count at which this signature last got the full treatment, which starts at 0. Normally that means occurrences 1, 2, 4, 8, 16 and so on, so a thousand occurrences cost ten sets of artefacts. The backoff never holds a new error back, because a new error has its own signature and its own first occurrence.
-2. A ceiling across all signatures: fewer than `stormCeiling` crashes got the full treatment within the last hour. This catches a storm of *distinct* signatures, which the backoff cannot see and which a corrupted workspace or an exhausted resource produces: one cause, many different errors. During such a storm the ceiling can hold back a new error too. That is deliberate.
+2. A time limit per signature: its last full treatment is at least `stormRepeatAfter` hours old. This is for an error that keeps coming at a low rate, which the backoff alone would silence for longer and longer; see below.
+3. A ceiling across all signatures: fewer than `stormCeiling` crashes got the full treatment within the last hour. This catches a storm of *distinct* signatures, which the backoff cannot see and which a corrupted workspace or an exhausted resource produces: one cause, many different errors. During such a storm the ceiling can hold back a new error too. That is deliberate.
 
 Together they keep a single recurring fault down to a handful of artefacts, leave a new fault visible outside a storm and bound the total whatever the mix of signatures.
+
+The time limit exists because the backoff counts occurrences and knows nothing about time. An error that occurs once an hour is no storm, but by count alone it would get the full treatment at hours 0, 1, 3, 7, 15, 31, 63 and 127, and after six weeks the next one would be 43 days away. With the time limit at 24 hours the first six are the same and after that it is reported once a day: hours 55, 79, 103 and so on. A real storm is not affected in its first 24 hours, and later it costs at most one more set of artefacts per signature per day. When the time limit grants the full treatment, `lastFull` is set to the count all the same, so the doubling continues from there, and the note in the log entry and the Windows event says that the time limit was the reason.
 
 Comparing with `lastFull` rather than testing for a power of two means that an occurrence the ceiling blocks is not lost. When the ceiling blocks occurrence 8, `lastFull` stays at 4, so occurrence 9 qualifies again, and so does every later one until the ceiling lets one through. That one becomes the new `lastFull`, and the doubling continues from there.
 
@@ -77,17 +80,17 @@ When `stormGuard` is 1, `Process` adds two variables to `parms` before it calls 
 
 ### Where the counts live
 
-In a small text file in the error folder, `StormGuard.txt`: one line per signature with its count, its `lastFull` and the times of its first and last occurrence, followed by the times of the most recent full treatments, for the ceiling. Fields are separated by tabs, and comment lines starting with `#` explain them:
+In a small text file in the error folder, `StormGuard.txt`: one line per signature with its count, its `lastFull` and the times of its first occurrence, its last occurrence and its last full treatment, followed by the times of the most recent full treatments, for the ceiling. Fields are separated by tabs, and comment lines starting with `#` explain them:
 
 ```
 # HandleError storm guard. All times are UTC.
-signature    5 Foo[2]    5    4    2026-11-23T16:11:50Z    2026-11-23T16:11:51Z
+signature    5 Foo[2]    5    4    2026-11-23T16:11:50Z    2026-11-23T16:11:51Z    2026-11-23T16:11:51Z
 full    2026-11-23T16:11:50Z
 full    2026-11-23T16:11:50Z
 full    2026-11-23T16:11:51Z
 ```
 
-All times are UTC. Local time jumps when daylight saving time starts or ends, which would stretch or shrink "the last hour" and the `stormResetAfter` period.
+All times are UTC. Local time jumps when daylight saving time starts or ends, which would stretch or shrink "the last hour" and the periods of `stormRepeatAfter` and `stormResetAfter`.
 
 Whenever the guard writes the file, it drops the signatures that have not occurred for `stormResetAfter` hours and the full-treatment times older than an hour. Neither is needed any more, and the file stays small however long the application runs.
 
@@ -109,12 +112,13 @@ The file is small and is read and written once per crash, so the guard does not 
 
 ### Parameters
 
-Three new parameters in `CreateParms`:
+Four new parameters in `CreateParms`:
 
 | Parameter | Default | Meaning |
 |---|---|---|
-| `stormGuard` | 0 | Boolean. 1 switches the guard on. With 0, `Process` behaves as it does today and the other two are ignored. |
+| `stormGuard` | 0 | Boolean. 1 switches the guard on. With 0, `Process` behaves as it does today and the other three are ignored. |
 | `stormCeiling` | 10 | The maximum number of crashes within one hour that get the full treatment, across all signatures. |
+| `stormRepeatAfter` | 24 | Hours after which a signature that keeps occurring gets the full treatment again, whatever its count. 0 switches the time limit off. |
 | `stormResetAfter` | 24 | Hours after which a signature that has not occurred starts again at 1. |
 
 The application decides where the values come from. The Tatin server, for example, will read `StormGuard` from the `[TRAP]` section of its INI file and set `#.ErrorParms.stormGuard` accordingly.
@@ -139,7 +143,7 @@ The application decides where the values come from. The Tatin server, for exampl
 
 ## Open
 
-- The defaults for `stormCeiling` and `stormResetAfter` are first guesses. Before the release they should be checked against what a real storm looked like.
+- The defaults for `stormCeiling`, `stormRepeatAfter` and `stormResetAfter` are first guesses. Before the release they should be checked against what a real storm looked like.
 
 
 

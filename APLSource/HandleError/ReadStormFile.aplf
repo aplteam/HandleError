@@ -9,12 +9,13 @@
      fields←{⍵⊆⍨⍵≠⎕UCS 9}¨lines
      records←('signature'∘≡¨⊃¨fields)/fields
      :If 0<≢records
-         'Invalid signature record'⎕SIGNAL 11/⍨∨/6≠≢¨records
+         'Invalid signature record'⎕SIGNAL 11/⍨∨/7≠≢¨records
          state.signatures←2⊃¨records
          state.counts←ToNumber¨3⊃¨records
          state.lastFulls←ToNumber¨4⊃¨records
          state.firsts←IsoToSeconds¨5⊃¨records
          state.lasts←IsoToSeconds¨6⊃¨records
+         state.lastFullTimes←IsoToSeconds¨7⊃¨records
      :EndIf
      records←('full'∘≡¨⊃¨fields)/fields
      :If 0<≢records

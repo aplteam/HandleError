@@ -1,4 +1,4 @@
- (parms full note)←StormGuard(parms error);signature;count;filename;state;problem;qdmx;now
+ (parms full note)←StormGuard(parms error);signature;count;filename;state;problem;qdmx;now;byTime
 ⍝ The crash storm guard: decides whether a crash gets the full treatment. See `Misc/CrashStormGuard.md`.\\
 ⍝ `error` is the copy of `⎕DMX` taken by `Process`.\\
 ⍝ Returns `parms`, a Boolean that is 1 for the full treatment, and a note for the log entry and the
@@ -12,6 +12,7 @@
  :If parms.stormGuard
      signature←''
      count←0
+     byTime←0
      problem←''
      :Trap parms.trapInternalErrors/0
          signature←StormSignature error
@@ -24,7 +25,7 @@
              state←NewStormState
          :EndTrap
          now←UtcNow
-         (state count full)←StormRule state signature now parms.stormCeiling parms.stormResetAfter
+         (state count full byTime)←StormRule state signature now parms.stormCeiling parms.stormResetAfter parms.stormRepeatAfter
          filename WriteStormFile state
      :Else
          qdmx←⎕DMX
@@ -39,6 +40,8 @@
          note←'Storm guard: occurrence ',(⍕count),' of "',signature,'"'
          :If ~full
              note,←'; everything but the log entry and the Windows event held back'
+         :ElseIf byTime
+             note,←'; full treatment because the last one is at least ',(⍕parms.stormRepeatAfter),' hours old'
          :EndIf
      :EndIf
  :EndIf

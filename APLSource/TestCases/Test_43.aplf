@@ -18,11 +18,12 @@
  state.lastFulls←8 1
  state.firsts←(now-7200)(now-60)
  state.lasts←(now-30)(now-60)
+ state.lastFullTimes←(now-90)(now-60)
  state.fulls←(now-30)(now-60)
  filename H.WriteStormFile state
  state2←H.ReadStormFile filename
 
- names←'signatures' 'counts' 'lastFulls' 'firsts' 'lasts' 'fulls'
+ names←'signatures' 'counts' 'lastFulls' 'firsts' 'lasts' 'lastFullTimes' 'fulls'
  →T.GoToTidyUp(state∘⍎¨names)≢state2∘⍎¨names
 
  →T.GoToTidyUp'2026-11-23T16:00:00Z'≢H.SecondsToIso 1795449600
