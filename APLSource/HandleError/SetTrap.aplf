@@ -1,4 +1,4 @@
- r←{force}SetTrap parameterSpaceName;⎕ML;⎕IO;parent
+ r←{force}SetTrap parameterSpaceName;⎕ML;⎕IO;parent;isRunTime
 ⍝ Returns a vector useful to set `⎕TRAP`.
 ⍝ It behaves differently depending on whether it's a development session or not.\\
 ⍝ The right argument can be either an empty vector or the fully qualified name (but not a ref!) of a
@@ -18,9 +18,10 @@
      'Invalid right argument - not a named namespace'⎕SIGNAL 11/⍨∧/'[]'∊⍕parameterSpaceName
      'Invalid right argument - not a named namespace'⎕SIGNAL 11/⍨~{11::0 ⋄ 9=⎕NC ⍵}parameterSpaceName
  :EndIf
+ isRunTime←~APLTreeUtils2.IsDevelopment
  :If 0=≢parameterSpaceName  ⍝ No parameter space (yet): typically at a very early stage
- :AndIf (0=APLTreeUtils2.IsDevelopment)∨force
+ :AndIf force∨isRunTime
      r←⊂0 'E'(parent,'.Process ⍬')
- :ElseIf force∨0=APLTreeUtils2.IsDevelopment
+ :ElseIf force∨isRunTime
      r←⊂0 'E'(parent,'.Process ''',parameterSpaceName,'''')
  :EndIf
